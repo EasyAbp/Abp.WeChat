@@ -4,6 +4,6 @@ namespace Zony.Abp.WeiXin.Official
 {
     public interface IAccessTokenAccessor
     {
-        Task<string> GetAccessToken();
+        Task<string> GetAccessTokenAsync();
     }
 }

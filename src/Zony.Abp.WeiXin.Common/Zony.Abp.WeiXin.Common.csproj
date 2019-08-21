@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <PackageReference Include="Volo.Abp.Caching" Version="0.19.0" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
       <PackageReference Include="Volo.Abp.Core" Version="0.19.0" />
     </ItemGroup>
 
