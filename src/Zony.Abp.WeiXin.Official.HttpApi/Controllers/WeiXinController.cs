@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Zony.Abp.WeiXin.Official.HttpApi.Models;
+using Zony.Abp.WeiXin.Official.Infrastructure;
 
 namespace Zony.Abp.WeiXin.Official.HttpApi.Controllers
 {

@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Volo.Abp.DependencyInjection;
 
-namespace Zony.Abp.WeiXin.Official
+namespace Zony.Abp.WeiXin.Official.Infrastructure
 {
     public class SignatureChecker : ITransientDependency
     {
