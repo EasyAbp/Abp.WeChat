@@ -2,11 +2,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Volo.Abp;
+using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Modularity;
 
 namespace Zony.Abp.WeiXin.Official.HttpApi
 {
-    [DependsOn(typeof(AbpWeiXinOfficialModule))]
+    [DependsOn(typeof(AbpWeiXinOfficialModule),
+        typeof(AbpAspNetCoreMvcModule))]
     public class AbpWeiXinOfficialHttpApiModule : AbpModule
     {
         public override void OnApplicationInitialization(ApplicationInitializationContext context)

@@ -4,6 +4,26 @@
         <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <Title>Zony.Abp.WeiXin.Official</Title>
+        <Authors>Zony</Authors>
+        <Description>定义了微信公众号相关接口的封装。</Description>
+        <RepositoryType>git</RepositoryType>
+
+        <PackageTags>wechat;wechat official;wechat pay;abp vnext;abp;asp.net core;.netcore;asp.net mvc</PackageTags>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageProjectUrl>https://github.com/GameBelial/Zony.Abp.WeiXin</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/GameBelial/Zony.Abp.WeiXin</RepositoryUrl>
+        <PackageLicenseUrl>https://github.com/GameBelial/Zony.Abp.WeiXin/blob/master/LICENSE</PackageLicenseUrl>
+
+        <PackageVersion>1.0.0</PackageVersion>
+        <Version>1.0.0</Version>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <DocumentationFile>bin\Debug\Zony.Abp.WeiXin.Official.xml</DocumentationFile>
+        <NoWarn>1701;1702;1591;NU5125</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
       <ProjectReference Include="..\Zony.Abp.WeiXin.Common\Zony.Abp.WeiXin.Common.csproj" />
     </ItemGroup>
