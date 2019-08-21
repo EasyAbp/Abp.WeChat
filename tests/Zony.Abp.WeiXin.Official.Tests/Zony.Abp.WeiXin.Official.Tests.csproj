@@ -6,7 +6,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Zony.Abp.WeiXin.Official\Zony.Abp.WeiXin.Official.csproj" />
-      <ProjectReference Include="..\..\Zony.Abp.WeiXin.Common.Tests\Zony.Abp.WeiXin.Common.Tests.csproj" />
+      <ProjectReference Include="..\Zony.Abp.WeiXin.Common.Tests\Zony.Abp.WeiXin.Common.Tests.csproj" />
     </ItemGroup>
 
     <ItemGroup>
