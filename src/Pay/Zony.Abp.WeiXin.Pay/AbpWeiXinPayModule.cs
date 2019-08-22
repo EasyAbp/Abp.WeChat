@@ -4,7 +4,7 @@ using Zony.Abp.WeiXin.Common;
 namespace Zony.Abp.WeiXin.Pay
 {
     [DependsOn(typeof(AbpWeiXinCommonModule))]
-    public class ZonyAbpWeiXinPayModule : AbpModule
+    public class AbpWeiXinPayModule : AbpModule
     {
         
     }
