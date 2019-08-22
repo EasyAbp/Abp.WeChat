@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
-using Zony.Abp.WeiXin.Official.Services.RequestDtos;
+using Zony.Abp.WeiXin.Official.Infrastructure.Models;
 
 namespace Zony.Abp.WeiXin.Official.Infrastructure
 {

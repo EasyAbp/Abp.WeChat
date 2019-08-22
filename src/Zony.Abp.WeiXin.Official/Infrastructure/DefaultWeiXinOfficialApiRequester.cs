@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Zony.Abp.WeiXin.Official.Services.RequestDtos;
+using Zony.Abp.WeiXin.Official.Infrastructure.Models;
 
 namespace Zony.Abp.WeiXin.Official.Infrastructure
 {

@@ -6,10 +6,11 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
+using Zony.Abp.WeiXin.Common;
 
-namespace Zony.Abp.WeiXin.Official
+namespace Zony.Abp.WeiXin.Official.Infrastructure
 {
-    public class CacheAccessTokenAccessor : IAccessTokenAccessor,ISingletonDependency
+    public class CacheAccessTokenAccessor : IAccessTokenAccessor, ISingletonDependency
     {
         private readonly IDistributedCache<string> _distributedCache;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -30,14 +31,17 @@ namespace Zony.Abp.WeiXin.Official
                 async () =>
                 {
                     var client = _httpClientFactory.CreateClient();
-                    var requestUrl = $"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={_abpWeiXinOfficialOptions.AppId}&secret={_abpWeiXinOfficialOptions.AppSecret}";
+                    var requestUrl =
+                        $"https://api.weixin.qq.com/cgi-bin/token?grant_type=${GrantTypes.ClientCredential}&appid={_abpWeiXinOfficialOptions.AppId}&secret={_abpWeiXinOfficialOptions.AppSecret}";
 
-                    var resultStr = await (await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUrl))).Content.ReadAsStringAsync();
+                    var resultStr = await (await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUrl)))
+                        .Content.ReadAsStringAsync();
                     var resultJson = JObject.Parse(resultStr);
 
                     var accessTokenObj = resultJson.SelectToken("$.access_token");
-                    if(accessTokenObj == null) throw new NullReferenceException($"无法获取到 AccessToken，微信 API 返回的内容为：{resultStr}");
-                    
+                    if (accessTokenObj == null)
+                        throw new NullReferenceException($"无法获取到 AccessToken，微信 API 返回的内容为：{resultStr}");
+
                     return resultJson.SelectToken("$.access_token").Value<string>();
                 },
                 () => new DistributedCacheEntryOptions

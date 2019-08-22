@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using Zony.Abp.WeiXin.Official.Infrastructure.Models;
-using Zony.Abp.WeiXin.Official.Services.RequestDtos;
 using Zony.Abp.WeiXin.Official.Services.TemplateMessage.Json;
 
 namespace Zony.Abp.WeiXin.Official.Services.TemplateMessage

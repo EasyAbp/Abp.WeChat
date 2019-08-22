@@ -1,6 +1,6 @@
-namespace Zony.Abp.WeiXin.Official.Services.RequestDtos
+namespace Zony.Abp.WeiXin.Official.Infrastructure.Models
 {
-    public class IOfficialRequest
+    public interface IOfficialRequest
     {
         
     }
