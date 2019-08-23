@@ -19,7 +19,7 @@ namespace Zony.Abp.WeiXin.Pay.Infrastructure
         {
             var signStr = $"{payRequest.GetWaitForSignatureStr()}&key={_abpWeiXinPayOptions.ApiKey}";
 
-            var signBytes = MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(signStr));
+            var signBytes = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(signStr));
 
             var sb = new StringBuilder();
             foreach (var @byte in signBytes)
