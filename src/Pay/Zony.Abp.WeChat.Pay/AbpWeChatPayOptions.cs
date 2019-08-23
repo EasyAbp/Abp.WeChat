@@ -1,6 +1,6 @@
-﻿namespace Zony.Abp.WeiXin.Pay
+﻿namespace Zony.Abp.WeChat.Pay
 {
-    public class AbpWeiXinPayOptions
+    public class AbpWeChatPayOptions
     {
         /// <summary>
         /// 微信支付的 API 密钥。
@@ -17,7 +17,7 @@
         /// </summary>
         public bool IsSandBox { get; set; }
 
-        public AbpWeiXinPayOptions()
+        public AbpWeChatPayOptions()
         {
             IsSandBox = false;
         }

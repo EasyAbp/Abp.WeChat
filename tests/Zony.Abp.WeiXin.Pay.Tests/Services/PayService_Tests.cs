@@ -1,13 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
 using Xunit;
-using Zony.Abp.WeiXin.Pay.Services.Pay;
+using Zony.Abp.WeChat.Pay;
+using Zony.Abp.WeChat.Pay.Services.Pay;
 
 namespace Zony.Abp.WeiXin.Pay.Tests.Services
 {
-    public class PayService_Tests : AbpWeiXinPayTestBase
+    public class PayService_Tests : AbpWeChatPayTestBase
     {
         private readonly PayService _payService;
 

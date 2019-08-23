@@ -1,9 +1,9 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.DependencyInjection;
-using Zony.Abp.WeiXin.Pay.Infrastructure;
+using Zony.Abp.WeChat.Pay.Infrastructure;
 
-namespace Zony.Abp.WeiXin.Pay.Services
+namespace Zony.Abp.WeChat.Pay.Services
 {
     public abstract class WeChatPayService : ITransientDependency
     {

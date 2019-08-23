@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Zony.Abp.WeiXin.Pay.Infrastructure
+namespace Zony.Abp.WeChat.Pay.Infrastructure
 {
     public interface IWeChatPayApiRequester
     {

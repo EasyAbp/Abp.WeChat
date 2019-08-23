@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Zony.Abp.WeiXin.Pay.Models
+namespace Zony.Abp.WeChat.Pay.Models
 {
     /// <summary>
     /// 微信支付参数集合，所有接口参数都必须传入。

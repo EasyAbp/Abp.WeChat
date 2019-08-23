@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Pay\Zony.Abp.WeiXin.Pay\Zony.Abp.WeiXin.Pay.csproj" />
+      <ProjectReference Include="..\..\src\Pay\Zony.Abp.WeChat.Pay\Zony.Abp.WeChat.Pay.csproj" />
       <ProjectReference Include="..\Zony.Abp.WeiXin.Common.Tests\Zony.Abp.WeiXin.Common.Tests.csproj" />
     </ItemGroup>
 

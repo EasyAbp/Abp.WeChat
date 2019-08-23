@@ -1,12 +1,11 @@
-﻿using Microsoft.Extensions.Options;
-using Shouldly;
+﻿using Shouldly;
 using Xunit;
-using Zony.Abp.WeiXin.Pay.Infrastructure;
-using Zony.Abp.WeiXin.Pay.Models;
+using Zony.Abp.WeChat.Pay.Infrastructure;
+using Zony.Abp.WeChat.Pay.Models;
 
 namespace Zony.Abp.WeiXin.Pay.Tests.Infrastructure
 {
-    public class SignatureGenerator_Tests : AbpWeiXinPayTestBase
+    public class SignatureGenerator_Tests : AbpWeChatPayTestBase
     {
         private readonly ISignatureGenerator _signatureGenerator;
 
@@ -18,7 +17,7 @@ namespace Zony.Abp.WeiXin.Pay.Tests.Infrastructure
         [Fact]
         public void Generate_Test()
         {
-            AbpWeiXinPayOptions.ApiKey = "192006250b4c09247ec02edce69f6a2d";
+            AbpWeChatPayOptions.ApiKey = "192006250b4c09247ec02edce69f6a2d";
             
             var newParam = new WeChatPayRequest();
             newParam.AddParameter("appid","wxd930ea5d5a258f4f");

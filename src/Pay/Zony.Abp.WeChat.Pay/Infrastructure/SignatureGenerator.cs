@@ -2,22 +2,22 @@
 using System.Text;
 using Microsoft.Extensions.Options;
 using Volo.Abp.DependencyInjection;
-using Zony.Abp.WeiXin.Pay.Models;
+using Zony.Abp.WeChat.Pay.Models;
 
-namespace Zony.Abp.WeiXin.Pay.Infrastructure
+namespace Zony.Abp.WeChat.Pay.Infrastructure
 {
     public class SignatureGenerator : ISignatureGenerator, ISingletonDependency
     {
-        private readonly AbpWeiXinPayOptions _abpWeiXinPayOptions;
+        private readonly AbpWeChatPayOptions _abpWeChatPayOptions;
 
-        public SignatureGenerator(IOptions<AbpWeiXinPayOptions> abpWeiXinPayOptions)
+        public SignatureGenerator(IOptions<AbpWeChatPayOptions> abpWeChatPayOptions)
         {
-            _abpWeiXinPayOptions = abpWeiXinPayOptions.Value;
+            _abpWeChatPayOptions = abpWeChatPayOptions.Value;
         }
 
         public string Generate(WeChatPayRequest payRequest)
         {
-            var signStr = $"{payRequest.GetWaitForSignatureStr()}&key={_abpWeiXinPayOptions.ApiKey}";
+            var signStr = $"{payRequest.GetWaitForSignatureStr()}&key={_abpWeChatPayOptions.ApiKey}";
 
             var signBytes = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(signStr));
 

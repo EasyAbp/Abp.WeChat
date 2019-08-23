@@ -1,21 +1,21 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Volo.Abp;
-using Zony.Abp.WeiXin.Pay.Models;
+using Zony.Abp.WeChat.Pay.Models;
 
-namespace Zony.Abp.WeiXin.Pay.Services.Pay
+namespace Zony.Abp.WeChat.Pay.Services.Pay
 {
     public class PayService : WeChatPayService
     {
         private readonly string TargetUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
-        private readonly AbpWeiXinPayOptions _abpWeiXinPayOptions;
+        private readonly AbpWeChatPayOptions _abpWeChatPayOptions;
 
-        public PayService(IOptions<AbpWeiXinPayOptions> abpWeiXinPayOptions)
+        public PayService(IOptions<AbpWeChatPayOptions> aboWeChatPayOptions)
         {
-            _abpWeiXinPayOptions = abpWeiXinPayOptions.Value;
+            _abpWeChatPayOptions = aboWeChatPayOptions.Value;
 
-            if (_abpWeiXinPayOptions.IsSandBox) TargetUrl = $" https://api.mch.weixin.qq.com/sandboxnew/pay/unifiedorder";
+            if (_abpWeChatPayOptions.IsSandBox) TargetUrl = $" https://api.mch.weixin.qq.com/sandboxnew/pay/unifiedorder";
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Zony.Abp.WeiXin.Pay.Services.Pay
             request.AddParameter("out_trade_no",orderNo);
             request.AddParameter("total_fee",totalFee);
             request.AddParameter("spbill_create_ip","127.0.0.1");
-            request.AddParameter("notify_url",_abpWeiXinPayOptions.NotifyUrl);
+            request.AddParameter("notify_url",_abpWeChatPayOptions.NotifyUrl);
             request.AddParameter("trade_type",tradeType);
 
             var signStr = SignatureGenerator.Generate(request);

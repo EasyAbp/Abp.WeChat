@@ -1,4 +1,4 @@
-﻿namespace Zony.Abp.WeiXin.Pay
+﻿namespace Zony.Abp.WeChat.Pay
 {
     /// <summary>
     /// 微信支付方式的类型定义。

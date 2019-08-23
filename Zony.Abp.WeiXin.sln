@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Official", "Official", "{A0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pay", "Pay", "{7AA7BACD-F0B0-46BD-A0B9-2E0C5C1233A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeiXin.Pay", "src\Pay\Zony.Abp.WeiXin.Pay\Zony.Abp.WeiXin.Pay.csproj", "{8247C119-83C4-4D49-BD21-B9CFF59F9C0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeChat.Pay", "src\Pay\Zony.Abp.WeChat.Pay\Zony.Abp.WeChat.Pay.csproj", "{8247C119-83C4-4D49-BD21-B9CFF59F9C0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeiXin.Pay.Tests", "tests\Zony.Abp.WeiXin.Pay.Tests\Zony.Abp.WeiXin.Pay.Tests.csproj", "{4C7B9ADE-7E5F-466A-B3B5-47F40135B926}"
 EndProject

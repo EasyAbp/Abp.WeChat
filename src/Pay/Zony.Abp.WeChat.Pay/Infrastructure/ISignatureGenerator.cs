@@ -1,6 +1,6 @@
-﻿using Zony.Abp.WeiXin.Pay.Models;
+﻿using Zony.Abp.WeChat.Pay.Models;
 
-namespace Zony.Abp.WeiXin.Pay.Infrastructure
+namespace Zony.Abp.WeChat.Pay.Infrastructure
  {
      public interface ISignatureGenerator
      {

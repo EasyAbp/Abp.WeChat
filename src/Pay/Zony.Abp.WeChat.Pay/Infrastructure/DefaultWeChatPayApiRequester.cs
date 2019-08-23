@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Volo.Abp.DependencyInjection;
 
-namespace Zony.Abp.WeiXin.Pay.Infrastructure
+namespace Zony.Abp.WeChat.Pay.Infrastructure
 {
     public class DefaultWeChatPayApiRequester : IWeChatPayApiRequester, ISingletonDependency
     {

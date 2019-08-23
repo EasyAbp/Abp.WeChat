@@ -1,6 +1,6 @@
 ﻿namespace Zony.Abp.WeiXin.Pay.Tests
 {
-    public class AbpWeiXinPayTestConsts
+    public class AbpWeChatPayTestConsts
     {
         public const string AppId = "";
         public const string ApiKey = "";
