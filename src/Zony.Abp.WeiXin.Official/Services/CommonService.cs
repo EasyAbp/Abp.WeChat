@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.DependencyInjection;
 using Zony.Abp.WeiXin.Official.Infrastructure;
 
-namespace Zony.Abp.WeiXin.Official
+namespace Zony.Abp.WeiXin.Official.Services
 {
     public abstract class CommonService : ITransientDependency
     {
