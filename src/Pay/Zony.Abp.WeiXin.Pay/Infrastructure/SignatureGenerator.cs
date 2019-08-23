@@ -6,7 +6,7 @@ using Zony.Abp.WeiXin.Pay.Models;
 
 namespace Zony.Abp.WeiXin.Pay.Infrastructure
 {
-    public class SignatureGenerator : ISignatureGenerator,ITransientDependency
+    public class SignatureGenerator : ISignatureGenerator, ISingletonDependency
     {
         private readonly AbpWeiXinPayOptions _abpWeiXinPayOptions;
 
@@ -18,9 +18,9 @@ namespace Zony.Abp.WeiXin.Pay.Infrastructure
         public string Generate(WeChatPayRequest payRequest)
         {
             var signStr = $"{payRequest.GetWaitForSignatureStr()}&key={_abpWeiXinPayOptions.ApiKey}";
-            
+
             var signBytes = MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(signStr));
-            
+
             var sb = new StringBuilder();
             foreach (var @byte in signBytes)
             {
