@@ -31,8 +31,7 @@ namespace Zony.Abp.WeiXin.Official.Infrastructure
                 async () =>
                 {
                     var client = _httpClientFactory.CreateClient();
-                    var requestUrl =
-                        $"https://api.weixin.qq.com/cgi-bin/token?grant_type={GrantTypes.ClientCredential}&appid={_abpWeiXinOfficialOptions.AppId}&secret={_abpWeiXinOfficialOptions.AppSecret}";
+                    var requestUrl = $"https://api.weixin.qq.com/cgi-bin/token?grant_type={GrantTypes.ClientCredential}&appid={_abpWeiXinOfficialOptions.AppId}&secret={_abpWeiXinOfficialOptions.AppSecret}";
 
                     var resultStr = await (await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUrl)))
                         .Content.ReadAsStringAsync();
