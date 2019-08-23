@@ -1,8 +1,7 @@
 ﻿using Volo.Abp.Modularity;
-using Zony.Abp.WeChat.Pay;
 using Zony.Abp.WeiXin.Common.Tests;
 
-namespace Zony.Abp.WeiXin.Pay.Tests
+namespace Zony.Abp.WeChat.Pay.Tests
 {
     [DependsOn(typeof(AbpWeiXinCommonTestsModule),
         typeof(AbpWeChatPayModule))]

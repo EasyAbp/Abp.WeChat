@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
-using Zony.Abp.WeChat.Pay;
 using Zony.Abp.WeiXin.Common.Tests;
 
-namespace Zony.Abp.WeiXin.Pay.Tests
+namespace Zony.Abp.WeChat.Pay.Tests
 {
     public class AbpWeChatPayTestBase : AbpWeiXinCommonTestBase<AbpWeChatPayTestsModule>
     {

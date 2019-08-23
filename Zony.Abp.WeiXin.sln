@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pay", "Pay", "{7AA7BACD-F0B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeChat.Pay", "src\Pay\Zony.Abp.WeChat.Pay\Zony.Abp.WeChat.Pay.csproj", "{8247C119-83C4-4D49-BD21-B9CFF59F9C0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeiXin.Pay.Tests", "tests\Zony.Abp.WeiXin.Pay.Tests\Zony.Abp.WeiXin.Pay.Tests.csproj", "{4C7B9ADE-7E5F-466A-B3B5-47F40135B926}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeChat.Pay.Tests", "tests\Zony.Abp.WeChat.Pay.Tests\Zony.Abp.WeChat.Pay.Tests.csproj", "{4C7B9ADE-7E5F-466A-B3B5-47F40135B926}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeChat.Pay.HttpApi", "src\Pay\Zony.Abp.WeChat.Pay.HttpApi\Zony.Abp.WeChat.Pay.HttpApi.csproj", "{14759F2F-193D-42DA-BDFD-A2F9B889D2B9}"
 EndProject

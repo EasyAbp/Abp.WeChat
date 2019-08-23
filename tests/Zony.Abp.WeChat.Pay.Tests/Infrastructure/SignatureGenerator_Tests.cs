@@ -3,7 +3,7 @@ using Xunit;
 using Zony.Abp.WeChat.Pay.Infrastructure;
 using Zony.Abp.WeChat.Pay.Models;
 
-namespace Zony.Abp.WeiXin.Pay.Tests.Infrastructure
+namespace Zony.Abp.WeChat.Pay.Tests.Infrastructure
 {
     public class SignatureGenerator_Tests : AbpWeChatPayTestBase
     {

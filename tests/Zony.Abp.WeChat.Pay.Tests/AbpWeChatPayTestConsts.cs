@@ -1,4 +1,4 @@
-﻿namespace Zony.Abp.WeiXin.Pay.Tests
+﻿namespace Zony.Abp.WeChat.Pay.Tests
 {
     public class AbpWeChatPayTestConsts
     {

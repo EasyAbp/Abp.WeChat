@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Xunit;
-using Zony.Abp.WeChat.Pay;
 using Zony.Abp.WeChat.Pay.Services.Pay;
 
-namespace Zony.Abp.WeiXin.Pay.Tests.Services
+namespace Zony.Abp.WeChat.Pay.Tests.Services
 {
     public class PayService_Tests : AbpWeChatPayTestBase
     {
