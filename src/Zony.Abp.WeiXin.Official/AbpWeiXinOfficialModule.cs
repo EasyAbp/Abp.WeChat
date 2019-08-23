@@ -1,9 +1,9 @@
 ﻿using Volo.Abp.Modularity;
-using Zony.Abp.WeiXin.Common;
+using Zony.Abp.WeChat.Common;
 
 namespace Zony.Abp.WeiXin.Official
 {
-    [DependsOn(typeof(AbpWeiXinCommonModule))]
+    [DependsOn(typeof(AbpWeChatCommonModule))]
     public class AbpWeiXinOfficialModule : AbpModule 
     {
         

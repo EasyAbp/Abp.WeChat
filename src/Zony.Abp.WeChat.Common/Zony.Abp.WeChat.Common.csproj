@@ -6,6 +6,7 @@
     
     <PropertyGroup>
         <Title>Zony.Abp.WeiXin.Common</Title>
+        <RootNamespace>Zony.Abp.WeChat.Common</RootNamespace>
         <Authors>Zony</Authors>
         <Description>定义了微信公众号与微信支付公用的组件。</Description>
         <RepositoryType>git</RepositoryType>

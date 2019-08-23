@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
-using Zony.Abp.WeiXin.Common;
+using Zony.Abp.WeChat.Common;
 
 namespace Zony.Abp.WeiXin.Official.Infrastructure
 {

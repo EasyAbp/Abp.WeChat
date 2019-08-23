@@ -1,4 +1,4 @@
-namespace Zony.Abp.WeiXin.Common
+namespace Zony.Abp.WeChat.Common
 {
     public class Scopes
     {

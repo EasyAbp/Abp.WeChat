@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{90122FA0-637C-46F5-9509-47A581A1CB00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeiXin.Common", "src\Zony.Abp.WeiXin.Common\Zony.Abp.WeiXin.Common.csproj", "{B12E7D16-FE59-4F96-9F62-173D471279EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeChat.Common", "src\Zony.Abp.WeChat.Common\Zony.Abp.WeChat.Common.csproj", "{B12E7D16-FE59-4F96-9F62-173D471279EE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{03A4A696-FC94-4F91-B7CE-9C508C1F9EBA}"
 EndProject

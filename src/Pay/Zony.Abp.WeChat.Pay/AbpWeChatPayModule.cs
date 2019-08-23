@@ -3,11 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Volo.Abp;
 using Volo.Abp.Modularity;
-using Zony.Abp.WeiXin.Common;
+using Zony.Abp.WeChat.Common;
 
 namespace Zony.Abp.WeChat.Pay
 {
-    [DependsOn(typeof(AbpWeiXinCommonModule))]
+    [DependsOn(typeof(AbpWeChatCommonModule))]
     public class AbpWeChatPayModule : AbpModule
     {
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
