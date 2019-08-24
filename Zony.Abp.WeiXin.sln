@@ -6,13 +6,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeChat.Common", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{03A4A696-FC94-4F91-B7CE-9C508C1F9EBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeiXin.Official", "src\Zony.Abp.WeiXin.Official\Zony.Abp.WeiXin.Official.csproj", "{88EB49BF-0610-47AC-B7C0-E04F17B9F2E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeChat.Official", "src\Zony.Abp.WeChat.Official\Zony.Abp.WeChat.Official.csproj", "{88EB49BF-0610-47AC-B7C0-E04F17B9F2E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeiXin.Official.HttpApi", "src\Zony.Abp.WeiXin.Official.HttpApi\Zony.Abp.WeiXin.Official.HttpApi.csproj", "{98C7067F-ABF2-4479-B9DB-CC2491BF1422}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeChat.Official.HttpApi", "src\Zony.Abp.WeChat.Official.HttpApi\Zony.Abp.WeChat.Official.HttpApi.csproj", "{98C7067F-ABF2-4479-B9DB-CC2491BF1422}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeiXin.Official.Tests", "tests\Zony.Abp.WeiXin.Official.Tests\Zony.Abp.WeiXin.Official.Tests.csproj", "{69F0A12F-2151-4F65-B2EB-476E91BEE43A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeChat.Official.Tests", "tests\Zony.Abp.WeChat.Official.Tests\Zony.Abp.WeChat.Official.Tests.csproj", "{69F0A12F-2151-4F65-B2EB-476E91BEE43A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeiXin.Common.Tests", "tests\Zony.Abp.WeiXin.Common.Tests\Zony.Abp.WeiXin.Common.Tests.csproj", "{916E3ECC-0BCC-488D-8ADB-D1C6EC670D9E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zony.Abp.WeChat.Common.Tests", "tests\Zony.Abp.WeChat.Common.Tests\Zony.Abp.WeChat.Common.Tests.csproj", "{916E3ECC-0BCC-488D-8ADB-D1C6EC670D9E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Official", "Official", "{A0F50CAC-775F-4598-A4D6-1DC3C9A4036B}"
 EndProject

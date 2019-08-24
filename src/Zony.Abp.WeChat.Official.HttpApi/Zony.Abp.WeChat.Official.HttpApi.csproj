@@ -2,33 +2,35 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>Zony.Abp.WeChat.Official.HttpApi</RootNamespace>
     </PropertyGroup>
-    
+
     <PropertyGroup>
-        <Title>Zony.Abp.WeChat.Common</Title>
-        <RootNamespace>Zony.Abp.WeChat.Common</RootNamespace>
+        <Title>Zony.Abp.WeChat.Official.HttpApi</Title>
         <Authors>Zony</Authors>
-        <Description>定义了微信公众号与微信支付公用的组件。</Description>
+        <Description>定义了微信公众号验证接口和消息回调接口。</Description>
         <RepositoryType>git</RepositoryType>
-        
+
         <PackageTags>wechat;wechat official;wechat pay;abp vnext;abp;asp.net core;.netcore;asp.net mvc</PackageTags>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageProjectUrl>https://github.com/GameBelial/Zony.Abp.WeiXin</PackageProjectUrl>
         <RepositoryUrl>https://github.com/GameBelial/Zony.Abp.WeiXin</RepositoryUrl>
         <PackageLicenseUrl>https://github.com/GameBelial/Zony.Abp.WeiXin/blob/master/LICENSE</PackageLicenseUrl>
-        
+
         <PackageVersion>1.0.0</PackageVersion>
         <Version>1.0.0</Version>
-        
+
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <DocumentationFile>bin\Debug\Zony.Abp.WeChat.Common.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\Zony.Abp.WeChat.Official.HttpApi.xml</DocumentationFile>
         <NoWarn>1701;1702;1591;NU5125</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Volo.Abp.Caching" Version="0.19.0" />
-        <PackageReference Include="Volo.Abp.Core" Version="0.19.0" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
+      <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="0.19.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Zony.Abp.WeChat.Official\Zony.Abp.WeChat.Official.csproj" />
     </ItemGroup>
 
 </Project>
