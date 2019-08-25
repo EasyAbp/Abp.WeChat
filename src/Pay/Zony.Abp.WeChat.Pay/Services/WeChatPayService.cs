@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.DependencyInjection;
+using Zony.Abp.WeChat.Common.Infrastructure.Signature;
 using Zony.Abp.WeChat.Pay.Infrastructure;
 
 namespace Zony.Abp.WeChat.Pay.Services
