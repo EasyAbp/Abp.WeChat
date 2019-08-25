@@ -1,4 +1,5 @@
-﻿using Shouldly;
+﻿using System.Security.Cryptography;
+using Shouldly;
 using Xunit;
 using Zony.Abp.WeChat.Common.Infrastructure.Signature;
 using Zony.Abp.WeChat.Pay.Models;
@@ -26,7 +27,7 @@ namespace Zony.Abp.WeChat.Pay.Tests.Infrastructure
             newParam.AddParameter("body", "test");
             newParam.AddParameter("nonce_str", "ibuaiVcKdpRxkhJA");
 
-            var signStr = _signatureGenerator.Generate(newParam, AbpWeChatPayOptions.ApiKey);
+            var signStr = _signatureGenerator.Generate(newParam, MD5.Create(), AbpWeChatPayOptions.ApiKey);
 
             signStr.ShouldBe("9A0A8659F005D6984697E2CA0A9CF3B7");
         }
