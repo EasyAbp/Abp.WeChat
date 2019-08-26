@@ -26,10 +26,11 @@ namespace Zony.Abp.WeChat.Pay.Infrastructure
             var responseMessage = await client.SendAsync(request);
             
             if(responseMessage.StatusCode == HttpStatusCode.GatewayTimeout) throw new HttpRequestException("微信支付网关超时，请稍后重试。");
-            var readAsStream = await responseMessage.Content.ReadAsStreamAsync();
+            //var readAsStream = await responseMessage.Content.ReadAsStreamAsync();
 
+            var readAsString = await responseMessage.Content.ReadAsStringAsync();
             var newXmlDocument = new XmlDocument();
-            newXmlDocument.Load(readAsStream);
+            newXmlDocument.LoadXml(readAsString);
             return newXmlDocument;
         }
     }

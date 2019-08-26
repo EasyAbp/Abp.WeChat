@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Zony.Abp.WeChat.Official\Zony.Abp.WeChat.Official.csproj" />
+      <ProjectReference Include="..\..\src\Official\Zony.Abp.WeChat.Official\Zony.Abp.WeChat.Official.csproj" />
       <ProjectReference Include="..\Zony.Abp.WeChat.Common.Tests\Zony.Abp.WeChat.Common.Tests.csproj" />
     </ItemGroup>
 
