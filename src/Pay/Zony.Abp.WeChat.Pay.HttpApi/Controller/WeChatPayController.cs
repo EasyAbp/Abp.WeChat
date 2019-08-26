@@ -1,3 +1,4 @@
+using System;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,13 @@ namespace Zony.Abp.WeChat.Pay.HttpApi.Controller
             }
             
             return Ok(BuildSuccessXml());
+        }
+
+        [HttpGet]
+        [Route("GetJsSdkWeChatPayParameters")]
+        public virtual ActionResult GetJsSdkWeChatPayParameters()
+        {
+            throw new NotImplementedException();
         }
 
         private string BuildSuccessXml()
