@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -84,8 +85,6 @@ namespace Zony.Abp.WeChat.Official.HttpApi.Controllers
         [Route("GetJsSdkConfigParameters")]
         public virtual async Task<ActionResult> GetJsSdkConfigParameters([FromQuery] string jsUrl)
         {
-            var srcUrl = _httpContextAccessor.HttpContext.Request.GetDisplayUrl();
-            
             var nonceStr = RandomHelper.GetRandom();
             var timeStamp = (Int32) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             var ticket = await _jsTicketAccessor.GetTicketAsync();
@@ -93,13 +92,14 @@ namespace Zony.Abp.WeChat.Official.HttpApi.Controllers
             var @params = new WeChatParameters();
             @params.AddParameter("noncestr", nonceStr);
             @params.AddParameter("jsapi_ticket", await _jsTicketAccessor.GetTicketAsync());
-            @params.AddParameter("url", jsUrl);
+            @params.AddParameter("url", HttpUtility.UrlDecode(jsUrl));
             @params.AddParameter("timestamp", timeStamp);
 
             var signStr = _signatureGenerator.Generate(@params, SHA1.Create()).ToLower();
 
             return new JsonResult(new
             {
+                appid = _officialOptions.AppId,
                 noncestr = nonceStr,
                 timestamp = timeStamp,
                 signature = signStr,
