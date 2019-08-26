@@ -10,13 +10,13 @@ using Zony.Abp.WeChat.Common;
 
 namespace Zony.Abp.WeChat.Official.Infrastructure
 {
-    public class CacheAccessTokenAccessor : IAccessTokenAccessor, ISingletonDependency
+    public class DefaultAccessTokenAccessor : IAccessTokenAccessor, ISingletonDependency
     {
         private readonly IDistributedCache<string> _distributedCache;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly AbpWeChatOfficialOptions _abpWeChatOfficialOptions;
 
-        public CacheAccessTokenAccessor(IDistributedCache<string> distributedCache,
+        public DefaultAccessTokenAccessor(IDistributedCache<string> distributedCache,
             IHttpClientFactory httpClientFactory,
             IOptions<AbpWeChatOfficialOptions> abpWeChatOfficialOptions)
         {

@@ -22,18 +22,20 @@ namespace Zony.Abp.WeChat.Official.HttpApi.Controllers
     public class WeChatController : AbpController
     {
         private readonly AbpWeChatOfficialOptions _officialOptions;
-        private readonly SignatureChecker _signatureChecker;
-        private readonly ISignatureGenerator _signatureGenerator;
         private readonly IHttpClientFactory _httpClientFactory;
 
+        private readonly SignatureChecker _signatureChecker;
+        private readonly ISignatureGenerator _signatureGenerator;
+        
         private readonly IJsTicketAccessor _jsTicketAccessor;
-
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public WeChatController(SignatureChecker signatureChecker,
             IOptions<AbpWeChatOfficialOptions> officialOptions,
             IHttpClientFactory httpClientFactory,
-            IJsTicketAccessor jsTicketAccessor, ISignatureGenerator signatureGenerator, IHttpContextAccessor httpContextAccessor)
+            IJsTicketAccessor jsTicketAccessor,
+            ISignatureGenerator signatureGenerator,
+            IHttpContextAccessor httpContextAccessor)
         {
             _signatureChecker = signatureChecker;
             _httpClientFactory = httpClientFactory;
@@ -76,13 +78,6 @@ namespace Zony.Abp.WeChat.Official.HttpApi.Controllers
                 .Content.ReadAsStringAsync();
 
             return Content(resultStr, "application/json; encoding=utf-8");
-        }
-
-        [HttpGet]
-        [Route("GetJsTicketByAccessToken")]
-        public virtual async Task<ActionResult> GetJsTicketByAccessToken()
-        {
-            return Content(await _jsTicketAccessor.GetTicketJsonAsync(), "application/json; encoding=utf-8");
         }
 
         [HttpGet]
