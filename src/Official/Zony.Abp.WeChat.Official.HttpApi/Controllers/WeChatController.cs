@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Zony.Abp.WeChat.Common;
+using Zony.Abp.WeChat.Common.Extensions;
 using Zony.Abp.WeChat.Common.Infrastructure;
 using Zony.Abp.WeChat.Common.Infrastructure.Signature;
 using Zony.Abp.WeChat.Official.HttpApi.Models;
@@ -85,8 +86,10 @@ namespace Zony.Abp.WeChat.Official.HttpApi.Controllers
         [Route("GetJsSdkConfigParameters")]
         public virtual async Task<ActionResult> GetJsSdkConfigParameters([FromQuery] string jsUrl)
         {
+            if(string.IsNullOrEmpty(jsUrl)) throw new UserFriendlyException("需要计算的 JS URL 参数不能够为空。");
+            
             var nonceStr = RandomHelper.GetRandom();
-            var timeStamp = (Int32) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            var timeStamp = DateTimeHelper.GetNowTimeStamp();
             var ticket = await _jsTicketAccessor.GetTicketAsync();
 
             var @params = new WeChatParameters();

@@ -21,7 +21,7 @@ namespace Zony.Abp.WeChat.Common.Infrastructure
             SortedDictionary.Add(key, strValue);
         }
         
-        public virtual void AddParameter(string key, int intValue)
+        public virtual void AddParameter<T>(string key, T intValue)
         {
             SortedDictionary.Add(key,intValue.ToString());
         }
