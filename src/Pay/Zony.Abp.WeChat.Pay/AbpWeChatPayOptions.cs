@@ -17,6 +17,11 @@
         /// </summary>
         public bool IsSandBox { get; set; }
 
+        /// <summary>
+        /// 绑定的支付应用 Id。
+        /// </summary>
+        public string AppId { get; set; }
+
         public AbpWeChatPayOptions()
         {
             IsSandBox = false;

@@ -47,7 +47,11 @@ namespace Zony.Abp.WeChat.Pay.HttpApi.Controller
             
             return Ok(BuildSuccessXml());
         }
-
+        
+        /// <summary>
+        /// 根据统一下单接口返回的预支付 Id 生成支付签名。
+        /// </summary>
+        /// <param name="prepayId">预支付 Id。</param>
         [HttpGet]
         [Route("GetJsSdkWeChatPayParameters")]
         public virtual ActionResult GetJsSdkWeChatPayParameters([FromQuery]string prepayId)
@@ -57,15 +61,16 @@ namespace Zony.Abp.WeChat.Pay.HttpApi.Controller
             var nonceStr = RandomHelper.GetRandom();
             var timeStamp = DateTimeHelper.GetNowTimeStamp();
             var package = $"prepay_id={prepayId}";
-            var signType = "SHA1";
+            var signType = "MD5";
             
             var @params = new WeChatParameters();
+            @params.AddParameter("appId",_abpWeChatPayOptions.AppId);
             @params.AddParameter("nonceStr", nonceStr);
             @params.AddParameter("timeStamp", timeStamp);
             @params.AddParameter("package",package);
-            @params.AddParameter("signType", "SHA1");
+            @params.AddParameter("signType", signType);
 
-            var paySignStr = _signatureGenerator.Generate(@params, SHA1.Create(), _abpWeChatPayOptions.ApiKey);
+            var paySignStr = _signatureGenerator.Generate(@params, MD5.Create(), _abpWeChatPayOptions.ApiKey);
             
             return new JsonResult(new
             {
