@@ -1,10 +1,14 @@
-using System;
+using System.Security.Cryptography;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
+using Zony.Abp.WeChat.Common.Extensions;
+using Zony.Abp.WeChat.Common.Infrastructure;
+using Zony.Abp.WeChat.Common.Infrastructure.Signature;
 using Zony.Abp.WeChat.Pay.Infrastructure;
 
 namespace Zony.Abp.WeChat.Pay.HttpApi.Controller
@@ -15,10 +19,16 @@ namespace Zony.Abp.WeChat.Pay.HttpApi.Controller
     public class WeChatPayController : AbpController
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ISignatureGenerator _signatureGenerator;
+        private readonly AbpWeChatPayOptions _abpWeChatPayOptions;
 
-        public WeChatPayController(IHttpContextAccessor httpContextAccessor)
+        public WeChatPayController(IHttpContextAccessor httpContextAccessor,
+            ISignatureGenerator signatureGenerator,
+            IOptions<AbpWeChatPayOptions> abpWeChatPayOptions)
         {
             _httpContextAccessor = httpContextAccessor;
+            _signatureGenerator = signatureGenerator;
+            _abpWeChatPayOptions = abpWeChatPayOptions.Value;
         }
 
         [HttpPost]
@@ -40,9 +50,31 @@ namespace Zony.Abp.WeChat.Pay.HttpApi.Controller
 
         [HttpGet]
         [Route("GetJsSdkWeChatPayParameters")]
-        public virtual ActionResult GetJsSdkWeChatPayParameters()
+        public virtual ActionResult GetJsSdkWeChatPayParameters([FromQuery]string prepayId)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(prepayId)) throw new UserFriendlyException("请传入有效的预支付订单 Id。");
+            
+            var nonceStr = RandomHelper.GetRandom();
+            var timeStamp = DateTimeHelper.GetNowTimeStamp();
+            var package = $"prepay_id={prepayId}";
+            var signType = "SHA1";
+            
+            var @params = new WeChatParameters();
+            @params.AddParameter("nonceStr", nonceStr);
+            @params.AddParameter("timeStamp", timeStamp);
+            @params.AddParameter("package",package);
+            @params.AddParameter("signType", "SHA1");
+
+            var paySignStr = _signatureGenerator.Generate(@params, SHA1.Create(), _abpWeChatPayOptions.ApiKey);
+            
+            return new JsonResult(new
+            {
+                nonceStr,
+                timeStamp,
+                package,
+                signType,
+                paySign = paySignStr
+            });
         }
 
         private string BuildSuccessXml()
