@@ -1,6 +1,9 @@
-﻿namespace Zony.Abp.WeChat.Pay.HttpApi
+﻿using Volo.Abp.Modularity;
+
+namespace Zony.Abp.WeChat.Pay.HttpApi
 {
-    public class AbpWeChatPayHttpApiModule
+    [DependsOn(typeof(AbpWeChatPayModule))]
+    public class AbpWeChatPayHttpApiModule : AbpModule
     {
     }
 }
