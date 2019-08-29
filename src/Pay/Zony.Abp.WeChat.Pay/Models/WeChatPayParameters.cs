@@ -6,10 +6,13 @@ using Zony.Abp.WeChat.Common.Infrastructure;
 namespace Zony.Abp.WeChat.Pay.Models
 {
     /// <summary>
-    /// 微信支付参数集合，所有接口参数都必须传入。
+    /// 适用于微信支付的参数定义，提供了微信支付需要用到的辅助方法。
     /// </summary>
     public class WeChatPayParameters : WeChatParameters
     {
+        /// <summary>
+        /// 将存储的所有参数和值以 XML 格式输出。
+        /// </summary>
         public virtual string ToXmlStr()
         {
             var xElement = new XElement("xml", SortedDictionary.Select(kv => new XElement(kv.Key, kv.Value)));

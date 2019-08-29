@@ -6,6 +6,9 @@ using Zony.Abp.WeChat.Pay.Infrastructure;
 
 namespace Zony.Abp.WeChat.Pay.Services
 {
+    /// <summary>
+    /// 微信支付服务的基类定义，主要提供了常用组件的组入，例如签名生成组件等。
+    /// </summary>
     public abstract class WeChatPayService : ITransientDependency
     {
         public IServiceProvider ServiceProvider { get; set; }

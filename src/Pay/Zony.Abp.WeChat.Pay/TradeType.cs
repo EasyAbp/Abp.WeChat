@@ -1,7 +1,8 @@
 ﻿namespace Zony.Abp.WeChat.Pay
 {
     /// <summary>
-    /// 微信支付方式的类型定义。
+    /// 微信支付方式的类型定义，具体信息可以参考 https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_2 定义的几种
+    /// 交易类型。
     /// </summary>
     public static class TradeType
     {
