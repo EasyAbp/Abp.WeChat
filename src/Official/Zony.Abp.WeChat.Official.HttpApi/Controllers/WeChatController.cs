@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http;
@@ -88,7 +90,7 @@ namespace Zony.Abp.WeChat.Official.HttpApi.Controllers
         {
             if(string.IsNullOrEmpty(jsUrl)) throw new UserFriendlyException("需要计算的 JS URL 参数不能够为空。");
             
-            var nonceStr = RandomHelper.GetRandom();
+            var nonceStr = RandomStringHelper.GetRandomString();
             var timeStamp = DateTimeHelper.GetNowTimeStamp();
             var ticket = await _jsTicketAccessor.GetTicketAsync();
 

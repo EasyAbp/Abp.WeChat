@@ -58,7 +58,7 @@ namespace Zony.Abp.WeChat.Pay.HttpApi.Controller
         {
             if(string.IsNullOrEmpty(prepayId)) throw new UserFriendlyException("请传入有效的预支付订单 Id。");
             
-            var nonceStr = RandomHelper.GetRandom();
+            var nonceStr = RandomStringHelper.GetRandomString();
             var timeStamp = DateTimeHelper.GetNowTimeStamp();
             var package = $"prepay_id={prepayId}";
             var signType = "MD5";
