@@ -35,13 +35,13 @@ namespace Zony.Abp.WeChat.Official.Services.TemplateMessage
         /// 模板关键字的填充内容。
         /// </summary>
         [JsonProperty("value")]
-        public string Value { get; set; }
+        public string Value { get; }
 
         /// <summary>
         /// 模板关键字的展示颜色。
         /// </summary>
         [JsonProperty("color")]
         [JsonConverter(typeof(ColorJsonConverter))]
-        public Color Color { get; set; }
+        public Color Color { get; }
     }
 }
