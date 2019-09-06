@@ -28,10 +28,13 @@ public class XXXHttpApiModule : AbpModule
 
 ```csharp
 [DependsOn (typeof (AbpWeChatPayHttpApiModule))]
-public class XXXHttpApiModule : AbpModule {
-    public override void ConfigureServices (ServiceConfigurationContext context) {
-        Configure<AbpWeChatPayOptions> (op => {
-        	// 发起微信支付请求的产品 App Id。如果是公众号需要发起支付请求则是公众号的 AppId，小程序则是小程序的 AppId。
+public class XXXHttpApiModule : AbpModule 
+{
+    public override void ConfigureServices (ServiceConfigurationContext context) 
+    {
+        Configure<AbpWeChatPayOptions> (op => 
+        {
+            // 发起微信支付请求的产品 App Id。如果是公众号需要发起支付请求则是公众号的 AppId，小程序则是小程序的 AppId。
             op.AppId = "000000000000000";
             // 微信支付的 API 密钥信息，会在后续进行签名时被使用。
             op.ApiKey = "000000000000000000000000000";
