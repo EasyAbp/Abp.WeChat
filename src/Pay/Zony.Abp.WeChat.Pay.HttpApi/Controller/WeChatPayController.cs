@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,7 @@ namespace Zony.Abp.WeChat.Pay.HttpApi.Controller
 
         [HttpPost]
         [Route("Notify")]
-        public virtual ActionResult Notify()
+        public virtual async Task<ActionResult> Notify()
         {
             var handlers = ServiceProvider.GetServices<IWeChatPayHandler>();
 
@@ -42,9 +43,9 @@ namespace Zony.Abp.WeChat.Pay.HttpApi.Controller
 
             foreach (var handler in handlers)
             {
-                handler.HandleAsync(xmlDocument);
+                await handler.HandleAsync(xmlDocument);
             }
-            
+
             return Ok(BuildSuccessXml());
         }
         
@@ -62,7 +63,7 @@ namespace Zony.Abp.WeChat.Pay.HttpApi.Controller
             var timeStamp = DateTimeHelper.GetNowTimeStamp();
             var package = $"prepay_id={prepayId}";
             var signType = "MD5";
-            
+
             var @params = new WeChatParameters();
             @params.AddParameter("appId",_abpWeChatPayOptions.AppId);
             @params.AddParameter("nonceStr", nonceStr);
