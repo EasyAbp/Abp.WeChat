@@ -25,7 +25,8 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
         /// </summary>
         public async Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string body, string orderNo, int totalFee,
             string tradeType,
-            string openId = null)
+            string openId = null,
+            string attach = null)
         {
            var request = new WeChatPayParameters();
             request.AddParameter("appid", appId);
@@ -37,6 +38,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
             request.AddParameter("spbill_create_ip", "127.0.0.1");
             request.AddParameter("notify_url", _abpWeChatPayOptions.NotifyUrl);
             request.AddParameter("openid",openId);
+            request.AddParameter("attach",attach);
             request.AddParameter("trade_type", tradeType);
 
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), _abpWeChatPayOptions.ApiKey);
