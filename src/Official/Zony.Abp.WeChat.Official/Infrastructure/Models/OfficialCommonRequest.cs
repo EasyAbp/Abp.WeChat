@@ -6,7 +6,7 @@ namespace Zony.Abp.WeChat.Official.Infrastructure.Models
     {
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this);
+            return JsonConvert.SerializeObject(this, new JsonSerializerSettings {NullValueHandling = NullValueHandling.Ignore});
         }
     }
 }
