@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Shouldly;
 using Xunit;
 using Zony.Abp.WeChat.Official.Services.CustomMenu;
 
@@ -17,16 +18,32 @@ namespace Zony.Abp.WeChat.Official.Tests.Services
         [Fact]
         public async Task Should_Create_A_CustomMenu()
         {
-            var newCustomMenu = new List<CustomButton>();
-            newCustomMenu.Add(new CustomButton("今日歌曲",CustomButtonType.Click,"V1001_TODAY_MUSIC")
+            var newCustomMenu = new List<CustomButton>
             {
-                SubButtons = new List<CustomButton>
+                new CustomButton("今日歌曲", CustomButtonType.Click, "V1001_TODAY_MUSIC")
                 {
-                    new CustomButton("赞一下我们",CustomButtonType.Click,"V1001_GOOD")
+                    SubButtons = new List<CustomButton>
+                    {
+                        new CustomButton("赞一下我们", CustomButtonType.Click, "V1001_GOOD")
+                    }
                 }
-            });
+            };
 
-            await _customMenuService.CreateCustomMenuAsync(newCustomMenu);
+            var result = await _customMenuService.CreateCustomMenuAsync(newCustomMenu);
+            
+            result.ShouldNotBeNull();
+            result.ErrorCode.ShouldBe(0);
+            result.ErrorMessage.ShouldBe("ok");
+        }
+
+        [Fact]
+        public async Task Should_Delete_All_CustomMenu()
+        {
+            var result = await _customMenuService.DeleteCustomMenuAsync();
+            
+            result.ShouldNotBeNull();
+            result.ErrorCode.ShouldBe(0);
+            result.ErrorMessage.ShouldBe("ok");
         }
     }
 }

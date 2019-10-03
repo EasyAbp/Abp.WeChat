@@ -19,7 +19,7 @@ namespace Zony.Abp.WeChat.Official.Infrastructure
             _accessTokenAccessor = accessTokenAccessor;
         }
 
-        public async Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IOfficialRequest officialRequest)
+        public async Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IOfficialRequest officialRequest = null)
         {
             var client = _httpClientFactory.CreateClient();
 
@@ -35,6 +35,8 @@ namespace Zony.Abp.WeChat.Official.Infrastructure
 
         private HttpRequestMessage BuildHttpGetRequestMessage(string targetUrl,IOfficialRequest officialRequest)
         {
+            if(officialRequest == null) return new HttpRequestMessage(HttpMethod.Get, targetUrl);
+            
             var requestUrl = BuildQueryString(targetUrl, officialRequest);
             return new HttpRequestMessage(HttpMethod.Get,requestUrl);
         }

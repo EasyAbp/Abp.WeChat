@@ -7,6 +7,6 @@ namespace Zony.Abp.WeChat.Official.Infrastructure
 {
     public interface IWeChatOfficialApiRequester : ITransientDependency
     {
-        Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method,IOfficialRequest officialRequest);
+        Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IOfficialRequest officialRequest = null);
     }
 }
