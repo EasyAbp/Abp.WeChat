@@ -48,6 +48,8 @@ public class XXXHttpApiModule : AbpModule
 
 进行上述配置以后，你的项目就集成了微信支付功能，如果你需要启用沙箱模式，可以设置 `AbpWeChatPayOptions.IsSandBox` 为 `true` 。
 
+其他配置参数，可以参考 `AbpWeChatPayOptions` 类型的定义，上面针对各个配置参数都有详细的注释说明。
+
 ## 二、默认启用的接口
 
 ### 2.1 预支付签名接口
