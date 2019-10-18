@@ -34,9 +34,9 @@
 
 | 功能               | 是否支持                                                     |
 | ------------------ | ------------------------------------------------------------ |
-| 创建自定义菜单     | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
+| 创建自定义菜单     | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
 | 查询自定义菜单     | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
-| 删除自定义菜单     | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
+| 删除自定义菜单     | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
 | 自定义菜单事件推送 | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
 | 获取自定义菜单配置 | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
 
