@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Net.Http;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Volo.Abp;
@@ -10,6 +13,25 @@ namespace Zony.Abp.WeChat.Pay
     [DependsOn(typeof(AbpWeChatCommonModule))]
     public class AbpWeChatPayModule : AbpModule
     {
+        public override void PostConfigureServices(ServiceConfigurationContext context)
+        {
+            context.Services.AddHttpClient("WeChatPay").ConfigurePrimaryHttpMessageHandler(builder =>
+            {
+                var handler = new HttpClientHandler
+                {
+                    ClientCertificateOptions = ClientCertificateOption.Manual,
+                    SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls
+                };
+
+                var options = builder.GetRequiredService<IOptions<AbpWeChatPayOptions>>().Value;
+
+                handler.ClientCertificates.Add(new X509Certificate2(options.CertificatePath,options.CertificateSecret,X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.MachineKeySet));
+                handler.ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true;
+
+                return handler;
+            });
+        }
+
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
         {
             var options = context.ServiceProvider.GetRequiredService<IOptions<AbpWeChatPayOptions>>().Value;

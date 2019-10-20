@@ -1,0 +1,7 @@
+{
+  "culture": "zh-Hans",
+  "texts": {
+    "SYSTEMERROR": "接口返回错误。",
+    "ERROR": "业务错误"
+  }
+}
