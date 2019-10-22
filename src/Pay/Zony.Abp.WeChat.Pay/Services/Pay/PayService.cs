@@ -74,7 +74,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
             request.AddParameter("out_trade_no", orderNo);
             request.AddParameter("total_fee", orderTotalFee);
             request.AddParameter("refund_fee", refundFee);
-            request.AddParameter("notify_url", AbpWeChatPayOptions.NotifyUrl);
+            request.AddParameter("notify_url", AbpWeChatPayOptions.RefundNotifyUrl);
             request.AddParameter("refund_desc",refundDescription);
             
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);

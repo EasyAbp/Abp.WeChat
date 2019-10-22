@@ -28,9 +28,14 @@
         public bool IsSandBox { get; set; }
         
         /// <summary>
-        /// 支付回调地址，用于接收支付结果通知。
+        /// 支付结果的回调地址，用于接收支付结果通知。
         /// </summary>
         public string NotifyUrl { get; set; }
+        
+        /// <summary>
+        /// 退款结果的回调地址，用于接收退款结果通知。
+        /// </summary>
+        public string RefundNotifyUrl { get; set; }
 
         /// <summary>
         /// PKCS 12 证书的所在路径，文件名称类似于 “apiclient_cert.p12” 。
