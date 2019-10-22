@@ -32,11 +32,34 @@ namespace Zony.Abp.WeChat.Pay.HttpApi.Controller
             _abpWeChatPayOptions = abpWeChatPayOptions.Value;
         }
 
+        /// <summary>
+        /// 微信支付模块提供的支付成功通知接口，开发人员需要实现 <see cref="IWeChatPayHandler"/> 处理器来处理回调请求。
+        /// </summary>
         [HttpPost]
         [Route("Notify")]
         public virtual async Task<ActionResult> Notify()
         {
             var handlers = ServiceProvider.GetServices<IWeChatPayHandler>();
+
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(_httpContextAccessor.HttpContext.Request.Body);
+
+            foreach (var handler in handlers)
+            {
+                await handler.HandleAsync(xmlDocument);
+            }
+
+            return Ok(BuildSuccessXml());
+        }
+
+        /// <summary>
+        /// 微信支付模块提供的退款回调接口，开发人员需要实现 <see cref="IWeChatPayRefundHandler"/> 处理器来处理回调请求。
+        /// </summary>
+        [HttpPost]
+        [Route("RefundNotify")]
+        public virtual async Task<ActionResult> RefundNotify()
+        {
+            var handlers = ServiceProvider.GetServices<IWeChatPayRefundHandler>();
 
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(_httpContextAccessor.HttpContext.Request.Body);
