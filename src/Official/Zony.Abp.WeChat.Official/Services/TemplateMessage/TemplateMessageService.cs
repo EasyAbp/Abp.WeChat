@@ -29,7 +29,7 @@ namespace Zony.Abp.WeChat.Official.Services.TemplateMessage
 
             return WeChatOfficialApiRequester.RequestAsync<SendMessageResponse>(TargetUrl, HttpMethod.Post, request);
         }
-
+        
         /// <summary>
         /// 请求微信公众号的 API 发送指定的模板消息。
         /// </summary>

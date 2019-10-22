@@ -14,10 +14,16 @@ namespace Zony.Abp.WeChat.Official.Services.TemplateMessage
         /// </summary>
         /// <param name="value">模板关键字的填充内容。</param>
         /// <param name="color">模板关键字的展示颜色。</param>
-        public TemplateMessageItem(string value,Color color)
+        public TemplateMessageItem(string value, Color color)
         {
             Value = value;
             Color = color;
+        }
+
+        public TemplateMessageItem(string value)
+        {
+            Value = value;
+            Color = Color.Black;
         }
 
         /// <summary>

@@ -9,6 +9,25 @@ namespace Zony.Abp.WeChat.Official.Services.TemplateMessage
     public class TemplateMessage : Dictionary<string,TemplateMessageItem>
     {
         /// <summary>
+        /// 构造一个新的 <see cref="TemplateMessage"/> 实例，需要开发人员自行构造 first 和 remark 参数。
+        /// </summary>
+        public TemplateMessage()
+        {
+            
+        }
+        
+        /// <summary>
+        /// 构造一个新的 <see cref="TemplateMessage"/> 实例，其中文字颜色默认为黑色(<see cref="Color.Black"/>)。
+        /// </summary>
+        /// <param name="first">模板消息的开始内容。</param>
+        /// <param name="remark">模板消息的结束内容。</param>
+        public TemplateMessage(string first, string remark)
+        {
+            Add("first",new TemplateMessageItem(first));
+            Add("remark",new TemplateMessageItem(remark));
+        }
+        
+        /// <summary>
         /// 构建一个新的 <see cref="TemplateMessage"/> 实例。
         /// </summary>
         /// <param name="first">模板消息的开始内容。</param>
