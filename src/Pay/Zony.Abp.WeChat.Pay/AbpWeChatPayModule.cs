@@ -41,8 +41,8 @@ namespace Zony.Abp.WeChat.Pay
         {
             var options = context.ServiceProvider.GetRequiredService<IOptions<AbpWeChatPayOptions>>().Value;
 
-            if (string.IsNullOrEmpty(options.NotifyUrl)) throw new ArgumentNullException("请指定有效的支付回调地址。");
-            if (string.IsNullOrEmpty(options.ApiKey)) throw new ArgumentNullException("请指定有效的微信 API 密钥。");
+            if (string.IsNullOrEmpty(options.NotifyUrl)) throw new ArgumentNullException(nameof(options.NotifyUrl),"请指定有效的支付回调地址。");
+            if (string.IsNullOrEmpty(options.ApiKey)) throw new ArgumentNullException(nameof(options.ApiKey),"请指定有效的微信 API 密钥。");
         }
     }
 }
