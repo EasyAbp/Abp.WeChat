@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Globalization;
 using Newtonsoft.Json;
 
 namespace Zony.Abp.WeChat.Official.Services.TemplateMessage.Json
@@ -19,7 +20,7 @@ namespace Zony.Abp.WeChat.Official.Services.TemplateMessage.Json
         {
             if (reader.Value is string valueStr)
             {
-                return Color.FromArgb(int.Parse(valueStr.Replace("#", "")));
+                return Color.FromArgb(int.Parse(valueStr.Replace("#", ""),NumberStyles.HexNumber));
             }
 
             return Color.Black;
