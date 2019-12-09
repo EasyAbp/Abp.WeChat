@@ -30,7 +30,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="0.19.0" />
+      <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="1.1.0" />
     </ItemGroup>
 
 </Project>
