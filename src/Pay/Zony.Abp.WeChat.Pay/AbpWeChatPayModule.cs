@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
@@ -25,7 +26,11 @@ namespace Zony.Abp.WeChat.Pay
 
                 var options = builder.GetRequiredService<IOptions<AbpWeChatPayOptions>>().Value;
 
-                handler.ClientCertificates.Add(new X509Certificate2(options.CertificatePath,options.CertificateSecret,X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.MachineKeySet));
+                if (string.IsNullOrEmpty(options.CertificatePath)) return handler;
+                if (!File.Exists(options.CertificatePath)) throw new FileNotFoundException("指定的证书路径无效，请重新指定有效的证书文件路径。");
+
+                handler.ClientCertificates.Add(new X509Certificate2(options.CertificatePath, options.CertificateSecret,
+                    X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.MachineKeySet));
                 handler.ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true;
 
                 return handler;
