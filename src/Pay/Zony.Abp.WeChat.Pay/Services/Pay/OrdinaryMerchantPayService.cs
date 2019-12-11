@@ -17,7 +17,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
     {
         protected readonly string UnifiedOrderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
         protected readonly string RefundUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
-        protected readonly string QueryOrderUrl = "https://api.mch.weixin.qq.com/pay/orderquery";
+        protected readonly string OrderQueryUrl = "https://api.mch.weixin.qq.com/pay/orderquery";
         protected readonly string CloseOrderUrl = "https://api.mch.weixin.qq.com/pay/closeorder";
         
         public OrdinaryMerchantPayService()
@@ -26,7 +26,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
             {
                 UnifiedOrderUrl = " https://api.mch.weixin.qq.com/sandboxnew/pay/unifiedorder";
                 RefundUrl = "https://api.mch.weixin.qq.com/sandboxnew/secapi/pay/refund";
-                QueryOrderUrl = "https://api.mch.weixin.qq.com/sandboxnew/pay/orderquery";
+                OrderQueryUrl = "https://api.mch.weixin.qq.com/sandboxnew/pay/orderquery";
                 CloseOrderUrl = "https://api.mch.weixin.qq.com/sandboxnew/pay/closeorder";
             }
         }
@@ -124,7 +124,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
         /// <param name="orderNo">商户订单号，该订单号是商户系统内部生成的唯一编号。</param>
         /// <returns>请求的结果，会被转换为 <see cref="XmlDocument"/> 实例并返回。</returns>
         /// <exception cref="ArgumentException">当微信订单号和商户订单号都为 null 时，会抛出本异常。</exception>
-        public Task<XmlDocument> QueryOrderAsync(string appId, string mchId, string weChatOrderNo = null, string orderNo = null)
+        public Task<XmlDocument> OrderQueryAsync(string appId, string mchId, string weChatOrderNo = null, string orderNo = null)
         {
             if (string.IsNullOrEmpty(weChatOrderNo) && string.IsNullOrEmpty(orderNo))
             {
@@ -148,7 +148,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return RequestAndGetReturnValueAsync(QueryOrderUrl, request);
+            return RequestAndGetReturnValueAsync(OrderQueryUrl, request);
         }
 
         #endregion
