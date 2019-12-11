@@ -10,19 +10,18 @@ using Zony.Abp.WeChat.Pay.Models;
 
 namespace Zony.Abp.WeChat.Pay.Services.Pay
 {
+    /// <summary>
+    /// 集成了普通商户的微信支付 API 接口。
+    /// </summary>
     public class OrdinaryMerchantPayService : WeChatPayService
     {
         protected readonly string UnifiedOrderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
         protected readonly string RefundUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
         protected readonly string QueryOrderUrl = "https://api.mch.weixin.qq.com/pay/orderquery";
         protected readonly string CloseOrderUrl = "https://api.mch.weixin.qq.com/pay/closeorder";
-
-        protected readonly AbpWeChatPayOptions AbpWeChatPayOptions;
-
-        public OrdinaryMerchantPayService(IOptions<AbpWeChatPayOptions> aboWeChatPayOptions)
+        
+        public OrdinaryMerchantPayService()
         {
-            AbpWeChatPayOptions = aboWeChatPayOptions.Value;
-
             if (AbpWeChatPayOptions.IsSandBox)
             {
                 UnifiedOrderUrl = " https://api.mch.weixin.qq.com/sandboxnew/pay/unifiedorder";

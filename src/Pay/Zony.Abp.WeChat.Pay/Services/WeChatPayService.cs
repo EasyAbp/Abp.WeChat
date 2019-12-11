@@ -4,6 +4,7 @@ using System.Xml;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Volo.Abp.DependencyInjection;
 using Zony.Abp.WeChat.Common.Infrastructure.Signature;
 using Zony.Abp.WeChat.Pay.Exceptions;
@@ -48,6 +49,9 @@ namespace Zony.Abp.WeChat.Pay.Services
 
         private Lazy<ILogger> _lazyLogger => new Lazy<ILogger>(() => LoggerFactory?.CreateLogger(GetType().FullName) ?? NullLogger.Instance, true);
         protected ILogger Logger => _lazyLogger.Value;
+
+        protected AbpWeChatPayOptions AbpWeChatPayOptions => LazyLoadService(ref _options).Value;
+        private IOptions<AbpWeChatPayOptions> _options;
         
         protected virtual async Task<XmlDocument> RequestAndGetReturnValueAsync(string targetUrl, WeChatPayParameters requestParameters)
         {
