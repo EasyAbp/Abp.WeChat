@@ -2,8 +2,10 @@ using System;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Volo.Abp;
+using Zony.Abp.WeChat.Pay.Exceptions;
 using Zony.Abp.WeChat.Pay.Models;
 
 namespace Zony.Abp.WeChat.Pay.Services.Pay
@@ -29,7 +31,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
                 CloseOrderUrl = "https://api.mch.weixin.qq.com/sandboxnew/pay/closeorder";
             }
         }
-        
+
         /// <summary>
         /// 统一下单功能，支持除付款码支付场景以外的预支付交易单生成。生成后，根据返回的预支付交易会话标识，前端再根据不同的场景
         /// 唤起支付行为。
@@ -53,7 +55,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
             {
                 throw new ArgumentException($"当交易类型为 JsApi 时，参数 {nameof(openId)} 必须传递有效值。");
             }
-            
+
             var request = new WeChatPayParameters();
             request.AddParameter("appid", appId);
             request.AddParameter("mch_id", mchId);
@@ -72,7 +74,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
 
             return RequestAndGetReturnValueAsync(UnifiedOrderUrl, request);
         }
-        
+
         /// <summary>
         /// 申请退款功能，支持针对指定订单进行退款操作。
         /// </summary>
@@ -109,7 +111,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
         }
 
         #region > 查询订单 <
-        
+
         /// <summary>
         /// 根据微信订单号或者商户订单号，查询订单的详细信息。如果两个参数都被填写，优先使用微信订单号进行查询。
         /// </summary>
@@ -123,7 +125,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
         /// <param name="orderNo">商户订单号，该订单号是商户系统内部生成的唯一编号。</param>
         /// <returns>请求的结果，会被转换为 <see cref="XmlDocument"/> 实例并返回。</returns>
         /// <exception cref="ArgumentException">当微信订单号和商户订单号都为 null 时，会抛出本异常。</exception>
-        public Task<XmlDocument> QueryOrderAsync(string appId, string mchId, string weChatOrderNo = null,string orderNo = null)
+        public Task<XmlDocument> QueryOrderAsync(string appId, string mchId, string weChatOrderNo = null, string orderNo = null)
         {
             if (string.IsNullOrEmpty(weChatOrderNo) && string.IsNullOrEmpty(orderNo))
             {
@@ -137,19 +139,19 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
 
             if (string.IsNullOrEmpty(weChatOrderNo))
             {
-                request.AddParameter("transaction_id",weChatOrderNo);
+                request.AddParameter("transaction_id", weChatOrderNo);
             }
             else
             {
-                request.AddParameter("out_trade_no",orderNo);
+                request.AddParameter("out_trade_no", orderNo);
             }
-            
+
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
             request.AddParameter("sign", signStr);
 
             return RequestAndGetReturnValueAsync(QueryOrderUrl, request);
         }
-        
+
         #endregion
 
         /// <summary>
@@ -169,9 +171,9 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
             request.AddParameter("appid", appId);
             request.AddParameter("mch_id", mchId);
             request.AddParameter("nonce_str", RandomHelper.GetRandom());
-            
+
             request.AddParameter("out_trade_no", orderNo);
-            
+
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
             request.AddParameter("sign", signStr);
 
@@ -185,7 +187,14 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
                 result.SelectSingleNode("/xml/return_code")?.InnerText != "SUCCESS" ||
                 result.SelectSingleNode("/xml/return_msg")?.InnerText != "OK")
             {
-                throw new UserFriendlyException($"调用微信支付接口失败，具体失败原因：{result.SelectSingleNode("/xml/err_code_des")?.InnerText}");
+                var errMsg = $"微信支付接口调用失败，具体失败原因：{result.SelectSingleNode("/xml/err_code_des")?.InnerText ?? result.SelectSingleNode("/xml/return_msg")?.InnerText}";
+                Logger.Log(LogLevel.Error, errMsg, targetUrl, requestParameters);
+
+                var exception = new CallWeChatPayApiException(errMsg);
+                exception.Data.Add(nameof(targetUrl),targetUrl);
+                exception.Data.Add(nameof(requestParameters),requestParameters);
+                
+                throw exception;
             }
 
             return result;

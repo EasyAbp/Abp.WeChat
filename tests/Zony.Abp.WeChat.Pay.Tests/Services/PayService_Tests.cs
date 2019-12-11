@@ -29,7 +29,7 @@ namespace Zony.Abp.WeChat.Pay.Tests.Services
         }
 
         [Fact]
-        public async Task Ref()
+        public async Task OrderRefund_Test()
         {
             var response = await _payService.RefundAsync("wxe32e0204e9db0b1c",
                 "1540561391",

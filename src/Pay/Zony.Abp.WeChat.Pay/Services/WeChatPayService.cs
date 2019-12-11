@@ -1,5 +1,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Volo.Abp.DependencyInjection;
 using Zony.Abp.WeChat.Common.Infrastructure.Signature;
 using Zony.Abp.WeChat.Pay.Infrastructure;
@@ -12,8 +14,9 @@ namespace Zony.Abp.WeChat.Pay.Services
     public abstract class WeChatPayService : ITransientDependency
     {
         public IServiceProvider ServiceProvider { get; set; }
-        
+
         protected readonly object ServiceLocker = new object();
+
         protected TService LazyLoadService<TService>(ref TService service)
         {
             if (service == null)
@@ -35,5 +38,11 @@ namespace Zony.Abp.WeChat.Pay.Services
 
         protected IWeChatPayApiRequester WeChatPayApiRequester => LazyLoadService(ref _weChatPayApiRequester);
         private IWeChatPayApiRequester _weChatPayApiRequester;
+
+        public ILoggerFactory LoggerFactory => LazyLoadService(ref _loggerFactory);
+        private ILoggerFactory _loggerFactory;
+
+        private Lazy<ILogger> _lazyLogger => new Lazy<ILogger>(() => LoggerFactory?.CreateLogger(GetType().FullName) ?? NullLogger.Instance, true);
+        protected ILogger Logger => _lazyLogger.Value;
     }
 }
