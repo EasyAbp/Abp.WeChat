@@ -10,7 +10,7 @@ using Zony.Abp.WeChat.Pay.Models;
 
 namespace Zony.Abp.WeChat.Pay.Services.Pay
 {
-    public class PayService : WeChatPayService
+    public class OrdinaryMerchantPayService : WeChatPayService
     {
         protected readonly string UnifiedOrderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
         protected readonly string RefundUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
@@ -19,7 +19,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
 
         protected readonly AbpWeChatPayOptions AbpWeChatPayOptions;
 
-        public PayService(IOptions<AbpWeChatPayOptions> aboWeChatPayOptions)
+        public OrdinaryMerchantPayService(IOptions<AbpWeChatPayOptions> aboWeChatPayOptions)
         {
             AbpWeChatPayOptions = aboWeChatPayOptions.Value;
 
@@ -178,26 +178,6 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
             request.AddParameter("sign", signStr);
 
             return RequestAndGetReturnValueAsync(CloseOrderUrl, request);
-        }
-
-        protected virtual async Task<XmlDocument> RequestAndGetReturnValueAsync(string targetUrl, WeChatPayParameters requestParameters)
-        {
-            var result = await WeChatPayApiRequester.RequestAsync(targetUrl, requestParameters.ToXmlStr());
-            if (result.SelectSingleNode("/xml/err_code") != null ||
-                result.SelectSingleNode("/xml/return_code")?.InnerText != "SUCCESS" ||
-                result.SelectSingleNode("/xml/return_msg")?.InnerText != "OK")
-            {
-                var errMsg = $"微信支付接口调用失败，具体失败原因：{result.SelectSingleNode("/xml/err_code_des")?.InnerText ?? result.SelectSingleNode("/xml/return_msg")?.InnerText}";
-                Logger.Log(LogLevel.Error, errMsg, targetUrl, requestParameters);
-
-                var exception = new CallWeChatPayApiException(errMsg);
-                exception.Data.Add(nameof(targetUrl),targetUrl);
-                exception.Data.Add(nameof(requestParameters),requestParameters);
-                
-                throw exception;
-            }
-
-            return result;
         }
     }
 }

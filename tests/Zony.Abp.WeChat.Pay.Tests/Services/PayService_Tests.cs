@@ -8,17 +8,17 @@ namespace Zony.Abp.WeChat.Pay.Tests.Services
 {
     public class PayService_Tests : AbpWeChatPayTestBase
     {
-        private readonly PayService _payService;
+        private readonly OrdinaryMerchantPayService _ordinaryMerchantPayService;
 
         public PayService_Tests()
         {
-            _payService = GetRequiredService<PayService>();
+            _ordinaryMerchantPayService = GetRequiredService<OrdinaryMerchantPayService>();
         }
 
         [Fact]
         public async Task UnifiedOrder_Test()
         {
-            var result = await _payService.UnifiedOrderAsync("wxe32e0204e9db0b1c",
+            var result = await _ordinaryMerchantPayService.UnifiedOrderAsync("wxe32e0204e9db0b1c",
                 "1540561391",
                 "测试支付",
                 DateTime.Now.ToString("yyyyMMddHHmmss"),
@@ -31,7 +31,7 @@ namespace Zony.Abp.WeChat.Pay.Tests.Services
         [Fact]
         public async Task OrderRefund_Test()
         {
-            var response = await _payService.RefundAsync("wxe32e0204e9db0b1c",
+            var response = await _ordinaryMerchantPayService.RefundAsync("wxe32e0204e9db0b1c",
                 "1540561391",
                 "151515151515",
                 "161616161616",
