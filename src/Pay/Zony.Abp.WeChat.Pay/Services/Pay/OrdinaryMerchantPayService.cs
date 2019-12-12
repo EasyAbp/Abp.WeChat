@@ -2,10 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Volo.Abp;
-using Zony.Abp.WeChat.Pay.Exceptions;
 using Zony.Abp.WeChat.Pay.Models;
 
 namespace Zony.Abp.WeChat.Pay.Services.Pay
@@ -19,7 +16,8 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
         protected readonly string RefundUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
         protected readonly string OrderQueryUrl = "https://api.mch.weixin.qq.com/pay/orderquery";
         protected readonly string CloseOrderUrl = "https://api.mch.weixin.qq.com/pay/closeorder";
-        
+        protected readonly string RefundQueryUrl = "https://api.mch.weixin.qq.com/pay/refundquery";
+
         public OrdinaryMerchantPayService()
         {
             if (AbpWeChatPayOptions.IsSandBox)
@@ -31,48 +29,105 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
             }
         }
 
+        #region > 统一下单接口 <
+
         /// <summary>
-        /// 统一下单功能，支持除付款码支付场景以外的预支付交易单生成。生成后，根据返回的预支付交易会话标识，前端再根据不同的场景
-        /// 唤起支付行为。
+        /// 除付款码支付场景以外，商户系统先调用该接口在微信支付服务后台生成预支付交易单，返回正确的预支付交易会话标识后再按 Native、JSAPI、APP 等不同场景生成交易串调起支付。
         /// </summary>
-        /// <param name="appId">微信小程序或公众号的 AppId。</param>
+        /// <param name="appId">微信支付分配的唯一 Id。</param>
         /// <param name="mchId">微信支付分配的商户号。</param>
-        /// <param name="body">商品描述，例如 “腾讯充值中心 - QQ 会员充值” 。</param>
-        /// <param name="orderNo">商户订单号，该订单号是商户系统内部生成的唯一编号。</param>
-        /// <param name="totalFee">订单总金额，单位为分。</param>
-        /// <param name="tradeType">本次的交易类型，具体参数可以参考 <see cref="TradeType"/> 的定义。</param>
-        /// <param name="openId">用户标识，当 <paramref name="tradeType"/> 的类型为 <see cref="TradeType.JsApi"/> 时，本参数
-        /// 必须传递。否则方法会抛出 <see cref="ArgumentException"/> 异常。</param>
-        /// <param name="attach">附加参数，最大长度为 127，将来在微信支付进行回调通知时，会一并传递回来。</param>
-        /// <returns>请求的结果，会被转换为 <see cref="XmlDocument"/> 实例并返回。</returns>
-        public Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string body, string orderNo, int totalFee,
-            string tradeType,
-            string openId = null,
-            string attach = null)
+        /// <param name="deviceInfo">终端设备号 (门店号或收银设备 Id)，注意：PC 网页或 JSAPI 支付请传 "WEB"。</param>
+        /// <param name="body">具体的商品描述信息，建议根据不同的场景传递不同的描述信息。</param>
+        /// <param name="detail">商品详细描述，对于使用单品优惠的商户，该字段必须按照规范上传。</param>
+        /// <param name="attach">附加数据，在查询 API 和支付通知中原样返回，该字段主要用于商户携带订单的自定义数据。</param>
+        /// <param name="outTradeNo">商户系统内部订单号，要求 32 个字符内，只能是数字、大小写字母_-|* 且在同一个商户号下唯一。</param>
+        /// <param name="feeType">符合 ISO 4217 标准的三位字母代码，默认人民币：CNY。</param>
+        /// <param name="totalFee">订单总金额，只能为整数，单位是分。</param>
+        /// <param name="billCreateIp">调用微信支付 API 的机器 IP，可以使用 IPv4 或 IPv6。</param>
+        /// <param name="timeStart">订单生成时间，格式为 yyyyMMddHHmmss。</param>
+        /// <param name="timeExpire">订单失效时间，格式为 yyyyMMddHHmmss。</param>
+        /// <param name="goodsTag">订单优惠标记，代金券或立减优惠功能的参数。</param>
+        /// <param name="notifyUrl">接收微信支付异步通知回调地址，通知 Url 必须为直接可访问的 Url，不能携带参数。</param>
+        /// <param name="tradeType">交易类型，请参考 <see cref="TradeType"/> 的定义。</param>
+        /// <param name="productId">当 <paramref name="tradeType"/> 参数为 <see cref="TradeType.Native"/> 时，此参数必填。</param>
+        /// <param name="limitPay">指定支付方式，传递 no_credit 则说明不能使用信用卡支付。</param>
+        /// <param name="openId">当 <paramref name="tradeType"/> 参数为 <see cref="TradeType.JsApi"/> 时，此参数必填。</param>
+        /// <param name="receipt">传入 Y 时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效。</param>
+        /// <param name="sceneInfo">该字段常用于线下活动时的场景信息上报，支持上报实际门店信息，商户也可以按需求自己上报相关信息。</param>
+        /// <param name="isProfitSharing">该笔订单是否参与分账操作。</param>
+        public Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string deviceInfo, string body, string detail, string attach,
+            string outTradeNo, string feeType, int totalFee, string billCreateIp, string timeStart, string timeExpire,
+            string goodsTag, string notifyUrl, string tradeType, string productId, string limitPay, string openId,
+            string receipt, string sceneInfo, bool isProfitSharing = false)
         {
             if (tradeType == TradeType.JsApi && string.IsNullOrEmpty(openId))
             {
                 throw new ArgumentException($"当交易类型为 JsApi 时，参数 {nameof(openId)} 必须传递有效值。");
             }
 
+            if (tradeType == TradeType.Native && string.IsNullOrEmpty(productId))
+            {
+                throw new ArgumentException($"当交易类型为 Native 时，参数 {nameof(productId)} 必须传递有效值。");
+            }
+
             var request = new WeChatPayParameters();
             request.AddParameter("appid", appId);
             request.AddParameter("mch_id", mchId);
+            request.AddParameter("device_info", deviceInfo);
+            request.AddParameter("receipt", receipt);
             request.AddParameter("nonce_str", RandomHelper.GetRandom());
             request.AddParameter("body", body);
-            request.AddParameter("out_trade_no", orderNo);
-            request.AddParameter("total_fee", totalFee);
-            request.AddParameter("spbill_create_ip", "127.0.0.1");
-            request.AddParameter("notify_url", AbpWeChatPayOptions.NotifyUrl);
-            request.AddParameter("openid", openId);
+            request.AddParameter("detail", detail);
             request.AddParameter("attach", attach);
+            request.AddParameter("out_trade_no", outTradeNo);
+            request.AddParameter("fee_type", feeType);
+            request.AddParameter("total_fee", totalFee);
+            request.AddParameter("spbill_create_ip", billCreateIp);
+            request.AddParameter("time_start", timeStart);
+            request.AddParameter("time_expire", timeExpire);
+            request.AddParameter("goods_tag", goodsTag);
+            request.AddParameter("notify_url", notifyUrl);
             request.AddParameter("trade_type", tradeType);
+            request.AddParameter("product_id", productId);
+            request.AddParameter("limit_pay", limitPay);
+            request.AddParameter("openid", openId);
+            request.AddParameter("scene_info", sceneInfo);
+
+            if (isProfitSharing)
+            {
+                request.AddParameter("profit_sharing", "Y");
+            }
 
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
             request.AddParameter("sign", signStr);
 
             return RequestAndGetReturnValueAsync(UnifiedOrderUrl, request);
         }
+
+        /// <summary>
+        /// 除付款码支付场景以外，商户系统先调用该接口在微信支付服务后台生成预支付交易单，返回正确的预支付交易会话标识后再按 Native、JSAPI、APP 等不同场景生成交易串调起支付。
+        /// </summary>
+        /// <param name="appId">微信支付分配的唯一 Id。</param>
+        /// <param name="mchId">微信支付分配的商户号。</param>
+        /// <param name="body">具体的商品描述信息，建议根据不同的场景传递不同的描述信息。</param>
+        /// <param name="attach">附加数据，在查询 API 和支付通知中原样返回，该字段主要用于商户携带订单的自定义数据。</param>
+        /// <param name="outTradeNo">商户系统内部订单号，要求 32 个字符内，只能是数字、大小写字母_-|* 且在同一个商户号下唯一。</param>
+        /// <param name="totalFee">订单总金额，只能为整数，单位是分。</param>
+        /// <param name="tradeType">交易类型，请参考 <see cref="TradeType"/> 的定义。</param>
+        /// <param name="openId">当 <paramref name="tradeType"/> 参数为 <see cref="TradeType.JsApi"/> 时，此参数必填。</param>
+        /// <param name="isProfitSharing">该笔订单是否参与分账操作。</param>
+        public Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string body, string attach, string outTradeNo, int totalFee,
+            string tradeType, string openId, bool isProfitSharing = false)
+        {
+            return UnifiedOrderAsync(appId, mchId, null, body, null, attach,
+                outTradeNo, null, totalFee, "127.0.0.1", null, null,
+                null, AbpWeChatPayOptions.NotifyUrl, tradeType, null, null,
+                openId, null, null, isProfitSharing);
+        }
+
+        #endregion
+
+        #region > 申请退款接口 <
 
         /// <summary>
         /// 申请退款功能，支持针对指定订单进行退款操作。
@@ -109,7 +164,9 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
             return RequestAndGetReturnValueAsync(RefundUrl, request);
         }
 
-        #region > 查询订单 <
+        #endregion
+
+        #region > 查询订单接口 <
 
         /// <summary>
         /// 根据微信订单号或者商户订单号，查询订单的详细信息。如果两个参数都被填写，优先使用微信订单号进行查询。
@@ -153,6 +210,8 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
 
         #endregion
 
+        #region > 关闭订单接口 <
+
         /// <summary>
         /// 根据商户订单号，关闭指定的订单。
         /// </summary>
@@ -178,5 +237,11 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
 
             return RequestAndGetReturnValueAsync(CloseOrderUrl, request);
         }
+
+        #endregion
+
+        #region > 查询退款接口 <
+
+        #endregion
     }
 }

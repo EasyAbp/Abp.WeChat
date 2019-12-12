@@ -28,7 +28,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
         /// <param name="deviceInfo">终端设备号 (门店号或收银设备 Id)，注意：PC 网页或 JSAPI 支付请传 "WEB"。</param>
         /// <param name="receipt">传入 Y 时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效。</param>
         /// <param name="body">具体的商品描述信息，建议根据不同的场景传递不同的描述信息。</param>
-        /// <param name="detail">商品详细描述，对于使用单品优惠的商户，该字段必须按照规范上传</param>
+        /// <param name="detail">商品详细描述，对于使用单品优惠的商户，该字段必须按照规范上传。</param>
         /// <param name="attach">附加数据，在查询 API 和支付通知中原样返回，该字段主要用于商户携带订单的自定义数据。</param>
         /// <param name="outTradeNo">商户系统内部订单号，要求 32 个字符内，只能是数字、大小写字母_-|* 且在同一个商户号下唯一。</param>
         /// <param name="feeType">符合 ISO 4217 标准的三位字母代码，默认人民币：CNY。</param>
