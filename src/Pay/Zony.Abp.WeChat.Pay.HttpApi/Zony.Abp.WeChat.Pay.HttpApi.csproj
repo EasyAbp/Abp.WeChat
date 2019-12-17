@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Zony.Abp.WeChat.Pay.HttpApi</RootNamespace>
+        <LangVersion>8</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup>
