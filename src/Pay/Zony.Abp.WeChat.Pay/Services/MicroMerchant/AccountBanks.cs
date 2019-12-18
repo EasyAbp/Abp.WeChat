@@ -1,4 +1,4 @@
-﻿namespace Zony.Abp.WeChat.Pay.Services
+﻿namespace Zony.Abp.WeChat.Pay.Services.MicroMerchant
 {
     public static class AccountBanks
     {

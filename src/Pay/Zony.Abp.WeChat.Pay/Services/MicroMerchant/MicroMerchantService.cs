@@ -1,36 +1,86 @@
-﻿using System.Security.Cryptography;
+﻿using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Xml;
 using JetBrains.Annotations;
 using Volo.Abp;
+using Zony.Abp.WeChat.Pay.Extensions;
 using Zony.Abp.WeChat.Pay.Models;
 
-namespace Zony.Abp.WeChat.Pay.Services
+namespace Zony.Abp.WeChat.Pay.Services.MicroMerchant
 {
     public class MicroMerchantService : WeChatPayService
     {
         private const string SubmitUrl = "https://api.mch.weixin.qq.com/applyment/micro/submit";
         private const string GetStateUrl = "https://api.mch.weixin.qq.com/applyment/micro/getstate";
+        private const string GetCertificateUrl = "https://api.mch.weixin.qq.com/risk/getcertficates";
+        private const string UploadMediaUrl = "https://api.mch.weixin.qq.com/secapi/mch/uploadmedia";
+
+        /// <summary>
+        /// 根据商户号获取平台证书。
+        /// </summary>
+        /// <param name="mchId">微信支付分配的商户号。</param>
+        public Task<XmlDocument> GetCertificateAsync(string mchId)
+        {
+            var request = new WeChatPayParameters();
+            request.AddParameter("mch_id", mchId);
+            request.AddParameter("nonce_str", RandomHelper.GetRandom());
+            request.AddParameter("sign_type", "HMAC-SHA256");
+
+            request.AddParameter("sign", SignatureGenerator.Generate(request, new HMACSHA256(), AbpWeChatPayOptions.ApiKey));
+
+            return RequestAndGetReturnValueAsync(GetCertificateUrl, request);
+        }
+
+        /// <summary>
+        /// 图片上传功能，用于上传证件照片等数据。
+        /// </summary>
+        /// <param name="mchId">服务商商户号或渠道号。</param>
+        /// <param name="imageUrl">图片的文件路径。</param>
+        /// <returns>图片关联的 Id。</returns>
+        public async Task<string> UploadMediaAsync(string mchId, string imageUrl)
+        {
+            var form = new MultipartFormDataContent();
+
+            using var client = HttpClientFactory.CreateClient("WeChatPay");
+            using (var resp = await client.PostAsync(UploadMediaUrl, form))
+            {
+                var xmlDocument = new XmlDocument();
+                xmlDocument.LoadXml(await resp.Content.ReadAsStringAsync());
+
+                var returnCode = xmlDocument.SelectSingleNode("/xml/return_code")?.InnerText;
+                var resultCode = xmlDocument.SelectSingleNode("/xml/result_code")?.InnerText;
+                var returnMsg = xmlDocument.SelectSingleNode("/xml/return_msg")?.InnerText;
+
+                if (returnCode != "SUCCESS" && resultCode != "SUCCESS")
+                {
+                    var exception = new HttpRequestException("图片上传失败，请稍候再试，详细信息请查看 Data 属性。");
+                    exception.Data.Add("Message", returnMsg ?? returnCode ?? resultCode);
+                }
+
+                return xmlDocument.SelectSingleNode("media_id")?.InnerText;
+            }
+        }
 
         /// <summary>
         /// 使用申请入驻接口提交你的小微商户资料，申请后一般 5 分钟左右可以查询到具体的申请结果。
         /// </summary>
         /// <param name="version">接口版本号，固定版本号为 3.0。</param>
-        /// <param name="certSn">平台证书序列号，通过 XX 接口获取。</param>
+        /// <param name="certSn">平台证书序列号，通过 <see cref="GetCertificateAsync"/> 接口获取。</param>
         /// <param name="mchId">服务商的商户号。</param>
         /// <param name="businessCode">业务申请编号，服务商自定义的商户唯一编号。每个编号对应一个申请单，每个申请单审核通过后会生成一个微信支付商户号。</param>
-        /// <param name="idCardCopy">身份证人像面照片，请使用 YY 接口预先上传图片，传递其 media_id 。</param>
-        /// <param name="idCardNational">身份证国徽面照片，请使用 YY 接口预先上传图片，传递其 media_id。</param>
-        /// <param name="idCardName">身份证姓名，请填写小微商户本人身份证上的姓名，使用 ZZ 提供的加密方法进行加密。</param>
-        /// <param name="idCardNumber">身份证号码，15 位数字 或  17 位数字 + 1 位数字 | X ，使用 ZZ 提供的加密方法进行加密。</param>
+        /// <param name="idCardCopy">身份证人像面照片，请使用 <see cref="UploadMediaAsync"/> 接口预先上传图片，传递其 media_id 。</param>
+        /// <param name="idCardNational">身份证国徽面照片，请使用 <see cref="UploadMediaAsync"/> 接口预先上传图片，传递其 media_id。</param>
+        /// <param name="idCardName">身份证姓名，请填写小微商户本人身份证上的姓名，使用 <see cref="WeChatPayToolUtility"/> 提供的加密方法进行加密。</param>
+        /// <param name="idCardNumber">身份证号码，15 位数字 或  17 位数字 + 1 位数字 | X ，使用 <see cref="WeChatPayToolUtility"/> 提供的加密方法进行加密。</param>
         /// <param name="idCardValidTime">身份证有效期限，格式应该和 ["1970-01-01","长期"] 一致，结束时间需要大于开始时间，需要和上传的身份证内容一致。</param>
-        /// <param name="accountName">开户名称，必须与身份证姓名一致，使用 ZZ 提供的加密方法进行加密。</param>
+        /// <param name="accountName">开户名称，必须与身份证姓名一致，使用 <see cref="WeChatPayToolUtility"/> 提供的加密方法进行加密。</param>
         /// <param name="accountBank">开户银行，请参考 <see cref="AccountBanks"/> 类型中定义的银行列表。</param>
         /// <param name="bankAddressCode">开户银行省市编码，至少精确到市，请参考 https://pay.weixin.qq.com/wiki/doc/api/xiaowei.php?chapter=22_1 提供的对照表。</param>
         /// <param name="bankName">
         /// 开户银行全称（含支行），17 家直连银行无需填写(在 <see cref="AccountBanks"/> 定义的)，其他银行请务必填写。<br/>
         /// 需填写银行全称，如 "深圳农村商业银行 XXX 支行"，详细信息请参考 https://pay.weixin.qq.com/wiki/doc/api/xiaowei.php?chapter=22_1。</param>
-        /// <param name="accountNumber">银行账号，数字，长度遵循系统支持的对私卡号长度要求，使用 ZZ 提供的加密方法进行加密。</param>
+        /// <param name="accountNumber">银行账号，数字，长度遵循系统支持的对私卡号长度要求，使用 <see cref="WeChatPayToolUtility"/> 提供的加密方法进行加密。</param>
         /// <param name="storeName">
         /// 门店名称，最长 50 个中文字符。<br/>
         /// 门店场所：填写门店名称<br/>
@@ -52,18 +102,18 @@ namespace Zony.Abp.WeChat.Pay.Services
         /// <param name="storeLongitude">门店经度。</param>
         /// <param name="storeLatitude">门店纬度。</param>
         /// <param name="storeEntrancePic">
-        /// 门店门口照片，请使用 YY 接口预先上传图片，传递其 media_id 。<br/>
+        /// 门店门口照片，请使用 <see cref="UploadMediaAsync"/> 接口预先上传图片，传递其 media_id 。<br/>
         /// 门店场所：提交门店门口照片，要求招牌清晰可见<br/>
         /// 流动经营 / 便民服务：提交经营 / 服务现场照片<br/>
         /// 线上商品 / 服务交易：提交店铺首页截图<br/>
         /// </param>
         /// <param name="indoorPic">
-        /// 店内环境照片，请使用 YY 接口预先上传图片，传递其 media_id 。<br/>
+        /// 店内环境照片，请使用 <see cref="UploadMediaAsync"/> 接口预先上传图片，传递其 media_id 。<br/>
         /// 门店场所：提交店内环境照片<br/>
         /// 流动经营 / 便民服务：可提交另一张经营 / 服务现场照片<br/>
         /// 线上商品 / 服务交易：提交店铺管理后台截图<br/>
         /// </param>
-        /// <param name="addressCertification">经营场地证明，门面租赁合同扫描件或经营场地证明（需与身份证同名），请使用 YY 接口预先上传图片，传递其 media_id 。</param>
+        /// <param name="addressCertification">经营场地证明，门面租赁合同扫描件或经营场地证明（需与身份证同名），请使用 <see cref="UploadMediaAsync"/> 接口预先上传图片，传递其 media_id 。</param>
         /// <param name="merchantShortName">商户简称，UTF-8 格式，中文占 3 个字节，即最多 16 个汉字长度。将在支付完成页向买家展示，需与商家的实际经营场景相符。</param>
         /// <param name="servicePhone">客服电话，UTF-8 格式，中文占 3 个字节，即最多 16 个汉字长度。在交易记录中向买家展示，请确保电话畅通以便平台回拨确认。</param>
         /// <param name="productDesc">
@@ -75,10 +125,10 @@ namespace Zony.Abp.WeChat.Pay.Services
         /// <param name="businessAdditionPics">补充材料，最多可上传 5 张照片，请填写已预先上传图片生成好的 MediaID，例如 ["123","456"]。</param>
         /// <param name="contact">
         /// 超级管理员姓名，和身份证姓名一致。超级管理员需在开户后进行签约，并可接收日常重要管理信息和进行资金操作，请确定其为商户法定代表人或负责人。<br/>
-        /// 使用 ZZ 提供的加密方法进行加密。
+        /// 使用 <see cref="WeChatPayToolUtility"/> 提供的加密方法进行加密。
         /// </param>
-        /// <param name="contactPhone">手机号码，11 位数字，手机号码，使用 ZZ 提供的加密方法进行加密。</param>
-        /// <param name="contactEmail">联系邮箱，需要带 @，遵循邮箱格式校验，使用 ZZ 提供的加密方法进行加密。</param>
+        /// <param name="contactPhone">手机号码，11 位数字，手机号码，使用 <see cref="WeChatPayToolUtility"/> 提供的加密方法进行加密。</param>
+        /// <param name="contactEmail">联系邮箱，需要带 @，遵循邮箱格式校验，使用 <see cref="WeChatPayToolUtility"/> 提供的加密方法进行加密。</param>
         /// <returns></returns>
         public Task<XmlDocument> SubmitAsync(string version, string certSn, string mchId, string businessCode,
             string idCardCopy, string idCardNational, string idCardName, string idCardNumber, string idCardValidTime,

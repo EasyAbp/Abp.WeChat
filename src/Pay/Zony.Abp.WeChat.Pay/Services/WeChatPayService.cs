@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,7 +53,10 @@ namespace Zony.Abp.WeChat.Pay.Services
 
         protected AbpWeChatPayOptions AbpWeChatPayOptions => LazyLoadService(ref _options).Value;
         private IOptions<AbpWeChatPayOptions> _options;
-        
+
+        protected IHttpClientFactory HttpClientFactory => LazyLoadService(ref _httpClientFactory);
+        private IHttpClientFactory _httpClientFactory;
+
         protected virtual async Task<XmlDocument> RequestAndGetReturnValueAsync(string targetUrl, WeChatPayParameters requestParameters)
         {
             var result = await WeChatPayApiRequester.RequestAsync(targetUrl, requestParameters.ToXmlStr());
@@ -64,9 +68,9 @@ namespace Zony.Abp.WeChat.Pay.Services
                 Logger.Log(LogLevel.Error, errMsg, targetUrl, requestParameters);
 
                 var exception = new CallWeChatPayApiException(errMsg);
-                exception.Data.Add(nameof(targetUrl),targetUrl);
-                exception.Data.Add(nameof(requestParameters),requestParameters);
-                
+                exception.Data.Add(nameof(targetUrl), targetUrl);
+                exception.Data.Add(nameof(requestParameters), requestParameters);
+
                 throw exception;
             }
 
