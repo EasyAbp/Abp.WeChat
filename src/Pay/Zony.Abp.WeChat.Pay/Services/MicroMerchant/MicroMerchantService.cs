@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml;
 using JetBrains.Annotations;
 using Volo.Abp;
@@ -70,7 +71,7 @@ namespace Zony.Abp.WeChat.Pay.Services.MicroMerchant
             var form = new MultipartFormDataContent
             {
                 {new StringContent(mchId), "\"mch_id\""},
-                {new ByteArrayContent(bytes), "\"media\"", $"\"{Path.GetFileName(imagePath)}\""},
+                {new ByteArrayContent(bytes), "\"media\"", $"\"{HttpUtility.UrlEncode(Path.GetFileName(imagePath))}\""},
                 {new StringContent(mediaHash), "\"media_hash\""},
                 {new StringContent(sign), "\"sign\""}
             };
