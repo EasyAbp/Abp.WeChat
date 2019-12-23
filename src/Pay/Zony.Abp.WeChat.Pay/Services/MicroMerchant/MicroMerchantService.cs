@@ -44,23 +44,11 @@ namespace Zony.Abp.WeChat.Pay.Services.MicroMerchant
             var form = new MultipartFormDataContent();
 
             using var client = HttpClientFactory.CreateClient("WeChatPay");
-            using (var resp = await client.PostAsync(UploadMediaUrl, form))
-            {
-                var xmlDocument = new XmlDocument();
-                xmlDocument.LoadXml(await resp.Content.ReadAsStringAsync());
+            using var resp = await client.PostAsync(UploadMediaUrl, form);
 
-                var returnCode = xmlDocument.SelectSingleNode("/xml/return_code")?.InnerText;
-                var resultCode = xmlDocument.SelectSingleNode("/xml/result_code")?.InnerText;
-                var returnMsg = xmlDocument.SelectSingleNode("/xml/return_msg")?.InnerText;
-
-                if (returnCode != "SUCCESS" && resultCode != "SUCCESS")
-                {
-                    var exception = new HttpRequestException("图片上传失败，请稍候再试，详细信息请查看 Data 属性。");
-                    exception.Data.Add("Message", returnMsg ?? returnCode ?? resultCode);
-                }
-
-                return xmlDocument.SelectSingleNode("media_id")?.InnerText;
-            }
+            var xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(await resp.Content.ReadAsStringAsync());
+            return xmlDocument.SelectSingleNode("media_id")?.InnerText;
         }
 
         /// <summary>

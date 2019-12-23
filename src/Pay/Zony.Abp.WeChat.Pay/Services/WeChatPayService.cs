@@ -60,7 +60,7 @@ namespace Zony.Abp.WeChat.Pay.Services
         protected virtual async Task<XmlDocument> RequestAndGetReturnValueAsync(string targetUrl, WeChatPayParameters requestParameters)
         {
             var result = await WeChatPayApiRequester.RequestAsync(targetUrl, requestParameters.ToXmlStr());
-            if (result.SelectSingleNode("/xml/err_code") != null ||
+            if (result.SelectSingleNode("/xml/return_code")?.InnerText != "SUCCESS" ||
                 result.SelectSingleNode("/xml/return_code")?.InnerText != "SUCCESS" ||
                 result.SelectSingleNode("/xml/return_msg")?.InnerText != "OK")
             {
