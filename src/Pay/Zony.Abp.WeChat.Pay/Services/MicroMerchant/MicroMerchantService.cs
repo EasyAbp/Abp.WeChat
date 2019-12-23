@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using JetBrains.Annotations;
@@ -27,7 +28,7 @@ namespace Zony.Abp.WeChat.Pay.Services.MicroMerchant
             request.AddParameter("nonce_str", RandomHelper.GetRandom());
             request.AddParameter("sign_type", "HMAC-SHA256");
 
-            request.AddParameter("sign", SignatureGenerator.Generate(request, new HMACSHA256(), AbpWeChatPayOptions.ApiKey));
+            request.AddParameter("sign", SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey));
 
             return RequestAndGetReturnValueAsync(GetCertificateUrl, request);
         }
@@ -174,7 +175,7 @@ namespace Zony.Abp.WeChat.Pay.Services.MicroMerchant
             request.AddParameter("contact_phone", contactPhone);
             request.AddParameter("contact_email", contactEmail);
 
-            request.AddParameter("sign", SignatureGenerator.Generate(request, new HMACSHA256(), AbpWeChatPayOptions.ApiKey));
+            request.AddParameter("sign", SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey));
 
             return RequestAndGetReturnValueAsync(SubmitUrl, request);
         }
@@ -197,7 +198,7 @@ namespace Zony.Abp.WeChat.Pay.Services.MicroMerchant
             request.AddParameter("applyment_id", applyentId);
             request.AddParameter("business_code", businessCode);
 
-            request.AddParameter("sign", SignatureGenerator.Generate(request, new HMACSHA256(), AbpWeChatPayOptions.ApiKey));
+            request.AddParameter("sign", SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey));
 
             return RequestAndGetReturnValueAsync(GetStateUrl, request);
         }

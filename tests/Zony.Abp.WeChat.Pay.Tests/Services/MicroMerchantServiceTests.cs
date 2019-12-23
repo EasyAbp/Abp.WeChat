@@ -9,9 +9,9 @@ namespace Zony.Abp.WeChat.Pay.Tests.Services
     {
         private readonly MicroMerchantService _service;
 
-        public MicroMerchantServiceTests(MicroMerchantService service)
+        public MicroMerchantServiceTests()
         {
-            _service = service;
+            _service = GetRequiredService<MicroMerchantService>();
         }
 
         [Fact]

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft.Json;
@@ -55,7 +56,7 @@ namespace Zony.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sub_appid", subAppId);
 
-            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(), AbpWeChatPayOptions.ApiKey);
+            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey);
             request.AddParameter("sign", signStr);
 
             return RequestAndGetReturnValueAsync(ProfitSharingUrl, request);
@@ -98,7 +99,7 @@ namespace Zony.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sub_appid", subAppId);
 
-            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(), AbpWeChatPayOptions.ApiKey);
+            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey);
             request.AddParameter("sign", signStr);
 
             return RequestAndGetReturnValueAsync(MultiProfitSharingUrl, request);
@@ -124,7 +125,7 @@ namespace Zony.Abp.WeChat.Pay.Services.ProfitSharing
             request.AddParameter("transaction_id", transactionId);
             request.AddParameter("out_order_no", outOrderNo);
 
-            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(), AbpWeChatPayOptions.ApiKey);
+            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey);
             request.AddParameter("sign", signStr);
 
             return RequestAndGetReturnValueAsync(ProfitSharingQueryUrl, request);
@@ -150,7 +151,7 @@ namespace Zony.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sub_appid", subAppId);
 
-            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(), AbpWeChatPayOptions.ApiKey);
+            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey);
             request.AddParameter("sign", signStr);
 
             return RequestAndGetReturnValueAsync(ProfitSharingAddReceiverUrl, request);
@@ -177,7 +178,7 @@ namespace Zony.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sub_appid", subAppId);
 
-            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(), AbpWeChatPayOptions.ApiKey);
+            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey);
             request.AddParameter("sign", signStr);
 
             return RequestAndGetReturnValueAsync(ProfitSharingRemoveReceiverUrl, request);
@@ -207,7 +208,7 @@ namespace Zony.Abp.WeChat.Pay.Services.ProfitSharing
             request.AddParameter("description", description);
             request.AddParameter("nonce_str", RandomHelper.GetRandom());
 
-            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(), AbpWeChatPayOptions.ApiKey);
+            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey);
             request.AddParameter("sign", signStr);
 
             return RequestAndGetReturnValueAsync(ProfitSharingFinishUrl, request);
@@ -250,7 +251,7 @@ namespace Zony.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sub_appid", subAppId);
 
-            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(), AbpWeChatPayOptions.ApiKey);
+            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey);
             request.AddParameter("sign", signStr);
 
             return RequestAndGetReturnValueAsync(ProfitSharingReturnUrl, request);
@@ -275,7 +276,7 @@ namespace Zony.Abp.WeChat.Pay.Services.ProfitSharing
             request.AddParameter("out_return_no", outReturnNo);
             request.AddParameter("nonce_str", RandomHelper.GetRandom());
 
-            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(), AbpWeChatPayOptions.ApiKey);
+            var signStr = SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey);
             request.AddParameter("sign", signStr);
 
             return RequestAndGetReturnValueAsync(ProfitSharingReturnQueryUrl, request);
