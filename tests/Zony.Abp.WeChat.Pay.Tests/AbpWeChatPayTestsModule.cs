@@ -11,13 +11,13 @@ namespace Zony.Abp.WeChat.Pay.Tests
         {
             Configure<AbpWeChatPayOptions>(op =>
             {
-                // op.ApiKey = "e566e27045551d3a3806887497a15f86";
-                // op.IsSandBox = true;
-                // op.NotifyUrl = "Null";
-
+                // TODO: 测试的时候，请在此处填写相关的配置参数。
+                op.MchId = "";
+                op.AppId = "";
                 op.ApiKey = "";
                 op.CertificatePath = "";
                 op.CertificateSecret = "";
+                op.NotifyUrl = "";
             });
         }
     }
