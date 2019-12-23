@@ -1,4 +1,9 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +21,8 @@ namespace Zony.Abp.WeChat.Pay.Services.MicroMerchant
         private const string GetStateUrl = "https://api.mch.weixin.qq.com/applyment/micro/getstate";
         private const string GetCertificateUrl = "https://api.mch.weixin.qq.com/risk/getcertficates";
         private const string UploadMediaUrl = "https://api.mch.weixin.qq.com/secapi/mch/uploadmedia";
+
+        private const long MaxMediaFileSize = 1024 * 1024 * 2;
 
         /// <summary>
         /// 根据商户号获取平台证书。
@@ -37,18 +44,47 @@ namespace Zony.Abp.WeChat.Pay.Services.MicroMerchant
         /// 图片上传功能，用于上传证件照片等数据。
         /// </summary>
         /// <param name="mchId">服务商商户号或渠道号。</param>
-        /// <param name="imageUrl">图片的文件路径。</param>
+        /// <param name="imagePath">图片的文件路径。</param>
         /// <returns>图片关联的 Id。</returns>
-        public async Task<string> UploadMediaAsync(string mchId, string imageUrl)
+        public async Task<string> UploadMediaAsync(string mchId, string imagePath)
         {
-            var form = new MultipartFormDataContent();
+            if (new FileInfo(imagePath).Length > MaxMediaFileSize)
+            {
+                throw new ArgumentOutOfRangeException(nameof(imagePath), "指定的图像文件大小超过 2 M。");
+            }
+
+            var bytes = File.ReadAllBytes(imagePath);
+            var mediaHash = MD5.Create().ComputeHash(bytes).Select(b => b.ToString("X2")).JoinAsString("");
+
+            // 构建并计算签名值。
+            var parameters = new WeChatPayParameters();
+            parameters.AddParameter("mch_id", mchId);
+            parameters.AddParameter("media_hash", mediaHash);
+
+            var sign = SignatureGenerator.Generate(parameters, MD5.Create(), AbpWeChatPayOptions.ApiKey);
+
+            // 构建表单请求。
+            var fileContent = new ByteArrayContent(bytes);
+            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
+
+            var form = new MultipartFormDataContent
+            {
+                {new StringContent(mchId), "\"mch_id\""},
+                {new ByteArrayContent(bytes), "\"media\"", $"\"{Path.GetFileName(imagePath)}\""},
+                {new StringContent(mediaHash), "\"media_hash\""},
+                {new StringContent(sign), "\"sign\""}
+            };
+
+            // 处理 Boundary 蛋疼的引号问题，参考 https://developers.de/blogs/damir_dobric/archive/2013/09/10/problems-with-webapi-multipart-content-upload-and-boundary-quot-quotes.aspx 。
+            var boundaryValue = form.Headers.ContentType.Parameters.Single(p => p.Name == "boundary");
+            boundaryValue.Value = boundaryValue.Value.Replace("\"", String.Empty);
 
             using var client = HttpClientFactory.CreateClient("WeChatPay");
             using var resp = await client.PostAsync(UploadMediaUrl, form);
 
             var xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(await resp.Content.ReadAsStringAsync());
-            return xmlDocument.SelectSingleNode("media_id")?.InnerText;
+            return xmlDocument.SelectSingleNode("/xml/media_id")?.InnerText;
         }
 
         /// <summary>
