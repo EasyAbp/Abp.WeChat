@@ -18,17 +18,6 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
         protected readonly string CloseOrderUrl = "https://api.mch.weixin.qq.com/pay/closeorder";
         protected readonly string RefundQueryUrl = "https://api.mch.weixin.qq.com/pay/refundquery";
 
-        public OrdinaryMerchantPayService()
-        {
-            if (AbpWeChatPayOptions.IsSandBox)
-            {
-                UnifiedOrderUrl = " https://api.mch.weixin.qq.com/sandboxnew/pay/unifiedorder";
-                RefundUrl = "https://api.mch.weixin.qq.com/sandboxnew/secapi/pay/refund";
-                OrderQueryUrl = "https://api.mch.weixin.qq.com/sandboxnew/pay/orderquery";
-                CloseOrderUrl = "https://api.mch.weixin.qq.com/sandboxnew/pay/closeorder";
-            }
-        }
-
         #region > 统一下单接口 <
 
         /// <summary>
