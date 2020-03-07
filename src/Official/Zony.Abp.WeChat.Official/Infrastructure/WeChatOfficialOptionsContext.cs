@@ -1,8 +1,6 @@
-using Zony.Abp.WeChat.Official.Infrastructure;
-
-namespace Zony.Abp.WeChat.Official
+﻿namespace Zony.Abp.WeChat.Official.Infrastructure
 {
-    public class AbpWeChatOfficialOptions : IWeChatOfficialOptions
+    public class WeChatOfficialOptionsContext : IWeChatOfficialOptions
     {
         public string Token { get; set; }
 
