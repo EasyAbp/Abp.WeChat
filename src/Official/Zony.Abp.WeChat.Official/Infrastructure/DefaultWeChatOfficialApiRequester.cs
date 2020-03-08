@@ -24,7 +24,7 @@ namespace Zony.Abp.WeChat.Official.Infrastructure
             var client = _httpClientFactory.CreateClient();
 
             targetUrl = $"{targetUrl}access_token={await _accessTokenAccessor.GetAccessTokenAsync()}";
-            
+
             var requestMsg = method == HttpMethod.Get
                 ? BuildHttpGetRequestMessage(targetUrl, officialRequest)
                 : BuildHttpPostRequestMessage(targetUrl, officialRequest);
@@ -33,12 +33,12 @@ namespace Zony.Abp.WeChat.Official.Infrastructure
             return JsonConvert.DeserializeObject<TResponse>(resultStr);
         }
 
-        private HttpRequestMessage BuildHttpGetRequestMessage(string targetUrl,IOfficialRequest officialRequest)
+        private HttpRequestMessage BuildHttpGetRequestMessage(string targetUrl, IOfficialRequest officialRequest)
         {
-            if(officialRequest == null) return new HttpRequestMessage(HttpMethod.Get, targetUrl);
-            
+            if (officialRequest == null) return new HttpRequestMessage(HttpMethod.Get, targetUrl);
+
             var requestUrl = BuildQueryString(targetUrl, officialRequest);
-            return new HttpRequestMessage(HttpMethod.Get,requestUrl);
+            return new HttpRequestMessage(HttpMethod.Get, requestUrl);
         }
 
         private HttpRequestMessage BuildHttpPostRequestMessage(string targetUrl, IOfficialRequest officialRequest)
@@ -56,15 +56,15 @@ namespace Zony.Abp.WeChat.Official.Infrastructure
             var type = request.GetType();
             var properties = type.GetProperties();
             var queryStringBuilder = new StringBuilder();
-            
+
             foreach (var propertyInfo in properties)
             {
                 var jsonProperty = propertyInfo.GetCustomAttribute<JsonPropertyAttribute>();
                 var propertyName = jsonProperty != null ? jsonProperty.PropertyName : propertyInfo.Name;
-                
+
                 queryStringBuilder.Append($"{propertyName}={propertyInfo.GetValue(request)}&");
             }
-            
+
             return queryStringBuilder.ToString().TrimEnd('&');
         }
     }

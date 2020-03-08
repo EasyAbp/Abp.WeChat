@@ -1,4 +1,4 @@
-using Zony.Abp.WeChat.Official.Infrastructure;
+using Zony.Abp.WeChat.Official.Infrastructure.OptionsResolve;
 
 namespace Zony.Abp.WeChat.Official
 {

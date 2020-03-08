@@ -1,4 +1,4 @@
-﻿namespace Zony.Abp.WeChat.Official.Infrastructure
+﻿namespace Zony.Abp.WeChat.Official.Infrastructure.OptionsResolve
 {
     public interface IWeChatOfficialOptions
     {

@@ -9,7 +9,7 @@ using Zony.Abp.WeChat.Common;
 
 namespace Zony.Abp.WeChat.Official.Infrastructure
 {
-    public class DefaultJsTicketAccessor : IJsTicketAccessor,ISingletonDependency
+    public class DefaultJsTicketAccessor : IJsTicketAccessor, ISingletonDependency
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IAccessTokenAccessor _accessTokenAccessor;

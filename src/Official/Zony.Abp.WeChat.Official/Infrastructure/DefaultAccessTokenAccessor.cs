@@ -2,36 +2,38 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
 using Zony.Abp.WeChat.Common;
+using Zony.Abp.WeChat.Official.Infrastructure.OptionsResolve;
 
 namespace Zony.Abp.WeChat.Official.Infrastructure
 {
     public class DefaultAccessTokenAccessor : IAccessTokenAccessor, ISingletonDependency
     {
-        private readonly IDistributedCache<string> _distributedCache;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly AbpWeChatOfficialOptions _abpWeChatOfficialOptions;
+        protected readonly IDistributedCache<string> DistributedCache;
+        protected readonly IHttpClientFactory HttpClientFactory;
+        protected readonly IWeChatOfficialOptionsResolver WeChatOfficialOptionsResolver;
 
         public DefaultAccessTokenAccessor(IDistributedCache<string> distributedCache,
             IHttpClientFactory httpClientFactory,
-            IOptions<AbpWeChatOfficialOptions> abpWeChatOfficialOptions)
+            IWeChatOfficialOptionsResolver weChatOfficialOptionsResolver)
         {
-            _distributedCache = distributedCache;
-            _httpClientFactory = httpClientFactory;
-            _abpWeChatOfficialOptions = abpWeChatOfficialOptions.Value;
+            DistributedCache = distributedCache;
+            HttpClientFactory = httpClientFactory;
+            WeChatOfficialOptionsResolver = weChatOfficialOptionsResolver;
         }
 
-        public async Task<string> GetAccessTokenAsync()
+        public virtual async Task<string> GetAccessTokenAsync()
         {
-            return await _distributedCache.GetOrAddAsync("CurrentAccessToken",
+            return await DistributedCache.GetOrAddAsync("CurrentAccessToken",
                 async () =>
                 {
-                    var client = _httpClientFactory.CreateClient();
-                    var requestUrl = $"https://api.weixin.qq.com/cgi-bin/token?grant_type={GrantTypes.ClientCredential}&appid={_abpWeChatOfficialOptions.AppId}&secret={_abpWeChatOfficialOptions.AppSecret}";
+                    var client = HttpClientFactory.CreateClient();
+                    var options = WeChatOfficialOptionsResolver.Resolve();
+
+                    var requestUrl = $"https://api.weixin.qq.com/cgi-bin/token?grant_type={GrantTypes.ClientCredential}&appid={options.AppId}&secret={options.AppSecret}";
 
                     var resultStr = await (await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUrl)))
                         .Content.ReadAsStringAsync();
