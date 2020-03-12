@@ -177,7 +177,7 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
             request.AddParameter("mch_id", mchId);
             request.AddParameter("nonce_str", RandomHelper.GetRandom());
 
-            if (string.IsNullOrEmpty(weChatOrderNo))
+            if (!string.IsNullOrEmpty(weChatOrderNo))
             {
                 request.AddParameter("transaction_id", weChatOrderNo);
             }
