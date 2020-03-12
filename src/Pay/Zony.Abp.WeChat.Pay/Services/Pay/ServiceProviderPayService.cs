@@ -54,11 +54,6 @@ namespace Zony.Abp.WeChat.Pay.Services.Pay
                 throw new ArgumentException($"当交易类型为 JsApi 时，参数 {nameof(openId)} 必须传递有效值。");
             }
 
-            if (tradeType == TradeType.Native && string.IsNullOrEmpty(productId))
-            {
-                throw new ArgumentException($"当交易类型为 Native 时，参数 {nameof(productId)} 必须传递有效值。");
-            }
-
             if (!string.IsNullOrEmpty(subOpenId) && string.IsNullOrEmpty(subAppId))
             {
                 throw new ArgumentException($"传递子商户的 OpenId 时，参数 {nameof(subAppId)} 必须传递有效值。");
