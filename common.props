@@ -1,0 +1,28 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Version>1.0.0</Version>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>EasyAbp Team</Authors>
+    <Description>专门为 ABP vNext 封装的微信模块，包括微信公众号和微信支付相关接口。</Description>
+    <PackageProjectUrl>https://github.com/EasyAbp/Abp.WeChat</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/EasyAbp/Abp.WeChat</RepositoryUrl>
+    <PackageTags>abp module easyabp wechat weixin sdk zony</PackageTags>
+    <Company>EasyAbp</Company>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ConfigureAwait.Fody" Version="3.3.1" />
+    <PackageReference Include="Fody" Version="6.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
