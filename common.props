@@ -5,7 +5,7 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>EasyAbp Team</Authors>
-    <Description>专门为 ABP vNext 封装的微信模块，包括微信公众号和微信支付相关接口。</Description>
+    <Description>专门为 ABP vNext 封装的微信模块，包括微信公众号和微信支付相关接口</Description>
     <PackageProjectUrl>https://github.com/EasyAbp/Abp.WeChat</PackageProjectUrl>
     <RepositoryUrl>https://github.com/EasyAbp/Abp.WeChat</RepositoryUrl>
     <PackageTags>abp module easyabp wechat weixin sdk zony</PackageTags>
