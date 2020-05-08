@@ -36,13 +36,5 @@ namespace EasyAbp.Abp.WeChat.Pay
                 return handler;
             });
         }
-
-        public override void OnApplicationInitialization(ApplicationInitializationContext context)
-        {
-            var options = context.ServiceProvider.GetRequiredService<IOptions<AbpWeChatPayOptions>>().Value;
-
-            if (string.IsNullOrEmpty(options.NotifyUrl)) throw new ArgumentNullException(nameof(options.NotifyUrl),"请指定有效的支付回调地址。");
-            if (string.IsNullOrEmpty(options.ApiKey)) throw new ArgumentNullException(nameof(options.ApiKey),"请指定有效的微信 API 密钥。");
-        }
     }
 }
