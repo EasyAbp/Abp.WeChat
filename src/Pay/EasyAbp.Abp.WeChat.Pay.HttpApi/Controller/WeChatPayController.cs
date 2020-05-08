@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using EasyAbp.Abp.WeChat.Common.Extensions;
 using EasyAbp.Abp.WeChat.Common.Infrastructure;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Signature;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure;
+using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
+using JetBrains.Annotations;
 
 namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
 {
@@ -24,15 +24,15 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISignatureGenerator _signatureGenerator;
-        private readonly AbpWeChatPayOptions _abpWeChatPayOptions;
+        private readonly IWeChatPayOptionsResolver _optionsResolver;
 
         public WeChatPayController(IHttpContextAccessor httpContextAccessor,
             ISignatureGenerator signatureGenerator,
-            IOptions<AbpWeChatPayOptions> abpWeChatPayOptions)
+            IWeChatPayOptionsResolver optionsResolver)
         {
             _httpContextAccessor = httpContextAccessor;
             _signatureGenerator = signatureGenerator;
-            _abpWeChatPayOptions = abpWeChatPayOptions.Value;
+            _optionsResolver = optionsResolver;
         }
 
         /// <summary>
@@ -89,7 +89,8 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         /// <param name="prepayId">预支付 Id。</param>
         [HttpGet]
         [Route("GetJsSdkWeChatPayParameters")]
-        public virtual ActionResult GetJsSdkWeChatPayParameters([FromQuery] string prepayId)
+        [ItemCanBeNull]
+        public virtual async Task<ActionResult> GetJsSdkWeChatPayParameters([FromQuery] string prepayId)
         {
             if (string.IsNullOrEmpty(prepayId)) throw new UserFriendlyException("请传入有效的预支付订单 Id。");
 
@@ -98,14 +99,16 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
             var package = $"prepay_id={prepayId}";
             var signType = "MD5";
 
+            var option = await _optionsResolver.ResolveAsync();
+
             var @params = new WeChatParameters();
-            @params.AddParameter("appId", _abpWeChatPayOptions.AppId);
+            @params.AddParameter("appId", option.AppId);
             @params.AddParameter("nonceStr", nonceStr);
             @params.AddParameter("timeStamp", timeStamp);
             @params.AddParameter("package", package);
             @params.AddParameter("signType", signType);
 
-            var paySignStr = _signatureGenerator.Generate(@params, MD5.Create(), _abpWeChatPayOptions.ApiKey);
+            var paySignStr = _signatureGenerator.Generate(@params, MD5.Create(), option.ApiKey);
 
             return new JsonResult(new
             {
