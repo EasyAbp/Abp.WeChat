@@ -44,7 +44,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="openId">当 <paramref name="tradeType"/> 参数为 <see cref="TradeType.JsApi"/> 时，此参数必填。如果选择传 <paramref name="subOpenId"/>, 则必须传 <paramref name="subAppId"/>。</param>
         /// <param name="subOpenId">当 <paramref name="tradeType"/> 参数为 <see cref="TradeType.JsApi"/> 时，此参数必填。如果选择传 <paramref name="subOpenId"/>, 则必须传 <paramref name="subAppId"/>。</param>
         /// <param name="sceneInfo">该字段常用于线下活动时的场景信息上报，支持上报实际门店信息，商户也可以按需求自己上报相关信息。</param>
-        public Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string subAppId, string subMchId, string deviceInfo, string receipt,
+        public async Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string subAppId, string subMchId, string deviceInfo, string receipt,
             string body, string detail, string attach, string outTradeNo, string feeType, int totalFee,
             string billCreateIp, string timeStart, string timeExpire, string goodsTag, string notifyUrl, string tradeType, string productId,
             string limitPay, string openId, string subOpenId, string sceneInfo)
@@ -85,10 +85,12 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             request.AddParameter("sub_openid", subOpenId);
             request.AddParameter("scene_info", sceneInfo);
 
-            var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
+            var options = await GetAbpWeChatPayOptions();
+
+            var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return RequestAndGetReturnValueAsync(UnifiedOrderUrl, request);
+            return await RequestAndGetReturnValueAsync(UnifiedOrderUrl, request);
         }
 
         /// <summary>
@@ -120,7 +122,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="refundDesc">若商户传入，会在下发给用户的退款消息中体现退款原因，当订单退款金额 ≤1 元并且属于部分退款，则不会在退款消息中体现退款原因。</param>
         /// <param name="refundAccount">仅针对老资金流商户使用，具体参考 <see cref="RefundAccountType"/> 的定义。</param>
         /// <param name="notifyUrl">异步接收微信支付退款结果通知的回调地址，通知 Url 必须为外网可访问的 Url，不允许带参数。如果传递了该参数，则商户平台上配置的回调地址将不会生效。</param>
-        public Task<XmlDocument> RefundAsync(string appId, string mchId, string subAppId, string subMchId, string transactionId, string outTradeNo, string outRefundNo,
+        public async Task<XmlDocument> RefundAsync(string appId, string mchId, string subAppId, string subMchId, string transactionId, string outTradeNo, string outRefundNo,
             int totalFee, int refundFee, string refundFeeType, string refundDesc, string refundAccount, string notifyUrl)
         {
             var request = new WeChatPayParameters();
@@ -139,10 +141,12 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             request.AddParameter("refund_account", refundAccount);
             request.AddParameter("notify_url", notifyUrl);
 
-            var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
+            var options = await GetAbpWeChatPayOptions();
+
+            var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return RequestAndGetReturnValueAsync(RefundUrl, request);
+            return await RequestAndGetReturnValueAsync(RefundUrl, request);
         }
 
         /// <summary>
@@ -162,7 +166,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// 商户系统内部订单号，要求 32 个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。<br/>
         /// <paramref name="transactionId"/> 与 <paramref name="outTradeNo"/> 二选一，如果同时存在，优先级是：<paramref name="transactionId"/> 大于 <paramref name="outTradeNo"/>。
         /// </param>
-        public Task<XmlDocument> OrderQueryAsync(string appId, string mchId, string subAppId, string subMchId, string transactionId, string outTradeNo)
+        public async Task<XmlDocument> OrderQueryAsync(string appId, string mchId, string subAppId, string subMchId, string transactionId, string outTradeNo)
         {
             var request = new WeChatPayParameters();
             request.AddParameter("appid", appId);
@@ -173,10 +177,12 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             request.AddParameter("transaction_id", transactionId);
             request.AddParameter("out_trade_no", outTradeNo);
 
-            var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
+            var options = await GetAbpWeChatPayOptions();
+
+            var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return RequestAndGetReturnValueAsync(OrderQueryUrl, request);
+            return await RequestAndGetReturnValueAsync(OrderQueryUrl, request);
         }
 
         /// <summary>
@@ -190,7 +196,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="subMchId">微信支付分配的子商户号。</param>
         /// <param name="outTradeNo">商户系统内部订单号，要求 32 个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。</param>
         /// <returns></returns>
-        public Task<XmlDocument> CloseOrderAsync(string appId, string mchId, string subAppId, string subMchId, string outTradeNo)
+        public async Task<XmlDocument> CloseOrderAsync(string appId, string mchId, string subAppId, string subMchId, string outTradeNo)
         {
             var request = new WeChatPayParameters();
             request.AddParameter("appid", appId);
@@ -200,10 +206,12 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             request.AddParameter("nonce_str", RandomHelper.GetRandom());
             request.AddParameter("out_trade_no", outTradeNo);
 
-            var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
+            var options = await GetAbpWeChatPayOptions();
+
+            var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return RequestAndGetReturnValueAsync(CloseOrderUrl, request);
+            return await RequestAndGetReturnValueAsync(CloseOrderUrl, request);
         }
 
         /// <summary>
@@ -224,7 +232,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="outRefundNo">商户系统内部的退款单号，商户系统内部唯一，只能是数字、大小写字母_-|*@ ，同一退款单号多次请求只退一笔。</param>
         /// <param name="refundId">微信退款单号。</param>
         /// <param name="offset">偏移量，当部分退款次数超过 10 次时可使用，表示返回的查询结果从这个偏移量开始取记录。</param>
-        public Task<XmlDocument> RefundQueryAsync(string appId, string mchId, string subAppId, string subMchId, string transactionId, string outTradeNo, string outRefundNo,
+        public async Task<XmlDocument> RefundQueryAsync(string appId, string mchId, string subAppId, string subMchId, string transactionId, string outTradeNo, string outRefundNo,
             string refundId, int offset)
         {
             var request = new WeChatPayParameters();
@@ -239,10 +247,12 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             request.AddParameter("refund_id", refundId);
             request.AddParameter("out_trade_no", offset);
 
-            var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
+            var options = await GetAbpWeChatPayOptions();
+
+            var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return RequestAndGetReturnValueAsync(RefundQueryUrl, request);
+            return await RequestAndGetReturnValueAsync(RefundQueryUrl, request);
         }
     }
 }

@@ -1,11 +1,6 @@
-﻿using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
-
-namespace EasyAbp.Abp.WeChat.Pay
+namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve
 {
-    /// <summary>
-    /// 配置类定义了微信支付模块的相关配置参数。
-    /// </summary>
-    public class AbpWeChatPayOptions : IWeChatPayOptions
+    public interface IWeChatPayOptions
     {
         /// <summary>
         /// 微信支付的 API 密钥信息，会在后续进行签名时被使用。
@@ -21,19 +16,19 @@ namespace EasyAbp.Abp.WeChat.Pay
         /// 微信支付的商户号，商户号在调用微信支付 API 的时候需要使用。
         /// </summary>
         public string MchId { get; set; }
-
+        
         #region > 可选参数 <
-
+        
         /// <summary>
         /// 配置微信支付是否处于沙箱模式。当处于沙箱模式时，所有的支付服务将会调用沙箱支付接口，该参数值默认为 false。
         /// </summary>
         public bool IsSandBox { get; set; }
-
+        
         /// <summary>
         /// 支付结果的回调地址，用于接收支付结果通知。
         /// </summary>
         public string NotifyUrl { get; set; }
-
+        
         /// <summary>
         /// 退款结果的回调地址，用于接收退款结果通知。
         /// </summary>
@@ -48,15 +43,7 @@ namespace EasyAbp.Abp.WeChat.Pay
         /// PKCS 12 证书的密码，默认为商户号(<see cref="MchId"/>)。
         /// </summary>
         public string CertificateSecret { get; set; }
-
+        
         #endregion
-
-        /// <summary>
-        /// 构建一个新的 <see cref="AbpWeChatPayModule"/> 实例。
-        /// </summary>
-        public AbpWeChatPayOptions()
-        {
-            IsSandBox = false;
-        }
     }
 }

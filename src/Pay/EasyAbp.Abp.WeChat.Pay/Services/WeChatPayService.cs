@@ -10,6 +10,7 @@ using Volo.Abp.DependencyInjection;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Signature;
 using EasyAbp.Abp.WeChat.Pay.Exceptions;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure;
+using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 using EasyAbp.Abp.WeChat.Pay.Models;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services
@@ -51,8 +52,8 @@ namespace EasyAbp.Abp.WeChat.Pay.Services
         private Lazy<ILogger> _lazyLogger => new Lazy<ILogger>(() => LoggerFactory?.CreateLogger(GetType().FullName) ?? NullLogger.Instance, true);
         protected ILogger Logger => _lazyLogger.Value;
 
-        protected AbpWeChatPayOptions AbpWeChatPayOptions => LazyLoadService(ref _options).Value;
-        private IOptions<AbpWeChatPayOptions> _options;
+        protected IWeChatPayOptionsResolver AbpWeChatPayOptionsResolver => LazyLoadService(ref _weChatPayOptionsResolver);
+        private IWeChatPayOptionsResolver _weChatPayOptionsResolver;
 
         protected IHttpClientFactory HttpClientFactory => LazyLoadService(ref _httpClientFactory);
         private IHttpClientFactory _httpClientFactory;
@@ -76,5 +77,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services
 
             return result;
         }
+
+        protected virtual Task<IWeChatPayOptions> GetAbpWeChatPayOptions() => AbpWeChatPayOptionsResolver.ResolveAsync();
     }
 }

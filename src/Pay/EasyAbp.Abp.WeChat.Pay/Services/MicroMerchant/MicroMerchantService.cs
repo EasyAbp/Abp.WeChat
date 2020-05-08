@@ -29,16 +29,19 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.MicroMerchant
         /// 根据商户号获取平台证书。
         /// </summary>
         /// <param name="mchId">微信支付分配的商户号。</param>
-        public Task<XmlDocument> GetCertificateAsync(string mchId)
+        public async Task<XmlDocument> GetCertificateAsync(string mchId)
         {
+            var options = await GetAbpWeChatPayOptions();
+
             var request = new WeChatPayParameters();
             request.AddParameter("mch_id", mchId);
             request.AddParameter("nonce_str", RandomHelper.GetRandom());
             request.AddParameter("sign_type", "HMAC-SHA256");
 
-            request.AddParameter("sign", SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey));
+            request.AddParameter("sign",
+                SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(options.ApiKey)), options.ApiKey));
 
-            return RequestAndGetReturnValueAsync(GetCertificateUrl, request);
+            return await RequestAndGetReturnValueAsync(GetCertificateUrl, request);
         }
 
         /// <summary>
@@ -62,7 +65,9 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.MicroMerchant
             parameters.AddParameter("mch_id", mchId);
             parameters.AddParameter("media_hash", mediaHash);
 
-            var sign = SignatureGenerator.Generate(parameters, MD5.Create(), AbpWeChatPayOptions.ApiKey);
+            var options = await GetAbpWeChatPayOptions();
+
+            var sign = SignatureGenerator.Generate(parameters, MD5.Create(), options.ApiKey);
 
             // 构建表单请求。
             var fileContent = new ByteArrayContent(bytes);
@@ -156,7 +161,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.MicroMerchant
         /// <param name="contactPhone">手机号码，11 位数字，手机号码，使用 <see cref="WeChatPayToolUtility"/> 提供的加密方法进行加密。</param>
         /// <param name="contactEmail">联系邮箱，需要带 @，遵循邮箱格式校验，使用 <see cref="WeChatPayToolUtility"/> 提供的加密方法进行加密。</param>
         /// <returns></returns>
-        public Task<XmlDocument> SubmitAsync(string version, string certSn, string mchId, string businessCode,
+        public async Task<XmlDocument> SubmitAsync(string version, string certSn, string mchId, string businessCode,
             string idCardCopy, string idCardNational, string idCardName, string idCardNumber, string idCardValidTime,
             string accountName, string accountBank, string bankAddressCode, [CanBeNull] string bankName, string accountNumber,
             string storeName, string storeAddressCode, string storeStreet, [CanBeNull] string storeLongitude, [CanBeNull] string storeLatitude,
@@ -200,9 +205,10 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.MicroMerchant
             request.AddParameter("contact_phone", contactPhone);
             request.AddParameter("contact_email", contactEmail);
 
-            request.AddParameter("sign", SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey));
+            var options = await GetAbpWeChatPayOptions();
 
-            return RequestAndGetReturnValueAsync(SubmitUrl, request);
+            request.AddParameter("sign", SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(options.ApiKey)), options.ApiKey));
+            return await RequestAndGetReturnValueAsync(SubmitUrl, request);
         }
 
         /// <summary>
@@ -213,7 +219,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.MicroMerchant
         /// <param name="applyentId">商户申请单号，微信支付分配的申请单号。</param>
         /// <param name="businessCode">业务申请编号，服务商自定义的商户唯一编号，当 <paramref name="applyentId"/>  已填写时，此字段无效。</param>
         /// <returns></returns>
-        public Task<XmlDocument> GetStateAsync(string version, string mchId, string applyentId, string businessCode)
+        public async Task<XmlDocument> GetStateAsync(string version, string mchId, string applyentId, string businessCode)
         {
             var request = new WeChatPayParameters();
             request.AddParameter("version", version);
@@ -223,9 +229,10 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.MicroMerchant
             request.AddParameter("applyment_id", applyentId);
             request.AddParameter("business_code", businessCode);
 
-            request.AddParameter("sign", SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(AbpWeChatPayOptions.ApiKey)), AbpWeChatPayOptions.ApiKey));
+            var options = await GetAbpWeChatPayOptions();
+            request.AddParameter("sign", SignatureGenerator.Generate(request, new HMACSHA256(Encoding.UTF8.GetBytes(options.ApiKey)), options.ApiKey));
 
-            return RequestAndGetReturnValueAsync(GetStateUrl, request);
+            return await RequestAndGetReturnValueAsync(GetStateUrl, request);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="receipt">传入 Y 时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效。</param>
         /// <param name="sceneInfo">该字段常用于线下活动时的场景信息上报，支持上报实际门店信息，商户也可以按需求自己上报相关信息。</param>
         /// <param name="isProfitSharing">该笔订单是否参与分账操作。</param>
-        public Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string deviceInfo, string body, string detail, string attach,
+        public async Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string deviceInfo, string body, string detail, string attach,
             string outTradeNo, string feeType, int totalFee, string billCreateIp, string timeStart, string timeExpire,
             string goodsTag, string notifyUrl, string tradeType, string productId, string limitPay, string openId,
             string receipt, string sceneInfo, bool isProfitSharing = false)
@@ -81,11 +81,13 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             {
                 request.AddParameter("profit_sharing", "Y");
             }
+            
+            var options = await GetAbpWeChatPayOptions();
 
-            var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
+            var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return RequestAndGetReturnValueAsync(UnifiedOrderUrl, request);
+            return await RequestAndGetReturnValueAsync(UnifiedOrderUrl, request);
         }
 
         /// <summary>
@@ -100,12 +102,14 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="tradeType">交易类型，请参考 <see cref="TradeType"/> 的定义。</param>
         /// <param name="openId">当 <paramref name="tradeType"/> 参数为 <see cref="TradeType.JsApi"/> 时，此参数必填。</param>
         /// <param name="isProfitSharing">该笔订单是否参与分账操作。</param>
-        public Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string body, string attach, string outTradeNo, int totalFee,
+        public async Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string body, string attach, string outTradeNo, int totalFee,
             string tradeType, string openId, bool isProfitSharing = false)
         {
-            return UnifiedOrderAsync(appId, mchId, null, body, null, attach,
+            var options = await GetAbpWeChatPayOptions();
+
+            return await UnifiedOrderAsync(appId, mchId, null, body, null, attach,
                 outTradeNo, null, totalFee, "127.0.0.1", null, null,
-                null, AbpWeChatPayOptions.NotifyUrl, tradeType, null, null,
+                null, options.NotifyUrl, tradeType, null, null,
                 openId, null, null, isProfitSharing);
         }
 
@@ -127,10 +131,12 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="refundFee">本次需要进行退款的金额，单位为分。注意该金额不能大于原始订单的总金额。</param>
         /// <param name="refundDescription">退款说明，当订单退款金额小于 1 元时，不会在退款消息中体现。</param>
         /// <returns>请求的结果，会被转换为 <see cref="XmlDocument"/> 实例并返回。</returns>
-        public Task<XmlDocument> RefundAsync(string appId, string mchId, string orderNo, string refundOrderNo,
+        public async Task<XmlDocument> RefundAsync(string appId, string mchId, string orderNo, string refundOrderNo,
             int orderTotalFee, int refundFee,
             string refundDescription = null)
         {
+            var options = await GetAbpWeChatPayOptions();
+            
             var request = new WeChatPayParameters();
             request.AddParameter("appid", appId);
             request.AddParameter("mch_id", mchId);
@@ -139,13 +145,13 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             request.AddParameter("out_trade_no", orderNo);
             request.AddParameter("total_fee", orderTotalFee);
             request.AddParameter("refund_fee", refundFee);
-            request.AddParameter("notify_url", AbpWeChatPayOptions.RefundNotifyUrl);
+            request.AddParameter("notify_url", options.RefundNotifyUrl);
             request.AddParameter("refund_desc", refundDescription);
 
-            var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
+            var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return RequestAndGetReturnValueAsync(RefundUrl, request);
+            return await RequestAndGetReturnValueAsync(RefundUrl, request);
         }
 
         #endregion
@@ -165,7 +171,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="orderNo">商户订单号，该订单号是商户系统内部生成的唯一编号。</param>
         /// <returns>请求的结果，会被转换为 <see cref="XmlDocument"/> 实例并返回。</returns>
         /// <exception cref="ArgumentException">当微信订单号和商户订单号都为 null 时，会抛出本异常。</exception>
-        public Task<XmlDocument> OrderQueryAsync(string appId, string mchId, string weChatOrderNo = null, string orderNo = null)
+        public async Task<XmlDocument> OrderQueryAsync(string appId, string mchId, string weChatOrderNo = null, string orderNo = null)
         {
             if (string.IsNullOrEmpty(weChatOrderNo) && string.IsNullOrEmpty(orderNo))
             {
@@ -185,11 +191,13 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             {
                 request.AddParameter("out_trade_no", orderNo);
             }
+            
+            var options = await GetAbpWeChatPayOptions();
 
-            var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
+            var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return RequestAndGetReturnValueAsync(OrderQueryUrl, request);
+            return await RequestAndGetReturnValueAsync(OrderQueryUrl, request);
         }
 
         #endregion
@@ -207,7 +215,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="mchId">微信支付分配的商户号。</param>
         /// <param name="orderNo">商户订单号，该订单号是商户系统内部生成的唯一编号。</param>
         /// <returns>请求的结果，会被转换为 <see cref="XmlDocument"/> 实例并返回。</returns>
-        public Task<XmlDocument> CloseOrderAsync(string appId, string mchId, string orderNo)
+        public async Task<XmlDocument> CloseOrderAsync(string appId, string mchId, string orderNo)
         {
             var request = new WeChatPayParameters();
             request.AddParameter("appid", appId);
@@ -216,10 +224,12 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
 
             request.AddParameter("out_trade_no", orderNo);
 
-            var signStr = SignatureGenerator.Generate(request, MD5.Create(), AbpWeChatPayOptions.ApiKey);
+            var options = await GetAbpWeChatPayOptions();
+
+            var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return RequestAndGetReturnValueAsync(CloseOrderUrl, request);
+            return await RequestAndGetReturnValueAsync(CloseOrderUrl, request);
         }
 
         #endregion
