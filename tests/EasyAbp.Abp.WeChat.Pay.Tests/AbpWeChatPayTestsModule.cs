@@ -13,7 +13,6 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests
             {
                 // TODO: 测试的时候，请在此处填写相关的配置参数。
                 op.MchId = "";
-                op.AppId = "";
                 op.ApiKey = "";
                 op.CertificatePath = "";
                 op.CertificateSecret = "";

@@ -86,11 +86,12 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         /// <summary>
         /// 根据统一下单接口返回的预支付 Id 生成支付签名。
         /// </summary>
+        /// <param name="appId">AppId</param>
         /// <param name="prepayId">预支付 Id。</param>
         [HttpGet]
         [Route("GetJsSdkWeChatPayParameters")]
         [ItemCanBeNull]
-        public virtual async Task<ActionResult> GetJsSdkWeChatPayParameters([FromQuery] string prepayId)
+        public virtual async Task<ActionResult> GetJsSdkWeChatPayParameters([FromQuery] string appId, string prepayId)
         {
             if (string.IsNullOrEmpty(prepayId)) throw new UserFriendlyException("请传入有效的预支付订单 Id。");
 
@@ -102,7 +103,7 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
             var option = await _optionsResolver.ResolveAsync();
 
             var @params = new WeChatParameters();
-            @params.AddParameter("appId", option.AppId);
+            @params.AddParameter("appId", appId);
             @params.AddParameter("nonceStr", nonceStr);
             @params.AddParameter("timeStamp", timeStamp);
             @params.AddParameter("package", package);

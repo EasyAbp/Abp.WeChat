@@ -8,11 +8,6 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// 发起微信支付请求的产品 App Id。如果是公众号需要发起支付请求则是公众号的 AppId，小程序则是小程序的 AppId。
-        /// </summary>
-        public string AppId { get; set; }
-
-        /// <summary>
         /// 微信支付的商户号，商户号在调用微信支付 API 的时候需要使用。
         /// </summary>
         public string MchId { get; set; }
