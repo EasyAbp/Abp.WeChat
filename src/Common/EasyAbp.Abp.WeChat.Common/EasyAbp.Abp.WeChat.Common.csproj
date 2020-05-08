@@ -3,7 +3,7 @@
     <Import Project="..\..\..\common.props" />
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <RootNamespace>EasyAbp.Abp.WeChat.Common</RootNamespace>
         <Description>ABP vNext微信模块，定义了微信公众号与微信支付公用的组件。</Description>
         <LangVersion>8</LangVersion>
