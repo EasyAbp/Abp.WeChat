@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/EasyAbp/Abp.WeChat</RepositoryUrl>
     <PackageTags>abp module easyabp wechat weixin sdk zony</PackageTags>
     <Company>EasyAbp</Company>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
