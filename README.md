@@ -1,3 +1,10 @@
+# Abp.WeChat
+
+[![NuGet](https://img.shields.io/nuget/v/EasyAbp.Abp.WeChat.Common.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.Abp.WeChat.Common)
+[![NuGet Download](https://img.shields.io/nuget/dt/EasyAbp.Abp.WeChat.Common.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.Abp.WeChat.Common)
+
+专门为 ABP vNext 封装的微信模块，包括微信公众号和微信支付相关接口。
+
 ## 一、简要介绍
 
 **EasyAbp.Abp.WeChat** 库是针对于微信公众号与微信支付 API 进行了二次封装的模块，与 ABP vNext 框架深度集成。开发人员如果是基于 ABP vNext  框架开发项目，集成本模块以后，可以快速实现同微信开放平台的对接。
