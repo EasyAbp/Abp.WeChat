@@ -1,19 +1,18 @@
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp;
-using Volo.Abp.AspNetCore.Mvc;
 using EasyAbp.Abp.WeChat.Common.Extensions;
 using EasyAbp.Abp.WeChat.Common.Infrastructure;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Signature;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp;
+using Volo.Abp.AspNetCore.Mvc;
 
 namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
 {
@@ -48,18 +47,26 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
             using (var streamReader = new StreamReader(_httpContextAccessor.HttpContext.Request.Body))
             {
                 var result = await streamReader.ReadToEndAsync();
-                
+
                 var xmlDocument = new XmlDocument();
                 xmlDocument.LoadXml(result);
-            
+                var context = new WeChatPayHandlerContext
+                {
+                    WeChatRequestXmlData = xmlDocument
+                };
+
                 foreach (var handler in handlers)
                 {
-                    await handler.HandleAsync(xmlDocument);
+                    await handler.HandleAsync(context);
+                    if (!context.IsSuccess)
+                    {
+                        return BadRequest(BuildFailedXml(context.FailedResponse));
+                    }
                 }
-                
+
                 Request.Body.Position = 0;
             }
-            
+
             return Ok(BuildSuccessXml());
         }
 
@@ -123,9 +130,18 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
 
         private string BuildSuccessXml()
         {
-            return @"<xml><return_code><![CDATA[SUCCESS]]></return_code>
-                      <return_msg><![CDATA[OK]]></return_msg>
-                 </xml>";
+            return @"<xml>
+                        <return_code><![CDATA[SUCCESS]]></return_code>
+                        <return_msg><![CDATA[OK]]></return_msg>
+                    </xml>";
+        }
+
+        private string BuildFailedXml(string failedReason)
+        {
+            return $@"<xml>
+                        <return_code><![CDATA[FAIL]]></return_code>
+                        <return_msg><![CDATA[{failedReason}]]></return_msg>
+                    </xml>";
         }
     }
 }
