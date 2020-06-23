@@ -24,8 +24,8 @@
 | 功能             | 是否支持                                                     |
 | ---------------- | ------------------------------------------------------------ |
 | 统一下单         | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
-| 查询订单         | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
-| 关闭订单         | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
+| 查询订单         | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
+| 关闭订单         | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
 | 申请退款         | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
 | 查询退款         | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
 | 下载对账单       | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
@@ -34,6 +34,9 @@
 | 交易保障         | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
 | 退款结果通知     | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
 | 拉取订单评价数据 | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
+
+#### 3.1.2 服务商特有接口
+TODO: ...
 
 ### 3.2 微信公众号
 
