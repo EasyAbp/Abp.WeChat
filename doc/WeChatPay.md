@@ -50,6 +50,12 @@ public class XXXHttpApiModule : AbpModule
 
 其他配置参数，可以参考 `AbpWeChatPayOptions` 类型的定义，上面针对各个配置参数都有详细的注释说明。
 
+#### 1.2.1 配置提供器
+
+我们参考 `ITenantResolver` 的方式，将微信支付相关的配置参数抽象到各个 Provider 当中。默认的 Provider 实现是基于 `IOptions<AbpWeChatPayOptions>`，他会从上述的配置项中读取 AppId 等参数。
+
+如果你的系统是根据租户分隔，那么只需要自己实现 `IWeChatPayOptionResolveContributor` 接口，在内部处理逻辑即可。
+
 ## 二、提供的回调接口
 
 ### 2.1 支付回调接口
@@ -63,7 +69,7 @@ public class XXXHttpApiModule : AbpModule
 ```csharp
 public class WeChatPaymentHandler : IWeChatPayHandler
 {
-    public Task HandleAsync(XmlDocument xmlDocument)
+    public Task HandleAsync(WeChatPayHandlerContext context)
     {
         Console.WriteLine("接受到了数据");
         return Task.CompletedTask;
@@ -78,12 +84,16 @@ public class XXXDomainModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddSingleton<IWeChatPayHandler, WeChatPaymentHandler>();
+        context.Services.AddTransient<IWeChatPayHandler, WeChatPaymentHandler>();
     }
 }
 ```
 
+如果在处理过程当中出现了异常，那么你可以设置 `WeChatPayHandlerContext` 当中的 `IsSuccess` 参数为 `false`，并且可以填写对应的失败原因。
+
 其中 `XmlDocument` 对象内部的参数含义，可以参考微信支付 **[开发文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7&index=8)**。
+
+WeChatPay 模块默认提供了参数校验处理器，各个处理器的调用顺序是按照 **注入顺序** 来的，目前暂时不支持处理器自定义排序。
 
 ### 2.2 退款回调接口
 
@@ -155,4 +165,3 @@ public async Task Ref()
     response.ShouldNotBeNull();
 }
 ```
-
