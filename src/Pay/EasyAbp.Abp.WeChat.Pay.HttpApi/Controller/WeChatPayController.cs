@@ -79,12 +79,28 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         {
             var handlers = ServiceProvider.GetServices<IWeChatPayRefundHandler>();
 
-            var xmlDocument = new XmlDocument();
-            xmlDocument.Load(_httpContextAccessor.HttpContext.Request.Body);
-
-            foreach (var handler in handlers)
+            Request.EnableBuffering();
+            using (var streamReader = new StreamReader(_httpContextAccessor.HttpContext.Request.Body))
             {
-                await handler.HandleAsync(xmlDocument);
+                var result = await streamReader.ReadToEndAsync();
+
+                var xmlDocument = new XmlDocument();
+                xmlDocument.LoadXml(result);
+                var context = new WeChatPayHandlerContext
+                {
+                    WeChatRequestXmlData = xmlDocument
+                };
+
+                foreach (var handler in handlers)
+                {
+                    await handler.HandleAsync(context);
+                    if (!context.IsSuccess)
+                    {
+                        return BadRequest(BuildFailedXml(context.FailedResponse));
+                    }
+                }
+
+                Request.Body.Position = 0;
             }
 
             return Ok(BuildSuccessXml());

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using System.Xml;
+using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 
 namespace EasyAbp.Abp.WeChat.Pay.Infrastructure
 {
@@ -8,6 +9,6 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure
     /// </summary>
     public interface IWeChatPayRefundHandler
     {
-        Task HandleAsync(XmlDocument xmlDocument);
+        Task HandleAsync(WeChatPayHandlerContext context);
     }
 }
