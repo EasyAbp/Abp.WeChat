@@ -62,7 +62,6 @@ namespace EasyAbp.Abp.WeChat.Pay.Services
         {
             var result = await WeChatPayApiRequester.RequestAsync(targetUrl, requestParameters.ToXmlStr());
             if (result.SelectSingleNode("/xml/return_code")?.InnerText != "SUCCESS" ||
-                result.SelectSingleNode("/xml/return_code")?.InnerText != "SUCCESS" ||
                 result.SelectSingleNode("/xml/return_msg")?.InnerText != "OK")
             {
                 var errMsg = $"微信支付接口调用失败，具体失败原因：{result.SelectSingleNode("/xml/err_code_des")?.InnerText ?? result.SelectSingleNode("/xml/return_msg")?.InnerText}";
