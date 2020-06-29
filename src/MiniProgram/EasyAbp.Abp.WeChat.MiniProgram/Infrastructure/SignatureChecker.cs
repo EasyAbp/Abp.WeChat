@@ -30,5 +30,28 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
 
             return signStrBuilder.ToString().Equals(signature);
         }
+        
+        /// <summary>
+        /// 数据签名校验。
+        /// </summary>
+        /// <param name="rawData"></param>
+        /// <param name="sessionKey"></param>
+        /// <param name="signature"></param>
+        /// <returns>返回 true 说明是有效数据，返回 false 说明是无效数据。</returns>
+        public bool Validate(string rawData, string sessionKey, string signature)
+        {
+            var paraArray = new[] {rawData, sessionKey}.ToArray();
+            var paraString = string.Join(string.Empty, paraArray);
+            var bytes = SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(paraString));
+
+            var signStrBuilder = new StringBuilder();
+
+            foreach (var @byte in bytes)
+            {
+                signStrBuilder.Append($"{@byte:x2}");
+            }
+
+            return signStrBuilder.ToString().Equals(signature);
+        }
     }
 }
