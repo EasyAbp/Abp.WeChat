@@ -1,7 +1,7 @@
 using EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.Models;
 using Newtonsoft.Json;
 
-namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.Services.Login
+namespace EasyAbp.Abp.WeChat.MiniProgram.Services.Login
 {
     public class Code2SessionResponse : IMiniProgramResponse
     {

@@ -1,8 +1,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
-namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.Services.Login
+namespace EasyAbp.Abp.WeChat.MiniProgram.Services.Login
 {
     /// <summary>
     /// 小程序登录服务。

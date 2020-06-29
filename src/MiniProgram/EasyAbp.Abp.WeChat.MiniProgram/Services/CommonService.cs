@@ -1,8 +1,9 @@
 using System;
+using EasyAbp.Abp.WeChat.MiniProgram.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.DependencyInjection;
 
-namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.Services
+namespace EasyAbp.Abp.WeChat.MiniProgram.Services
 {
     public abstract class CommonService : ITransientDependency
     {
