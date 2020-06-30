@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using EasyAbp.Abp.WeChat.Common.Exceptions;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
@@ -32,7 +33,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
         }
         
         /// <summary>
-        /// 数据签名校验。
+        /// 检验数据签名是否有效。
         /// </summary>
         /// <param name="rawData"></param>
         /// <param name="sessionKey"></param>
@@ -52,6 +53,35 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
             }
 
             return signStrBuilder.ToString().Equals(signature);
+        }
+
+        /// <summary>
+        /// 确保校验请求参数有效。
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="timeStamp"></param>
+        /// <param name="nonce"></param>
+        /// <param name="signature"></param>
+        public void Check(string token, string timeStamp, string nonce, string signature)
+        {
+            if (!Validate(token, timeStamp, nonce, signature))
+            {
+                throw new SignatureInvalidException();
+            }
+        }
+        
+        /// <summary>
+        /// 确保数据签名有效。
+        /// </summary>
+        /// <param name="rawData"></param>
+        /// <param name="sessionKey"></param>
+        /// <param name="signature"></param>
+        public void Check(string rawData, string sessionKey, string signature)
+        {
+            if (!Validate(rawData, sessionKey, signature))
+            {
+                throw new SignatureInvalidException();
+            }
         }
     }
 }
