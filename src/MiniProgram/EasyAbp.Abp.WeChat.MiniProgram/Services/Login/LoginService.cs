@@ -21,7 +21,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Services.Login
 
             var request = new Code2SessionRequest(appId, appSecret, jsCode, grantType);
 
-            return WeChatMiniProgramApiRequester.RequestAsync<Code2SessionResponse>(targetUrl, HttpMethod.Post, request);
+            return WeChatMiniProgramApiRequester.RequestAsync<Code2SessionResponse>(targetUrl, HttpMethod.Get, request, false);
         }
     }
 }
