@@ -22,7 +22,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Tests.Services
             
             result.ShouldNotBeNull();
             result.ErrorCode.ShouldBe(0);
-            result.ErrorMessage.ShouldBe("ok");
+            result.ErrorMessage.ShouldBeNull();
             
             result.OpenId.ShouldNotBeEmpty();
             result.SessionKey.ShouldNotBeEmpty();

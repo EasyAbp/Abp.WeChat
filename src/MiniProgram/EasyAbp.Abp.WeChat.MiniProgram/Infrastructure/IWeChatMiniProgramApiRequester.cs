@@ -5,8 +5,8 @@ using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
 {
-    public interface IWeChatMiniProgramApiRequester : ITransientDependency
+    public interface IWeChatMiniProgramApiRequester
     {
-        Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IMiniProgramRequest miniProgramRequest = null);
+        Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IMiniProgramRequest miniProgramRequest = null, bool withAccessToken = true);
     }
 }

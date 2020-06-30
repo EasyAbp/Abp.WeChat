@@ -1,13 +1,16 @@
+using System;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.Models;
 using Newtonsoft.Json;
+using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
 {
-    public class DefaultWeChatMiniProgramApiRequester : IWeChatMiniProgramApiRequester
+    [Dependency(TryRegister = true)]
+    public class DefaultWeChatMiniProgramApiRequester : IWeChatMiniProgramApiRequester, ITransientDependency
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IAccessTokenAccessor _accessTokenAccessor;
@@ -19,11 +22,16 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
             _accessTokenAccessor = accessTokenAccessor;
         }
 
-        public async Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IMiniProgramRequest miniProgramRequest = null)
+        public async Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IMiniProgramRequest miniProgramRequest = null, bool withAccessToken = true)
         {
             var client = _httpClientFactory.CreateClient();
 
-            targetUrl = $"{targetUrl}access_token={await _accessTokenAccessor.GetAccessTokenAsync()}";
+            targetUrl = targetUrl.EnsureEndsWith('?');
+
+            if (withAccessToken)
+            {
+                targetUrl += $"access_token={await _accessTokenAccessor.GetAccessTokenAsync()}";
+            }
 
             var requestMsg = method == HttpMethod.Get
                 ? BuildHttpGetRequestMessage(targetUrl, miniProgramRequest)
@@ -55,7 +63,13 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
 
             var type = request.GetType();
             var properties = type.GetProperties();
-            var queryStringBuilder = new StringBuilder();
+
+            if (properties.Length > 0)
+            {
+                targetUrl = targetUrl.EnsureEndsWith('&');
+            }
+            
+            var queryStringBuilder = new StringBuilder(targetUrl);
 
             foreach (var propertyInfo in properties)
             {

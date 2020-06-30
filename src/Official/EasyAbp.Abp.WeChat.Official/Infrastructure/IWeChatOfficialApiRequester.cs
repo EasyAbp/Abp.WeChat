@@ -5,8 +5,8 @@ using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
 
 namespace EasyAbp.Abp.WeChat.Official.Infrastructure
 {
-    public interface IWeChatOfficialApiRequester : ITransientDependency
+    public interface IWeChatOfficialApiRequester
     {
-        Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IOfficialRequest officialRequest = null);
+        Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IOfficialRequest officialRequest = null, bool withAccessToken = true);
     }
 }
