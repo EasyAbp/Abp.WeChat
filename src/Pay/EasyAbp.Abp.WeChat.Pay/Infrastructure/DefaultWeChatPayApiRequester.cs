@@ -6,7 +6,8 @@ using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Pay.Infrastructure
 {
-    public class DefaultWeChatPayApiRequester : IWeChatPayApiRequester, ISingletonDependency
+    [Dependency(TryRegister = true)]
+    public class DefaultWeChatPayApiRequester : IWeChatPayApiRequester, ITransientDependency
     {
         private readonly IHttpClientFactory _httpClientFactory;
 

@@ -3,26 +3,26 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.Models;
 using Newtonsoft.Json;
-using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
 using Volo.Abp.DependencyInjection;
 
-namespace EasyAbp.Abp.WeChat.Official.Infrastructure
+namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
 {
     [Dependency(TryRegister = true)]
-    public class DefaultWeChatOfficialApiRequester : IWeChatOfficialApiRequester, ITransientDependency
+    public class DefaultWeChatMiniProgramApiRequester : IWeChatMiniProgramApiRequester, ITransientDependency
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IAccessTokenAccessor _accessTokenAccessor;
 
-        public DefaultWeChatOfficialApiRequester(IHttpClientFactory httpClientFactory,
+        public DefaultWeChatMiniProgramApiRequester(IHttpClientFactory httpClientFactory,
             IAccessTokenAccessor accessTokenAccessor)
         {
             _httpClientFactory = httpClientFactory;
             _accessTokenAccessor = accessTokenAccessor;
         }
 
-        public async Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IOfficialRequest officialRequest = null, bool withAccessToken = true)
+        public async Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IMiniProgramRequest miniProgramRequest = null, bool withAccessToken = true)
         {
             var client = _httpClientFactory.CreateClient();
 
@@ -34,36 +34,36 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
             }
 
             var requestMsg = method == HttpMethod.Get
-                ? BuildHttpGetRequestMessage(targetUrl, officialRequest)
-                : BuildHttpPostRequestMessage(targetUrl, officialRequest);
+                ? BuildHttpGetRequestMessage(targetUrl, miniProgramRequest)
+                : BuildHttpPostRequestMessage(targetUrl, miniProgramRequest);
 
             var resultStr = await (await client.SendAsync(requestMsg)).Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<TResponse>(resultStr);
         }
 
-        private HttpRequestMessage BuildHttpGetRequestMessage(string targetUrl, IOfficialRequest officialRequest)
+        private HttpRequestMessage BuildHttpGetRequestMessage(string targetUrl, IMiniProgramRequest miniProgramRequest)
         {
-            if (officialRequest == null) return new HttpRequestMessage(HttpMethod.Get, targetUrl);
+            if (miniProgramRequest == null) return new HttpRequestMessage(HttpMethod.Get, targetUrl);
 
-            var requestUrl = BuildQueryString(targetUrl, officialRequest);
+            var requestUrl = BuildQueryString(targetUrl, miniProgramRequest);
             return new HttpRequestMessage(HttpMethod.Get, requestUrl);
         }
 
-        private HttpRequestMessage BuildHttpPostRequestMessage(string targetUrl, IOfficialRequest officialRequest)
+        private HttpRequestMessage BuildHttpPostRequestMessage(string targetUrl, IMiniProgramRequest miniProgramRequest)
         {
             return new HttpRequestMessage(HttpMethod.Post, targetUrl)
             {
-                Content = new StringContent(officialRequest.ToString())
+                Content = new StringContent(miniProgramRequest.ToString())
             };
         }
 
-        private string BuildQueryString(string targetUrl, IOfficialRequest request)
+        private string BuildQueryString(string targetUrl, IMiniProgramRequest request)
         {
             if (request == null) return targetUrl;
 
             var type = request.GetType();
             var properties = type.GetProperties();
-            
+
             if (properties.Length > 0)
             {
                 targetUrl = targetUrl.EnsureEndsWith('&');

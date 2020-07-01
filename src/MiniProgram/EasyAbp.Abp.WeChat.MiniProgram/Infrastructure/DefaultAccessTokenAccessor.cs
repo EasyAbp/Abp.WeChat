@@ -1,38 +1,38 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Common;
+using EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.OptionsResolve;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json.Linq;
 using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
-using EasyAbp.Abp.WeChat.Common;
-using EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve;
 
-namespace EasyAbp.Abp.WeChat.Official.Infrastructure
+namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
 {
     public class DefaultAccessTokenAccessor : IAccessTokenAccessor, ISingletonDependency
     {
         protected readonly IDistributedCache<string> DistributedCache;
         protected readonly IHttpClientFactory HttpClientFactory;
-        protected readonly IWeChatOfficialOptionsResolver WeChatOfficialOptionsResolver;
+        protected readonly IWeChatMiniProgramOptionsResolver WeChatMiniProgramOptionsResolver;
 
         public DefaultAccessTokenAccessor(IDistributedCache<string> distributedCache,
             IHttpClientFactory httpClientFactory,
-            IWeChatOfficialOptionsResolver weChatOfficialOptionsResolver)
+            IWeChatMiniProgramOptionsResolver weChatMiniProgramOptionsResolver)
         {
             DistributedCache = distributedCache;
             HttpClientFactory = httpClientFactory;
-            WeChatOfficialOptionsResolver = weChatOfficialOptionsResolver;
+            WeChatMiniProgramOptionsResolver = weChatMiniProgramOptionsResolver;
         }
 
         public virtual async Task<string> GetAccessTokenAsync()
         {
-            // Todo: 应支持多AppId，参考小程序实现
-            return await DistributedCache.GetOrAddAsync("CurrentAccessToken",
+            var options = WeChatMiniProgramOptionsResolver.Resolve();
+
+            return await DistributedCache.GetOrAddAsync($"CurrentAccessToken:{options.AppId}",
                 async () =>
                 {
                     var client = HttpClientFactory.CreateClient();
-                    var options = WeChatOfficialOptionsResolver.Resolve();
 
                     var requestUrl = $"https://api.weixin.qq.com/cgi-bin/token?grant_type={GrantTypes.ClientCredential}&appid={options.AppId}&secret={options.AppSecret}";
 
