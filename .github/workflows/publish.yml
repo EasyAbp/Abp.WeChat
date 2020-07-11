@@ -5,49 +5,33 @@ on:
       - master # Default release branch
 jobs:
   publish:
-    name: list on nuget
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: publish EasyAbp.Abp.WeChat.Common.dll
-        uses: brandedoutcast/publish-nuget@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
         with:
-          PROJECT_FILE_PATH: src/Common/EasyAbp.Abp.WeChat.Common/EasyAbp.Abp.WeChat.Common.csproj
-          VERSION_FILE_PATH: common.props
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          dotnet-version: 3.1.200
+          source-url: https://nuget.pkg.github.com/EasyAbp/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      - name: publish EasyAbp.Abp.WeChat.MiniProgram.dll
-        uses: brandedoutcast/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/MiniProgram/EasyAbp.Abp.WeChat.MiniProgram/EasyAbp.Abp.WeChat.MiniProgram.csproj
-          VERSION_FILE_PATH: common.props
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+      - name: dotnet build
+        run: dotnet build -c Release
 
-      - name: publish EasyAbp.Abp.WeChat.Official.dll
-        uses: brandedoutcast/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/Official/EasyAbp.Abp.WeChat.Official/EasyAbp.Abp.WeChat.Official.csproj
-          VERSION_FILE_PATH: common.props
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+      - name: dotnet pack
+        run: dotnet pack -c Release --no-build -o dest
 
-      - name: publish EasyAbp.Abp.WeChat.Official.HttpApi.dll
-        uses: brandedoutcast/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/Official/EasyAbp.Abp.WeChat.Official.HttpApi/EasyAbp.Abp.WeChat.Official.HttpApi.csproj
-          VERSION_FILE_PATH: common.props
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+      - name: remove unused packages
+        run: |
+          cd dest
+          ls | grep -v EasyAbp. | xargs rm -f
+          ls | grep HttpApi.Client.ConsoleTestApp | xargs rm -f
+          ls
 
-      - name: publish EasyAbp.Abp.WeChat.Pay.dll
-        uses: brandedoutcast/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/Pay/EasyAbp.Abp.WeChat.Pay/EasyAbp.Abp.WeChat.Pay.csproj
-          VERSION_FILE_PATH: common.props
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+      - name: dotnet nuget push to GitHub
+        run: dotnet nuget push ./dest/**/*.nupkg --skip-duplicate --no-symbols true
 
-      - name: publish EasyAbp.Abp.WeChat.Pay.HttpApi.dll
-        uses: brandedoutcast/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/Pay/EasyAbp.Abp.WeChat.Pay.HttpApi/EasyAbp.Abp.WeChat.Pay.HttpApi.csproj
-          VERSION_FILE_PATH: common.props
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+      - name: dotnet nuget push to NuGet
+        run: dotnet nuget push ./dest/**/*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols true

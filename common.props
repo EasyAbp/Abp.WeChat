@@ -1,11 +1,12 @@
 <Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <Version>1.1.5</Version>
+    <Version>1.1.6</Version>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>EasyAbp Team</Authors>
     <Description>Abp 微信 SDK 模块，包含对微信小程序、公众号、企业微信、开放平台、第三方平台等相关接口封装。</Description>
+    <PackageIconUrl>https://avatars3.githubusercontent.com/u/58311641?s=128</PackageIconUrl>
     <PackageProjectUrl>https://github.com/EasyAbp/Abp.WeChat</PackageProjectUrl>
     <RepositoryUrl>https://github.com/EasyAbp/Abp.WeChat</RepositoryUrl>
     <PackageTags>abp module easyabp wechat weixin sdk zony</PackageTags>
