@@ -5,17 +5,10 @@ on:
       - master # Default release branch
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1.200
-          source-url: https://nuget.pkg.github.com/EasyAbp/index.json
-        env:
-          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - uses: warrenbuckley/Setup-Nuget@v1
 
       - name: dotnet build
         run: dotnet build -c Release
@@ -26,12 +19,15 @@ jobs:
       - name: remove unused packages
         run: |
           cd dest
-          ls | grep -v EasyAbp. | xargs rm -f
-          ls | grep HttpApi.Client.ConsoleTestApp | xargs rm -f
-          ls
+          del * -Exclude EasyAbp.*
+          del *.HttpApi.Client.ConsoleTestApp*
+          del *.Host.Shared*
+          dir -name
 
       - name: dotnet nuget push to GitHub
-        run: dotnet nuget push ./dest/**/*.nupkg --skip-duplicate --no-symbols true
+        run: |
+          dotnet nuget add source https://nuget.pkg.github.com/EasyAbp/index.json -n github -u EasyAbp -p ${{secrets.GITHUB_TOKEN}} 
+          dotnet nuget push dest\*.nupkg -s "github" --skip-duplicate
 
       - name: dotnet nuget push to NuGet
-        run: dotnet nuget push ./dest/**/*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols true
+        run: dotnet nuget push dest\*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate
