@@ -13,8 +13,8 @@ namespace EasyAbp.Abp.WeChat.Pay.Extensions
         public static string Encrypt(this string src, byte[] key)
         {
             using var x509 = new X509Certificate2(key);
-            using var rsa = (RSA)x509.PublicKey.Key;
-            var buff = rsa.Encrypt(Encoding.UTF8.GetBytes(src),RSAEncryptionPadding.Pkcs1);
+            using var rsa = (RSA) x509.PublicKey.Key;
+            var buff = rsa.Encrypt(Encoding.UTF8.GetBytes(src), RSAEncryptionPadding.Pkcs1);
 
             return Convert.ToBase64String(buff);
         }

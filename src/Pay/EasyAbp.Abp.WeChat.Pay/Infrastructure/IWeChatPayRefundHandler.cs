@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 
 namespace EasyAbp.Abp.WeChat.Pay.Infrastructure

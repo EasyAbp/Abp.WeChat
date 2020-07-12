@@ -8,6 +8,9 @@ using Microsoft.Extensions.Logging;
 
 namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers
 {
+    /// <summary>
+    /// 签名验证处理器，用于验证微信支付回调结果是否合法。
+    /// </summary>
     public class SignVerifyHandler : IWeChatPayHandler
     {
         protected readonly IWeChatPayOptionsResolver WeChatPayOptionsResolver;
