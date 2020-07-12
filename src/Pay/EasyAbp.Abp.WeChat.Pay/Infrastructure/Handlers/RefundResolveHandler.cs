@@ -19,8 +19,13 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers
 
         public async Task HandleAsync(WeChatPayHandlerContext context)
         {
-            var options = await WeChatPayOptionsResolver.ResolveAsync();
             var encryptedXml = context.WeChatRequestXmlData.SelectSingleNode("/xml/req_info")?.InnerText;
+            if (encryptedXml == null)
+            {
+                return;
+            }
+
+            var options = await WeChatPayOptionsResolver.ResolveAsync();
             var decryptXml = Decrypt(encryptedXml, options.ApiKey.ToMd5().ToLower());
 
             var root = context.WeChatRequestXmlData.DocumentElement?.SelectSingleNode("/xml/req_info");
