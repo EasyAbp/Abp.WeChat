@@ -2,6 +2,7 @@
 using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
+using Shouldly;
 using Xunit;
 
 namespace EasyAbp.Abp.WeChat.Pay.Tests.Infrastructure
@@ -18,6 +19,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests.Infrastructure
         [Fact]
         public async Task SignVerify_Test()
         {
+            // Arrange
             var xml = new XmlDocument();
             xml.LoadXml(@"<xml>
   <appid><![CDATA[wx2421b1c4370ec43b]]></appid>
@@ -41,10 +43,16 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests.Infrastructure
   <trade_type><![CDATA[JSAPI]]></trade_type>
   <transaction_id><![CDATA[1004400740201409030005092168]]></transaction_id>
 </xml>");
-            await _signVerifyHandler.HandleAsync(new WeChatPayHandlerContext
+            var context = new WeChatPayHandlerContext
             {
                 WeChatRequestXmlData = xml
-            });
+            };
+
+            // Act
+            await _signVerifyHandler.HandleAsync(context);
+
+            // Assert
+            context.IsSuccess.ShouldBe(true);
         }
     }
 }
