@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Xml;
@@ -41,7 +42,7 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         [Route("Notify")]
         public virtual async Task<ActionResult> Notify()
         {
-            var handlers = ServiceProvider.GetServices<IWeChatPayHandler>();
+            var handlers = ServiceProvider.GetServices<IWeChatPayHandler>().Where(h=>h.Type == WeChatHandlerType.Normal);
 
             Request.EnableBuffering();
             using (var streamReader = new StreamReader(_httpContextAccessor.HttpContext.Request.Body))
@@ -71,13 +72,13 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         }
 
         /// <summary>
-        /// 微信支付模块提供的退款回调接口，开发人员需要实现 <see cref="IWeChatPayRefundHandler"/> 处理器来处理回调请求。
+        /// 微信支付模块提供的退款回调接口，开发人员需要实现 <see cref="IWeChatPayHandler"/> 处理器来处理回调请求。
         /// </summary>
         [HttpPost]
         [Route("RefundNotify")]
         public virtual async Task<ActionResult> RefundNotify()
         {
-            var handlers = ServiceProvider.GetServices<IWeChatPayRefundHandler>();
+            var handlers = ServiceProvider.GetServices<IWeChatPayHandler>().Where(h=>h.Type == WeChatHandlerType.Refund);
 
             Request.EnableBuffering();
             using (var streamReader = new StreamReader(_httpContextAccessor.HttpContext.Request.Body))

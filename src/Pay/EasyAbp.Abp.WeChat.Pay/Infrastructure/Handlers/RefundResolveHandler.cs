@@ -2,7 +2,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 
 namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers
@@ -15,6 +14,8 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers
         {
             WeChatPayOptionsResolver = weChatPayOptionsResolver;
         }
+
+        public WeChatHandlerType Type => WeChatHandlerType.Refund;
 
         public async Task HandleAsync(WeChatPayHandlerContext context)
         {
@@ -39,7 +40,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers
                 Mode = CipherMode.ECB,
                 Padding = PaddingMode.PKCS7
             };
-            
+
             var cTransform = rDel.CreateDecryptor();
             var resultBytes = cTransform.TransformFinalBlock(dataBytes, 0, dataBytes.Length);
             return Encoding.UTF8.GetString(resultBytes);

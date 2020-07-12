@@ -9,5 +9,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure
     public interface IWeChatPayHandler
     {
         Task HandleAsync(WeChatPayHandlerContext context);
+
+        WeChatHandlerType Type { get; }
     }
 }

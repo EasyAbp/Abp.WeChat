@@ -25,6 +25,8 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers
             SignatureGenerator = signatureGenerator;
             Logger = logger;
         }
+        
+        public WeChatHandlerType Type => WeChatHandlerType.Normal;
 
         public async Task HandleAsync(WeChatPayHandlerContext context)
         {
