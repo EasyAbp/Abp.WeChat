@@ -8,6 +8,7 @@ using EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
+using Volo.Abp.Threading;
 
 namespace EasyAbp.Abp.WeChat.Pay
 {
@@ -24,8 +25,8 @@ namespace EasyAbp.Abp.WeChat.Pay
                     SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls
                 };
 
-                // TODO: Refactor?
-                var options = builder.GetRequiredService<IWeChatPayOptionsResolver>().ResolveAsync().GetAwaiter().GetResult();
+                var options = AsyncHelper.RunSync(() =>
+                    builder.GetRequiredService<IWeChatPayOptionsResolver>().ResolveAsync());
 
                 if (string.IsNullOrEmpty(options.CertificatePath)) return handler;
                 if (!File.Exists(options.CertificatePath)) throw new FileNotFoundException("指定的证书路径无效，请重新指定有效的证书文件路径。");
