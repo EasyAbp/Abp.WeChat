@@ -24,6 +24,40 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
 
         public async Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IMiniProgramRequest miniProgramRequest = null, bool withAccessToken = true)
         {
+            var responseMessage =
+                await RequestGetHttpResponseMessageAsync(targetUrl, method, miniProgramRequest, withAccessToken);
+            
+            var resultStr = await responseMessage.Content.ReadAsStringAsync();
+            
+            return JsonConvert.DeserializeObject<TResponse>(resultStr);
+        }
+
+        public async Task<TResponse> RequestGetBinaryDataAsync<TResponse>(string targetUrl, HttpMethod method,
+            IMiniProgramRequest miniProgramRequest = null, bool withAccessToken = true) where TResponse : IHasBinaryData
+        {
+            var responseMessage =
+                await RequestGetHttpResponseMessageAsync(targetUrl, method, miniProgramRequest, withAccessToken);
+            
+            var resultStr = await responseMessage.Content.ReadAsStringAsync();
+
+            try
+            {
+                return JsonConvert.DeserializeObject<TResponse>(resultStr);
+            }
+            catch (Exception)
+            {
+                var result = JsonConvert.DeserializeObject<TResponse>("{}");
+                // var result = default(TResponse);
+
+                result.BinaryData = await responseMessage.Content.ReadAsByteArrayAsync();
+
+                return result;
+            }
+        }
+
+        private async Task<HttpResponseMessage> RequestGetHttpResponseMessageAsync(string targetUrl, HttpMethod method,
+            IMiniProgramRequest miniProgramRequest = null, bool withAccessToken = true)
+        {
             var client = _httpClientFactory.CreateClient();
 
             targetUrl = targetUrl.EnsureEndsWith('?');
@@ -37,8 +71,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
                 ? BuildHttpGetRequestMessage(targetUrl, miniProgramRequest)
                 : BuildHttpPostRequestMessage(targetUrl, miniProgramRequest);
 
-            var resultStr = await (await client.SendAsync(requestMsg)).Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<TResponse>(resultStr);
+            return await client.SendAsync(requestMsg);
         }
 
         private HttpRequestMessage BuildHttpGetRequestMessage(string targetUrl, IMiniProgramRequest miniProgramRequest)
