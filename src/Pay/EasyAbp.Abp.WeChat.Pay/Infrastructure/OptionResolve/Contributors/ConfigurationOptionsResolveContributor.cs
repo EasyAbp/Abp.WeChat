@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve.Contributors
 {
-    public class ConfigurationOptionResolveContributor : IWeChatPayOptionResolveContributor
+    public class ConfigurationOptionsResolveContributor : IWeChatPayOptionsResolveContributor
     {
         public const string ContributorName = "Configuration";
 

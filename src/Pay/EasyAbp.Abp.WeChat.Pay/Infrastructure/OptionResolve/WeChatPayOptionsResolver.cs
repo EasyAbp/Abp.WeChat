@@ -28,7 +28,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve
             {
                 var context = new WeChatPayOptionsResolverContext(serviceScope.ServiceProvider);
 
-                foreach (var resolver in _options.ResolveContributors)
+                foreach (var resolver in _options.Contributors)
                 {
                     await resolver.ResolveAsync(context);
 

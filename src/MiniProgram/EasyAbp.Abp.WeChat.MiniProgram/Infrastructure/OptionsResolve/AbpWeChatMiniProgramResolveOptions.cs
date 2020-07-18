@@ -6,14 +6,11 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.OptionsResolve
 {
     public class AbpWeChatMiniProgramResolveOptions
     {
-        [NotNull] public List<IWeChatMiniProgramOptionsResolveContributor> WeChatMiniProgramOptionsResolveContributors { get; }
+        public List<IWeChatMiniProgramOptionsResolveContributor> Contributors { get; }
 
         public AbpWeChatMiniProgramResolveOptions()
         {
-            WeChatMiniProgramOptionsResolveContributors = new List<IWeChatMiniProgramOptionsResolveContributor>
-            {
-                new ConfigurationOptionsResolveContributor()
-            };
+            Contributors = new List<IWeChatMiniProgramOptionsResolveContributor>();
         }
     }
 }

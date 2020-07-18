@@ -6,6 +6,7 @@ using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
+using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve.Contributors;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
@@ -17,6 +18,19 @@ namespace EasyAbp.Abp.WeChat.Pay
     {
         public override void PostConfigureServices(ServiceConfigurationContext context)
         {
+            Configure<AbpWeChatPayResolveOptions>(options =>
+            {
+                if (!options.Contributors.Exists(x => x.Name == ConfigurationOptionsResolveContributor.ContributorName))
+                {
+                    options.Contributors.Add(new ConfigurationOptionsResolveContributor());
+                }
+
+                if (!options.Contributors.Exists(x => x.Name == AsyncLocalOptionsResolveContributor.ContributorName))
+                {
+                    options.Contributors.Insert(0, new AsyncLocalOptionsResolveContributor());
+                }
+            });
+            
             context.Services.AddHttpClient("WeChatPay").ConfigurePrimaryHttpMessageHandler(builder =>
             {
                 var handler = new HttpClientHandler

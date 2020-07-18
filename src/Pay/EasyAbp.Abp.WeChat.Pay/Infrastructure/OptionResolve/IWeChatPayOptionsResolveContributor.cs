@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve
 {
-    public interface IWeChatPayOptionResolveContributor
+    public interface IWeChatPayOptionsResolveContributor
     {
         string Name { get; }
 

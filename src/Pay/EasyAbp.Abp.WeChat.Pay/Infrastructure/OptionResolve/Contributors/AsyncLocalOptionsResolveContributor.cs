@@ -7,7 +7,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve.Contributors
 {
-    public class AsyncLocalResolveContributor : IWeChatPayOptionResolveContributor
+    public class AsyncLocalOptionsResolveContributor : IWeChatPayOptionsResolveContributor
     {
         public const string ContributorName = "AsyncLocal";
 
@@ -16,7 +16,11 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve.Contributors
         public Task ResolveAsync(WeChatPayOptionsResolverContext context)
         {
             var asyncLocal = context.ServiceProvider.GetRequiredService<IWeChatPayAsyncLocalAccessor>();
-            context.Options = asyncLocal.Current;
+
+            if (asyncLocal.Current != null)
+            {
+                context.Options = asyncLocal.Current;
+            }
 
             return Task.CompletedTask;
         }
@@ -50,7 +54,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve.Contributors
         IDisposable Change(IWeChatPayOptions weChatPayOptions);
     }
 
-    public class WeChatPayAsyncLocal : IWeChatPayAsyncLocal
+    public class WeChatPayAsyncLocal : IWeChatPayAsyncLocal, ITransientDependency
     {
         public IWeChatPayOptions CurrentOptions { get; }
 
@@ -59,12 +63,16 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve.Contributors
         public WeChatPayAsyncLocal(IWeChatPayAsyncLocalAccessor weChatPayAsyncLocalAccessor)
         {
             _weChatPayAsyncLocalAccessor = weChatPayAsyncLocalAccessor;
+            
+            CurrentOptions = weChatPayAsyncLocalAccessor.Current;
         }
 
         public IDisposable Change(IWeChatPayOptions weChatPayOptions)
         {
             var parentScope = _weChatPayAsyncLocalAccessor.Current;
+            
             _weChatPayAsyncLocalAccessor.Current = weChatPayOptions;
+            
             return new DisposeAction(() =>
             {
                 _weChatPayAsyncLocalAccessor.Current = parentScope;

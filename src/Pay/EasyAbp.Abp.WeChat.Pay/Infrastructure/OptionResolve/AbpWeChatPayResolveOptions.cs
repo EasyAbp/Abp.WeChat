@@ -5,14 +5,11 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve
 {
     public class AbpWeChatPayResolveOptions
     {
-        public List<IWeChatPayOptionResolveContributor> ResolveContributors { get; }
+        public List<IWeChatPayOptionsResolveContributor> Contributors { get; }
 
         public AbpWeChatPayResolveOptions()
         {
-            ResolveContributors = new List<IWeChatPayOptionResolveContributor>
-            {
-                new ConfigurationOptionResolveContributor()
-            };
+            Contributors = new List<IWeChatPayOptionsResolveContributor>();
         }
     }
 }

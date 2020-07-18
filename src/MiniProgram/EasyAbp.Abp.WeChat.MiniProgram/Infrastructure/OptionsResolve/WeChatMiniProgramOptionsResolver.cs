@@ -24,7 +24,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.OptionsResolve
             {
                 var context = new WeChatMiniProgramOptionsResolveContext(serviceScope.ServiceProvider);
 
-                foreach (var resolver in _options.WeChatMiniProgramOptionsResolveContributors)
+                foreach (var resolver in _options.Contributors)
                 {
                     await resolver.ResolveAsync(context);
 
