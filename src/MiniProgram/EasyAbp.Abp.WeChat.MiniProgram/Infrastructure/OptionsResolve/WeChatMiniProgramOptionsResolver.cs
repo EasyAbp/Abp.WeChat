@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Volo.Abp.DependencyInjection;
@@ -17,15 +18,15 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.OptionsResolve
             _options = abpWeChatMiniProgramResolveOptions.Value;
         }
 
-        public IWeChatMiniProgramOptions Resolve()
+        public async Task<IWeChatMiniProgramOptions> ResolveAsync()
         {
             using (var serviceScope = _serviceProvider.CreateScope())
             {
-                var context = new WeChatMiniProgramResolveContext(serviceScope.ServiceProvider);
+                var context = new WeChatMiniProgramOptionsResolveContext(serviceScope.ServiceProvider);
 
                 foreach (var resolver in _options.WeChatMiniProgramOptionsResolveContributors)
                 {
-                    resolver.Resolve(context);
+                    await resolver.ResolveAsync(context);
 
                     if (context.Options != null)
                     {

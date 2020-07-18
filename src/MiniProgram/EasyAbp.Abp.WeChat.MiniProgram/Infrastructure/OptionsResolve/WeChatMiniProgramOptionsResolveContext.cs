@@ -3,13 +3,13 @@ using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.OptionsResolve
 {
-    public class WeChatMiniProgramResolveContext : IServiceProviderAccessor
+    public class WeChatMiniProgramOptionsResolveContext : IServiceProviderAccessor
     {
         public IWeChatMiniProgramOptions Options { get; set; }
 
         public IServiceProvider ServiceProvider { get; }
 
-        public WeChatMiniProgramResolveContext(IServiceProvider serviceProvider)
+        public WeChatMiniProgramOptionsResolveContext(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
         }

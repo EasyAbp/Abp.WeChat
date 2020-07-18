@@ -27,7 +27,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
 
         public virtual async Task<string> GetAccessTokenAsync()
         {
-            var options = WeChatMiniProgramOptionsResolver.Resolve();
+            var options = await WeChatMiniProgramOptionsResolver.ResolveAsync();
 
             return await DistributedCache.GetOrAddAsync($"CurrentAccessToken:{options.AppId}",
                 async () =>

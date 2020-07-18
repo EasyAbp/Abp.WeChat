@@ -21,11 +21,11 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Services.Login
         /// </summary>
         /// <param name="jsCode">登录时获取的 code</param>
         /// <param name="grantType">授权类型，此处只需填写 authorization_code</param>
-        public Task<Code2SessionResponse> Code2SessionAsync(string jsCode, string grantType = "authorization_code")
+        public async Task<Code2SessionResponse> Code2SessionAsync(string jsCode, string grantType = "authorization_code")
         {
-            var options = _optionsResolver.Resolve();
+            var options = await _optionsResolver.ResolveAsync();
 
-            return Code2SessionAsync(options.AppId, options.AppSecret, jsCode, grantType);
+            return await Code2SessionAsync(options.AppId, options.AppSecret, jsCode, grantType);
         }
         
         /// <summary>

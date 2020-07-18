@@ -4,7 +4,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Common.Infrastructure.Signature
 {
-    public class SignatureGenerator : ISignatureGenerator, ISingletonDependency
+    public class SignatureGenerator : ISignatureGenerator, ITransientDependency
     {
         public string Generate(WeChatParameters parameters, HashAlgorithm hashAlgorithm, string apiKey = null)
         {
