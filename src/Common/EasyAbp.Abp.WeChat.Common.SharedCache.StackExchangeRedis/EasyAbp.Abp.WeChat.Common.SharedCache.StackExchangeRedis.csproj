@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>EasyAbp.Abp.WeChat.Common.SharedCache.StackExchangeRedis</RootNamespace>
+    <Description>ABP vNext微信模块，基于StackExchangeRedis提供多服务间共享access_token等缓存数据的功能扩展。</Description>
+    <LangVersion>8</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="3.0.4" />
+    <ProjectReference Include="..\EasyAbp.Abp.WeChat.Common\EasyAbp.Abp.WeChat.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\StackExchangeRedis\*.json" />
+    <Content Remove="Localization\StackExchangeRedis\*.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Infrastructure" />
+  </ItemGroup>
+
+</Project>

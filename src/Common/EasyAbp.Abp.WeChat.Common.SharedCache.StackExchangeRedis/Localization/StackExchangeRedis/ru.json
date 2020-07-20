@@ -1,0 +1,7 @@
+{
+  "culture": "ru",
+  "texts": {
+    "SharedCacheRedisConfiguration": "SharedCacheRedisConfiguration",
+    "SharedCacheRedisConfigurationDescription": "SharedCacheRedisConfigurationDescription"
+  }
+}

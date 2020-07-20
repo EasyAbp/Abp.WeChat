@@ -1,0 +1,7 @@
+{
+  "culture": "zh-Hant",
+  "texts": {
+    "SharedCacheRedisConfiguration": "共享缓存RedisConfiguration",
+    "SharedCacheRedisConfigurationDescription": "共享Redis缓存的连接配置，用于在多个服务之间分享access_token等动态数据"
+  }
+}
