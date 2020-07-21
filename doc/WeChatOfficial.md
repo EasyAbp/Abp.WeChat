@@ -29,10 +29,10 @@ public class XXXHttpApiModule : AbpModule
 微信模块的配置参数都存放在 `AbpWeChatOfficialOptions` 内部，开发人员只需要在启动模块的 `ConfigureService()` 方法中进行配置即可，下面是最小启动配置。
 
 ```csharp
-[DependsOn (typeof (AbpWeChatOfficialOptions))]
+[DependsOn(typeof(AbpWeChatOfficialHttpApiModule))]
 public class XXXHttpApiModule : AbpModule 
 {
-    public override void ConfigureServices (ServiceConfigurationContext context) 
+    public override void ConfigureServices(ServiceConfigurationContext context) 
     {
         Configure<AbpWeChatOfficialOptions>(op =>
         {
