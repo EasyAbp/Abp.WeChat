@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -25,12 +26,23 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure
 
             var client = _httpClientFactory.CreateClient("WeChatPay");
             var responseMessage = await client.SendAsync(request);
-            
-            if(responseMessage.StatusCode == HttpStatusCode.GatewayTimeout) throw new HttpRequestException("微信支付网关超时，请稍后重试。");
-
             var readAsString = await responseMessage.Content.ReadAsStringAsync();
+
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"微信支付接口请求失败。\n错误码: {responseMessage.StatusCode}，\n响应内容: {readAsString}");
+            }
+
             var newXmlDocument = new XmlDocument();
-            newXmlDocument.LoadXml(readAsString);
+            try
+            {
+                newXmlDocument.LoadXml(readAsString);
+            }
+            catch (XmlException e)
+            {
+                throw new HttpRequestException($"请求接口失败，返回的不是一个标准的 XML 文档。\n响应内容: {readAsString}");
+            }
+
             return newXmlDocument;
         }
     }
