@@ -22,6 +22,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests
                 op.CertificateName = "CertificateName";
                 op.CertificateSecret = "";
                 op.NotifyUrl = "";
+                op.RefundNotifyUrl = "RefundNotifyUrl";
             });
 
             Configure<AbpBlobStoringOptions>(options =>
