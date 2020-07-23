@@ -16,7 +16,9 @@ namespace EasyAbp.Abp.WeChat.Pay.Exceptions
         {
         }
 
-        public CallWeChatPayApiException(SerializationInfo serializationInfo, StreamingContext context) : base(serializationInfo, context)
+        public CallWeChatPayApiException(SerializationInfo serializationInfo,
+            StreamingContext context) : base(serializationInfo,
+            context)
         {
         }
 

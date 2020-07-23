@@ -39,8 +39,7 @@ namespace EasyAbp.Abp.WeChat.Pay
                     SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls
                 };
 
-                var options = AsyncHelper.RunSync(() =>
-                    builder.GetRequiredService<IWeChatPayOptionsResolver>().ResolveAsync());
+                var options = AsyncHelper.RunSync(() => builder.GetRequiredService<IWeChatPayOptionsResolver>().ResolveAsync());
 
                 if (string.IsNullOrEmpty(options.CertificatePath)) return handler;
                 if (!File.Exists(options.CertificatePath)) throw new FileNotFoundException("指定的证书路径无效，请重新指定有效的证书文件路径。");
