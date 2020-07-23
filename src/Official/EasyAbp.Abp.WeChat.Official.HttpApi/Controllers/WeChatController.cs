@@ -17,7 +17,7 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
 {
     [RemoteService]
     [ControllerName("WeChat")]
-    [Route("/WeChat")]
+    [Route("/wechat")]
     public class WeChatController : AbpController
     {
         private readonly IWeChatOfficialOptionsResolver _optionsResolver;
@@ -42,7 +42,7 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
         }
 
         [HttpGet]
-        [Route("Verify")]
+        [Route("verify")]
         public virtual Task<string> Verify(VerifyRequestDto input)
         {
             var options = _optionsResolver.Resolve();
@@ -55,7 +55,7 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
         }
 
         [HttpGet]
-        [Route("RedirectUrl")]
+        [Route("redirect-url")]
         public virtual ActionResult RedirectUrl(RedirectUrlRequest input)
         {
             if (input == null) return BadRequest();
@@ -66,7 +66,7 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetAccessTokenByCode")]
+        [Route("access-token-by-code")]
         public virtual async Task<ActionResult> GetAccessTokenByCode([FromQuery] string code)
         {
             var client = _httpClientFactory.CreateClient();
@@ -81,7 +81,7 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetJsSdkConfigParameters")]
+        [Route("js-sdk-config-parameters")]
         public virtual async Task<ActionResult> GetJsSdkConfigParameters([FromQuery] string jsUrl)
         {
             if (string.IsNullOrEmpty(jsUrl)) throw new UserFriendlyException("需要计算的 JS URL 参数不能够为空。");

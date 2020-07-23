@@ -19,7 +19,7 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
 {
     [RemoteService]
     [ControllerName("WeChatPay")]
-    [Route("/WeChatPay")]
+    [Route("/wechat-pay")]
     public class WeChatPayController : AbpController
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -39,10 +39,10 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         /// 微信支付模块提供的支付成功通知接口，开发人员需要实现 <see cref="IWeChatPayHandler"/> 处理器来处理回调请求。
         /// </summary>
         [HttpPost]
-        [Route("Notify")]
+        [Route("notify")]
         public virtual async Task<ActionResult> Notify()
         {
-            var handlers = ServiceProvider.GetServices<IWeChatPayHandler>().Where(h=>h.Type == WeChatHandlerType.Normal);
+            var handlers = ServiceProvider.GetServices<IWeChatPayHandler>().Where(h => h.Type == WeChatHandlerType.Normal);
 
             Request.EnableBuffering();
             using (var streamReader = new StreamReader(_httpContextAccessor.HttpContext.Request.Body))
@@ -75,10 +75,10 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         /// 微信支付模块提供的退款回调接口，开发人员需要实现 <see cref="IWeChatPayHandler"/> 处理器来处理回调请求。
         /// </summary>
         [HttpPost]
-        [Route("RefundNotify")]
+        [Route("refund-notify")]
         public virtual async Task<ActionResult> RefundNotify()
         {
-            var handlers = ServiceProvider.GetServices<IWeChatPayHandler>().Where(h=>h.Type == WeChatHandlerType.Refund);
+            var handlers = ServiceProvider.GetServices<IWeChatPayHandler>().Where(h => h.Type == WeChatHandlerType.Refund);
 
             Request.EnableBuffering();
             using (var streamReader = new StreamReader(_httpContextAccessor.HttpContext.Request.Body))
@@ -113,7 +113,7 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         /// <param name="appId">AppId</param>
         /// <param name="prepayId">预支付 Id。</param>
         [HttpGet]
-        [Route("GetJsSdkWeChatPayParameters")]
+        [Route("js-sdk-config-parameters")]
         [ItemCanBeNull]
         public virtual async Task<ActionResult> GetJsSdkWeChatPayParameters([FromQuery] string appId, string prepayId)
         {
