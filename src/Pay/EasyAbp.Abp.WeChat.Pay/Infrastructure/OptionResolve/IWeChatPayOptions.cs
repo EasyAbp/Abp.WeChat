@@ -30,9 +30,9 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve
         public string RefundNotifyUrl { get; set; }
 
         /// <summary>
-        /// PKCS 12 证书的所在路径，文件名称类似于 “apiclient_cert.p12” 。
+        /// PKCS 12 证书在 BLOB 的标识符。
         /// </summary>
-        public string CertificatePath { get; set; }
+        public string CertificateName { get; set; }
 
         /// <summary>
         /// PKCS 12 证书的密码，默认为商户号(<see cref="MchId"/>)。

@@ -8,15 +8,23 @@ using EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve.Contributors;
 using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.BlobStoring;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
 
 namespace EasyAbp.Abp.WeChat.Pay
 {
-    [DependsOn(typeof(AbpWeChatCommonModule))]
+    [DependsOn(typeof(AbpWeChatCommonModule),
+        typeof(AbpBlobStoringModule))]
     public class AbpWeChatPayModule : AbpModule
     {
         public override void PostConfigureServices(ServiceConfigurationContext context)
+        {
+            ConfigureResolveContributor();
+            ConfigureWeChatPayHttpClient(context);
+        }
+
+        private void ConfigureResolveContributor()
         {
             Configure<AbpWeChatPayResolveOptions>(options =>
             {
@@ -30,7 +38,10 @@ namespace EasyAbp.Abp.WeChat.Pay
                     options.Contributors.Insert(0, new AsyncLocalOptionsResolveContributor());
                 }
             });
-            
+        }
+
+        private void ConfigureWeChatPayHttpClient(ServiceConfigurationContext context)
+        {
             context.Services.AddHttpClient("WeChatPay").ConfigurePrimaryHttpMessageHandler(builder =>
             {
                 var handler = new HttpClientHandler
@@ -40,11 +51,14 @@ namespace EasyAbp.Abp.WeChat.Pay
                 };
 
                 var options = AsyncHelper.RunSync(() => builder.GetRequiredService<IWeChatPayOptionsResolver>().ResolveAsync());
+                if (string.IsNullOrEmpty(options.CertificateName)) return handler;
 
-                if (string.IsNullOrEmpty(options.CertificatePath)) return handler;
-                if (!File.Exists(options.CertificatePath)) throw new FileNotFoundException("指定的证书路径无效，请重新指定有效的证书文件路径。");
+                var certificateBytes = AsyncHelper.RunSync(() => builder.GetRequiredService<IBlobContainer>().GetAllBytesOrNullAsync(options.CertificateName));
+                if (certificateBytes == null) throw new FileNotFoundException("指定的证书路径无效，请重新指定有效的证书文件路径。");
 
-                handler.ClientCertificates.Add(new X509Certificate2(options.CertificatePath, options.CertificateSecret,
+                handler.ClientCertificates.Add(new X509Certificate2(
+                    certificateBytes,
+                    options.CertificateSecret,
                     X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.MachineKeySet));
                 handler.ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true;
 

@@ -33,7 +33,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests.Infrastructure
   <out_trade_no><![CDATA[1409811653]]></out_trade_no>
   <result_code><![CDATA[SUCCESS]]></result_code>
   <return_code><![CDATA[SUCCESS]]></return_code>
-  <sign><![CDATA[44DBC1D1FCFE7B6579D4771098D75DE8]]></sign>
+  <sign><![CDATA[29ADB404083AA9154EC99D650DDFDCC2]]></sign>
   <time_end><![CDATA[20140903131540]]></time_end>
   <total_fee>1</total_fee>
   <coupon_fee><![CDATA[10]]></coupon_fee>
