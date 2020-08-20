@@ -2,8 +2,11 @@
 
 [![NuGet](https://img.shields.io/nuget/v/EasyAbp.Abp.WeChat.Common.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.Abp.WeChat.Common)
 [![NuGet Download](https://img.shields.io/nuget/dt/EasyAbp.Abp.WeChat.Common.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.Abp.WeChat.Common)
+[![GitHub stars](https://img.shields.io/github/stars/EasyAbp/Abp.WeChat?style=social)](https://www.github.com/EasyAbp/Abp.WeChat)
 
 Abp 微信 SDK 模块，包含对微信小程序、公众号、企业微信、开放平台、第三方平台等相关接口封装。
+
+> 推荐你使用 EasyAbp 封装的[微信管理模块](https://github.com/EasyAbp/WeChatManagement)，它依赖本模块做了二次封装，提供应用级的各项功能。
 
 ## 一、简要介绍
 
