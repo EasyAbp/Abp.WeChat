@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
@@ -51,9 +52,13 @@ namespace EasyAbp.Abp.WeChat.Pay
                 };
 
                 var options = AsyncHelper.RunSync(() => builder.GetRequiredService<IWeChatPayOptionsResolver>().ResolveAsync());
-                if (string.IsNullOrEmpty(options.CertificateName)) return handler;
+                if (string.IsNullOrEmpty(options.CertificateBlobName)) return handler;
 
-                var certificateBytes = AsyncHelper.RunSync(() => builder.GetRequiredService<IBlobContainer>().GetAllBytesOrNullAsync(options.CertificateName));
+                var blobContainer = options.CertificateBlobContainerName.IsNullOrEmpty()
+                    ? builder.GetRequiredService<IBlobContainer>()
+                    : builder.GetRequiredService<IBlobContainerFactory>().Create(options.CertificateBlobContainerName);
+                
+                var certificateBytes = AsyncHelper.RunSync(() => blobContainer.GetAllBytesOrNullAsync(options.CertificateBlobName));
                 if (certificateBytes == null) throw new FileNotFoundException("指定的证书路径无效，请重新指定有效的证书文件路径。");
 
                 handler.ClientCertificates.Add(new X509Certificate2(

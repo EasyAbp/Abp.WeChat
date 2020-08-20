@@ -23,9 +23,13 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests.Services
         {
             // Arrange & Act
             var options = await GetRequiredService<IWeChatPayOptionsResolver>().ResolveAsync();
-            if (string.IsNullOrEmpty(options.CertificateName)) throw new NullReferenceException();
+            if (string.IsNullOrEmpty(options.CertificateBlobName)) throw new NullReferenceException();
 
-            var certificateBytes = await GetRequiredService<IBlobContainer>().GetAllBytesOrNullAsync(options.CertificateName);
+            var blobContainer = options.CertificateBlobContainerName.IsNullOrEmpty()
+                ? GetRequiredService<IBlobContainer>()
+                : GetRequiredService<IBlobContainerFactory>().Create(options.CertificateBlobContainerName);
+                
+            var certificateBytes = AsyncHelper.RunSync(() => blobContainer.GetAllBytesOrNullAsync(options.CertificateBlobName));
             if (certificateBytes == null) throw new FileNotFoundException("指定的证书路径无效，请重新指定有效的证书文件路径。");
 
             // Assert

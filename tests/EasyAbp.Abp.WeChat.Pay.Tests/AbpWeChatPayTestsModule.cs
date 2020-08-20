@@ -19,7 +19,8 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests
                 // TODO: 测试的时候，请在此处填写相关的配置参数。
                 op.MchId = "";
                 op.ApiKey = "abcdefg";
-                op.CertificateName = "CertificateName";
+                // op.CertificateBlobContainerName = "";
+                op.CertificateBlobName = "CertificateName";
                 op.CertificateSecret = "";
                 op.NotifyUrl = "";
                 op.RefundNotifyUrl = "RefundNotifyUrl";
