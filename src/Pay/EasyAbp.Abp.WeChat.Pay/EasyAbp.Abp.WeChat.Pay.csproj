@@ -15,7 +15,7 @@
 
     <ItemGroup>
         <PackageReference Include="Portable.BouncyCastle" Version="1.8.6.7" />
-        <PackageReference Include="Volo.Abp.BlobStoring" Version="3.0.4" />
+        <PackageReference Include="Volo.Abp.BlobStoring" Version="3.1.2" />
     </ItemGroup>
 
 </Project>
