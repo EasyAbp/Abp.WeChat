@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace EasyAbp.Abp.WeChat.MiniProgram.Services.ACode
 {
     /// <summary>
-    /// 发送模板消息时，需要传递的请求参数。
+    /// 获取 Unlimited 小程序码时，需要传递的请求参数。
     /// </summary>
     public class GetUnlimitedACodeRequest : MiniProgramCommonRequest
     {
