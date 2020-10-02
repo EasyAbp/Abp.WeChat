@@ -19,13 +19,13 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Tests.Services
         }
 
         [Fact]
-        public async Task Should_Get_Unlimited_ACode()
+        public async Task Should_Send_Subscribe_Message()
         {
             var result = await _subscribeMessageService.SendAsync(OpenId, TemplateId, null, new SubscribeMessageData
             {
-                {"任务标题", new SubscribeMessageDataItem {Value = "标题1"}},
-                {"任务类别", new SubscribeMessageDataItem {Value = "类别1"}},
-                {"任务内容", new SubscribeMessageDataItem {Value = "内容1"}}
+                {"thing1", new SubscribeMessageDataItem {Value = "标题1"}},
+                {"thing2", new SubscribeMessageDataItem {Value = "类别1"}},
+                {"thing3", new SubscribeMessageDataItem {Value = "内容1"}}
             });
             
             result.ShouldNotBeNull();
