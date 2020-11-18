@@ -8,7 +8,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: warrenbuckley/Setup-Nuget@v1
+      - uses: NuGet/setup-nuget@v1.0.5
 
       - name: read common.props
         id: commonProps
