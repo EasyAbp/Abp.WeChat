@@ -43,25 +43,25 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
 
         [HttpGet]
         [Route("verify")]
-        public virtual Task<string> Verify(VerifyRequestDto input)
+        public virtual async Task<string> Verify(VerifyRequestDto input)
         {
-            var options = _optionsResolver.Resolve();
+            var options = await _optionsResolver.ResolveAsync();
             if (_signatureChecker.Validate(options.Token, input.Timestamp, input.Nonce, input.Signature))
             {
-                return Task.FromResult(input.EchoStr);
+                return input.EchoStr;
             }
 
-            return Task.FromResult("非法参数。");
+            return "非法参数。";
         }
 
         [HttpGet]
         [Route("redirect-url")]
-        public virtual ActionResult RedirectUrl(RedirectUrlRequest input)
+        public virtual async Task<ActionResult> RedirectUrl(RedirectUrlRequest input)
         {
             if (input == null) return BadRequest();
             if (string.IsNullOrEmpty(input.Code)) return BadRequest();
 
-            var options = _optionsResolver.Resolve();
+            var options = await _optionsResolver.ResolveAsync();
             return Redirect($"{options.OAuthRedirectUrl.TrimEnd('/')}?code={input.Code}");
         }
 
@@ -70,7 +70,7 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
         public virtual async Task<ActionResult> GetAccessTokenByCode([FromQuery] string code)
         {
             var client = _httpClientFactory.CreateClient();
-            var options = _optionsResolver.Resolve();
+            var options = await _optionsResolver.ResolveAsync();
             var requestUrl =
                 $@"https://api.weixin.qq.com/sns/oauth2/access_token?grant_type={GrantTypes.AuthorizationCode}&appid={options.AppId}&secret={options.AppSecret}&code={code}";
 
@@ -100,7 +100,7 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
 
             return new JsonResult(new
             {
-                appid = _optionsResolver.Resolve().AppId,
+                appid = (await _optionsResolver.ResolveAsync()).AppId,
                 noncestr = nonceStr,
                 timestamp = timeStamp,
                 signature = signStr,

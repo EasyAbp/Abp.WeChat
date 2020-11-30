@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve
@@ -11,6 +12,13 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve
         public void Resolve(WeChatOfficialResolveContext context)
         {
             context.Options = context.ServiceProvider.GetRequiredService<IOptions<AbpWeChatOfficialOptions>>().Value;
+        }
+
+        public ValueTask ResolveAsync(WeChatOfficialResolveContext context)
+        {
+            context.Options = context.ServiceProvider.GetRequiredService<IOptions<AbpWeChatOfficialOptions>>().Value;
+
+            return new ValueTask();
         }
     }
 }

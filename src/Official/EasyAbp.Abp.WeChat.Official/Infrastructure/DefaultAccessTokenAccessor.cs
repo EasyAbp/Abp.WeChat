@@ -26,7 +26,7 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
 
         public virtual async Task<string> GetAccessTokenAsync()
         {
-            var options = _weChatOfficialOptionsResolver.Resolve();
+            var options = await _weChatOfficialOptionsResolver.ResolveAsync();
 
             return await _accessTokenProvider.GetAccessTokenAsync(options.AppId, options.AppSecret);
         }

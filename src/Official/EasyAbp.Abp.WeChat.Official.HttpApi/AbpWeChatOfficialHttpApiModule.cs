@@ -4,6 +4,7 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Modularity;
 using EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve;
+using Volo.Abp.Threading;
 
 namespace EasyAbp.Abp.WeChat.Official.HttpApi
 {
@@ -18,13 +19,30 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi
 
         private void VerifyOptions(ApplicationInitializationContext context)
         {
-            using (var scope = context.ServiceProvider.CreateScope())
+            AsyncHelper.RunSync(async () =>
             {
-                var options = context.ServiceProvider.GetRequiredService<IWeChatOfficialOptionsResolver>().Resolve();
-                if (string.IsNullOrEmpty(options.Token)) throw new ArgumentNullException(nameof(options.Token), "该参数是微信公众平台的必填参数，不能够为空。");
-                if (string.IsNullOrEmpty(options.AppId)) throw new ArgumentNullException(nameof(options.AppId), "该参数是微信公众平台的必填参数，不能够为空。");
-                if (string.IsNullOrEmpty(options.AppSecret)) throw new ArgumentNullException(nameof(options.AppSecret), "该参数是微信公众平台的必填参数，不能够为空。");
-            }
+                var options = await context.ServiceProvider
+                    .GetRequiredService<IWeChatOfficialOptionsResolver>()
+                    .ResolveAsync();
+
+                if (string.IsNullOrEmpty(options.Token))
+                {
+                    throw new ArgumentNullException(nameof(options.Token),
+                        "该参数是微信公众平台的必填参数，不能够为空。");
+                }
+
+                if (string.IsNullOrEmpty(options.AppId))
+                {
+                    throw new ArgumentNullException(nameof(options.AppId),
+                        "该参数是微信公众平台的必填参数，不能够为空。");
+                }
+
+                if (string.IsNullOrEmpty(options.AppSecret))
+                {
+                    throw new ArgumentNullException(nameof(options.AppSecret),
+                        "该参数是微信公众平台的必填参数，不能够为空。");
+                }
+            });
         }
     }
 }
