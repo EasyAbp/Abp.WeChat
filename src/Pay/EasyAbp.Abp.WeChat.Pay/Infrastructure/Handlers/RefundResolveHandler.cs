@@ -6,16 +6,19 @@ using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 
 namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers
 {
+    /// <summary>
+    /// 退款处理器，用于处理微信支付退款逻辑。
+    /// </summary>
     public class RefundResolveHandler : IWeChatPayHandler
     {
         protected readonly IWeChatPayOptionsResolver WeChatPayOptionsResolver;
+
+        public WeChatHandlerType Type => WeChatHandlerType.Refund;
 
         public RefundResolveHandler(IWeChatPayOptionsResolver weChatPayOptionsResolver)
         {
             WeChatPayOptionsResolver = weChatPayOptionsResolver;
         }
-
-        public WeChatHandlerType Type => WeChatHandlerType.Refund;
 
         public async Task HandleAsync(WeChatPayHandlerContext context)
         {
@@ -35,7 +38,13 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers
             }
         }
 
-        public static string Decrypt(string decryptStr, string key)
+        /// <summary>
+        /// 对加密数据进行 AES 解码。
+        /// </summary>
+        /// <param name="decryptStr">已经被加密的字符串。</param>
+        /// <param name="key">密钥。</param>
+        /// <returns>完成 AES 解密的数据。</returns>
+        private string Decrypt(string decryptStr, string key)
         {
             var keyBytes = Encoding.UTF8.GetBytes(key);
             var dataBytes = Convert.FromBase64String(decryptStr);
