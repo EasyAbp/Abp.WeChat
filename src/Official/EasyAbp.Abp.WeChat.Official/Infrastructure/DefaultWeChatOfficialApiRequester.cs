@@ -22,7 +22,10 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
             _accessTokenAccessor = accessTokenAccessor;
         }
 
-        public async Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IOfficialRequest officialRequest = null, bool withAccessToken = true)
+        public async Task<string> RequestAsync(string targetUrl,
+            HttpMethod method,
+            IOfficialRequest officialRequest = null,
+            bool withAccessToken = true)
         {
             var client = _httpClientFactory.CreateClient();
 
@@ -37,13 +40,28 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
                 ? BuildHttpGetRequestMessage(targetUrl, officialRequest)
                 : BuildHttpPostRequestMessage(targetUrl, officialRequest);
 
-            var resultStr = await (await client.SendAsync(requestMsg)).Content.ReadAsStringAsync();
+            return await (await client.SendAsync(requestMsg)).Content.ReadAsStringAsync();
+        }
+
+        public async Task<TResponse> RequestAsync<TResponse>(string targetUrl,
+            HttpMethod method,
+            IOfficialRequest officialRequest = null,
+            bool withAccessToken = true)
+        {
+            var resultStr = await RequestAsync(targetUrl,
+                method,
+                officialRequest,
+                withAccessToken);
+
             return JsonConvert.DeserializeObject<TResponse>(resultStr);
         }
 
         private HttpRequestMessage BuildHttpGetRequestMessage(string targetUrl, IOfficialRequest officialRequest)
         {
-            if (officialRequest == null) return new HttpRequestMessage(HttpMethod.Get, targetUrl);
+            if (officialRequest == null)
+            {
+                return new HttpRequestMessage(HttpMethod.Get, targetUrl);
+            }
 
             var requestUrl = BuildQueryString(targetUrl, officialRequest);
             return new HttpRequestMessage(HttpMethod.Get, requestUrl);
@@ -59,16 +77,19 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
 
         private string BuildQueryString(string targetUrl, IOfficialRequest request)
         {
-            if (request == null) return targetUrl;
+            if (request == null)
+            {
+                return targetUrl;
+            }
 
             var type = request.GetType();
             var properties = type.GetProperties();
-            
+
             if (properties.Length > 0)
             {
                 targetUrl = targetUrl.EnsureEndsWith('&');
             }
-            
+
             var queryStringBuilder = new StringBuilder(targetUrl);
 
             foreach (var propertyInfo in properties)
