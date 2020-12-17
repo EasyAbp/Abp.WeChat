@@ -37,5 +37,17 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services
 
             response.ErrorCode.ShouldBe(0);
         }
+
+        [Fact]
+        public async Task Should_Get_Current_Industry()
+        {
+            var response = await _templateMessageService.GetIndustryAsync();
+            
+            response.ErrorCode.ShouldBe(0);
+            response.PrimaryIndustry.FirstClass.ShouldBe("IT科技");
+            response.SecondaryIndustry.FirstClass.ShouldBe("IT科技");
+            response.PrimaryIndustry.SecondClass.ShouldBe("互联网|电子商务");
+            response.SecondaryIndustry.SecondClass.ShouldBe("电子技术");
+        }
     }
 }

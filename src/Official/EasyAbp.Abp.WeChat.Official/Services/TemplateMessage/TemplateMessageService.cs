@@ -12,6 +12,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
     {
         private const string SendUrl = "https://api.weixin.qq.com/cgi-bin/message/template/send?";
         private const string SetIndustry = "https://api.weixin.qq.com/cgi-bin/template/api_set_industry?";
+        private const string GetIndustry = "https://api.weixin.qq.com/cgi-bin/template/get_industry?";
 
         /// <summary>
         /// 请求微信公众号的 API 发送指定的模板消息。
@@ -61,11 +62,22 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
         /// 设置行业可在微信公众平台后台完成，每月可修改行业 1 次。<br/>
         /// 帐号仅可使用所属行业中相关的模板。
         /// </remarks>
-        /// <param name="industry1">公众号模板消息所属行业编号。</param>
-        /// <param name="industry2">公众号模板消息所属行业编号。</param>
-        public Task<OfficialCommonResponse> SetIndustryAsync(string industry1, string industry2)
+        /// <param name="primaryIndustry">公众号模板消息所属行业编号。</param>
+        /// <param name="secondaryIndustry">公众号模板消息所属行业编号。</param>
+        public Task<OfficialCommonResponse> SetIndustryAsync(string primaryIndustry, string secondaryIndustry)
         {
-            return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(SetIndustry, HttpMethod.Post, new SetIndustryRequest(industry1, industry2));
+            return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(SetIndustry, HttpMethod.Post, new SetIndustryRequest(primaryIndustry, secondaryIndustry));
+        }
+
+        /// <summary>
+        /// 获取设置的模版消息行业信息。
+        /// </summary>
+        /// <remarks>
+        /// 获取帐号设置的行业信息。可登录微信公众平台，在公众号后台中查看行业信息。
+        /// </remarks>
+        public Task<GetIndustryResponse> GetIndustryAsync()
+        {
+            return WeChatOfficialApiRequester.RequestAsync<GetIndustryResponse>(GetIndustry, HttpMethod.Get);
         }
     }
 }
