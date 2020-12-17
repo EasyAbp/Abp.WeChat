@@ -1,8 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
+using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.CustomMenu
 {
@@ -13,7 +13,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.CustomMenu
     {
         protected const string CreateApiUrl = "https://api.weixin.qq.com/cgi-bin/menu/create?";
         protected const string DeleteApiUrl = "https://api.weixin.qq.com/cgi-bin/menu/delete?";
-        protected const string GetDetailApiUrl = "https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?";
+        protected const string GetDetailApiUrl = "https://api.weixin.qq.com/cgi-bin/menu/get?";
 
         /// <summary>
         /// 根据指定的参数创建自定义菜单，本方法相当于全量覆盖，执行之后微信公众号的原有菜单信息将会被覆盖。
@@ -37,9 +37,9 @@ namespace EasyAbp.Abp.WeChat.Official.Services.CustomMenu
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(DeleteApiUrl, HttpMethod.Get);
         }
 
-        public Task GetCustomMenuDetailAsync()
+        public Task<GetAllCustomMenuResponse> GetAllCustomMenuAsync()
         {
-            throw new NotImplementedException();
+            return WeChatOfficialApiRequester.RequestAsync<GetAllCustomMenuResponse>(GetDetailApiUrl, HttpMethod.Get);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
 using EasyAbp.Abp.WeChat.Official.Services.CustomMenu;
+using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Tests.Services
 {
@@ -30,7 +31,7 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services
             };
 
             var result = await _customMenuService.CreateCustomMenuAsync(newCustomMenu);
-            
+
             result.ShouldNotBeNull();
             result.ErrorCode.ShouldBe(0);
             result.ErrorMessage.ShouldBe("ok");
@@ -40,10 +41,19 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services
         public async Task Should_Delete_All_CustomMenu()
         {
             var result = await _customMenuService.DeleteCustomMenuAsync();
-            
+
             result.ShouldNotBeNull();
             result.ErrorCode.ShouldBe(0);
             result.ErrorMessage.ShouldBe("ok");
+        }
+
+        [Fact]
+        public async Task Should_Return_All_CustomMenu()
+        {
+            var result = await _customMenuService.GetAllCustomMenuAsync();
+
+            result.Menu.Buttons.ShouldNotBeNull();
+            result.Menu.Buttons.Count.ShouldNotBe(0);
         }
     }
 }
