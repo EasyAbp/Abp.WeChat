@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="3.3.1" />
+    <PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="4.0.1" />
     <ProjectReference Include="..\EasyAbp.Abp.WeChat.Common\EasyAbp.Abp.WeChat.Common.csproj" />
   </ItemGroup>
 

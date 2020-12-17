@@ -3,7 +3,7 @@
     <Import Project="..\..\..\common.props" />
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <RootNamespace>EasyAbp.Abp.WeChat.Pay.HttpApi</RootNamespace>
         <Description>ABP vNext微信模块，提供对微信支付业务的支持。</Description>
         <LangVersion>8</LangVersion>
@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="3.3.1" />
+        <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="4.0.1" />
     </ItemGroup>
 
 </Project>

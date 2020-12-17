@@ -17,8 +17,10 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Tests.Services
         [Fact]
         public async Task Should_Get_OpenId_And_SessionKey()
         {
-            var result = await _loginService.Code2SessionAsync(AbpWeChatMiniProgramTestsConsts.AppId,
-                AbpWeChatMiniProgramTestsConsts.AppSecret, AbpWeChatMiniProgramTestsConsts.JsCode);
+            var result = await _loginService.Code2SessionAsync(
+                AbpWeChatMiniProgramTestsConsts.AppId,
+                AbpWeChatMiniProgramTestsConsts.AppSecret,
+                AbpWeChatMiniProgramTestsConsts.JsCode);
             
             result.ShouldNotBeNull();
             result.ErrorCode.ShouldBe(0);
