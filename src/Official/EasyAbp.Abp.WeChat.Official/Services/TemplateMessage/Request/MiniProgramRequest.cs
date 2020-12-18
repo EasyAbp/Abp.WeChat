@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
+namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Request
 {
     public class MiniProgramRequest
     {

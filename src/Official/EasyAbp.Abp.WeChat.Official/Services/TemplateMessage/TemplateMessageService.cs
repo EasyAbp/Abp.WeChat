@@ -1,6 +1,8 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
+using EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Request;
+using EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Response;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
@@ -11,8 +13,9 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
     public class TemplateMessageService : CommonService
     {
         private const string SendUrl = "https://api.weixin.qq.com/cgi-bin/message/template/send?";
-        private const string SetIndustry = "https://api.weixin.qq.com/cgi-bin/template/api_set_industry?";
-        private const string GetIndustry = "https://api.weixin.qq.com/cgi-bin/template/get_industry?";
+        private const string SetIndustryUrl = "https://api.weixin.qq.com/cgi-bin/template/api_set_industry?";
+        private const string GetIndustryUrl = "https://api.weixin.qq.com/cgi-bin/template/get_industry?";
+        private const string GetTemplateIdUrl = "https://api.weixin.qq.com/cgi-bin/template/api_add_template?";
 
         /// <summary>
         /// 请求微信公众号的 API 发送指定的模板消息。
@@ -28,13 +31,13 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
             TemplateMessage templateMessage,
             MiniProgramRequest miniProgramRequest = null)
         {
-            var request = new SendMessageRequest(openId,
-                templateId,
-                targetUrl,
-                templateMessage,
-                miniProgramRequest);
-
-            return WeChatOfficialApiRequester.RequestAsync<SendMessageResponse>(SendUrl, HttpMethod.Post, request);
+            return WeChatOfficialApiRequester.RequestAsync<SendMessageResponse>(SendUrl,
+                HttpMethod.Post,
+                new SendMessageRequest(openId,
+                    templateId,
+                    targetUrl,
+                    templateMessage,
+                    miniProgramRequest));
         }
 
         /// <summary>
@@ -51,7 +54,11 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
             string templateMessage,
             MiniProgramRequest miniProgramRequest = null)
         {
-            return SendMessageAsync(openId, templateId, targetUrl, JsonConvert.DeserializeObject<TemplateMessage>(templateMessage), miniProgramRequest);
+            return SendMessageAsync(openId,
+                templateId,
+                targetUrl,
+                JsonConvert.DeserializeObject<TemplateMessage>(templateMessage),
+                miniProgramRequest);
         }
 
         /// <summary>
@@ -66,7 +73,9 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
         /// <param name="secondaryIndustry">公众号模板消息所属行业编号。</param>
         public Task<OfficialCommonResponse> SetIndustryAsync(string primaryIndustry, string secondaryIndustry)
         {
-            return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(SetIndustry, HttpMethod.Post, new SetIndustryRequest(primaryIndustry, secondaryIndustry));
+            return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(SetIndustryUrl,
+                HttpMethod.Post,
+                new SetIndustryRequest(primaryIndustry, secondaryIndustry));
         }
 
         /// <summary>
@@ -77,7 +86,19 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
         /// </remarks>
         public Task<GetIndustryResponse> GetIndustryAsync()
         {
-            return WeChatOfficialApiRequester.RequestAsync<GetIndustryResponse>(GetIndustry, HttpMethod.Get);
+            return WeChatOfficialApiRequester.RequestAsync<GetIndustryResponse>(GetIndustryUrl,
+                HttpMethod.Get);
+        }
+
+        /// <summary>
+        /// 根据短模版 Id 创建模版。
+        /// </summary>
+        /// <param name="templateShortId">模板库中模板的编号，有 "TM**" 和 "OPENTMTM**" 等形式。</param>
+        public Task<CreateTemplateResponse> CreateTemplateAsync(string templateShortId)
+        {
+            return WeChatOfficialApiRequester.RequestAsync<CreateTemplateResponse>(GetTemplateIdUrl,
+                HttpMethod.Post,
+                new CreateTemplateRequest(templateShortId));
         }
     }
 }

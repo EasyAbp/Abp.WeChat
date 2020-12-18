@@ -1,7 +1,7 @@
-using Newtonsoft.Json;
 using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
+using Newtonsoft.Json;
 
-namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
+namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Response
 {
     /// <summary>
     /// 定义了执行发送模板消息之后的请求响应。

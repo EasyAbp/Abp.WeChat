@@ -42,12 +42,21 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services
         public async Task Should_Get_Current_Industry()
         {
             var response = await _templateMessageService.GetIndustryAsync();
-            
+
             response.ErrorCode.ShouldBe(0);
             response.PrimaryIndustry.FirstClass.ShouldBe("IT科技");
             response.SecondaryIndustry.FirstClass.ShouldBe("IT科技");
             response.PrimaryIndustry.SecondClass.ShouldBe("互联网|电子商务");
             response.SecondaryIndustry.SecondClass.ShouldBe("电子技术");
+        }
+
+        [Fact]
+        public async Task Should_Create_A_Template_And_Return_TemplateId()
+        {
+            var response = await _templateMessageService.CreateTemplateAsync("OPENTM206482867");
+
+            response.ErrorCode.ShouldBe(0);
+            response.TemplateId.ShouldNotBeNullOrEmpty();
         }
     }
 }

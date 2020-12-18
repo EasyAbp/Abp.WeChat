@@ -1,7 +1,7 @@
 using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
 using Newtonsoft.Json;
 
-namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
+namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Response
 {
     /// <summary>
     /// 获取消息模版对应的行业信息。

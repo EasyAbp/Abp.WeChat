@@ -1,7 +1,7 @@
-using Newtonsoft.Json;
 using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
+using Newtonsoft.Json;
 
-namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
+namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Request
 {
     /// <summary>
     /// 发送模板消息时，需要传递的请求参数。
