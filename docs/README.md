@@ -73,10 +73,10 @@ TODO: ...
 | ------------------ | ------------------------------------------------------------ |
 | 发送模板消息       | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
 | 设置所属行业       | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
-| 获取设置的行业信息 | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
-| 获得模板 Id        | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
-| 获取模板列表       | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
-| 删除模板           | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
+| 获取设置的行业信息 | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
+| 获得模板 Id        | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
+| 获取模板列表       | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
+| 删除模板           | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
 | 事件推送           | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
 
 ### 3.3 微信小程序
