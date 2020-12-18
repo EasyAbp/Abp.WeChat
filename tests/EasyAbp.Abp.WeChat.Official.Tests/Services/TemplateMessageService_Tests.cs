@@ -58,5 +58,13 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services
             response.ErrorCode.ShouldBe(0);
             response.TemplateId.ShouldNotBeNullOrEmpty();
         }
+
+        [Fact]
+        public async Task Should_Return_All_Template()
+        {
+            var response = await _templateMessageService.GetAllPrivateTemplateAsync();
+            
+            response.ErrorCode.ShouldBe(0);
+        }
     }
 }

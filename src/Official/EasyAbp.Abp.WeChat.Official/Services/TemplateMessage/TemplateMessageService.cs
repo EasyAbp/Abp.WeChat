@@ -16,6 +16,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
         private const string SetIndustryUrl = "https://api.weixin.qq.com/cgi-bin/template/api_set_industry?";
         private const string GetIndustryUrl = "https://api.weixin.qq.com/cgi-bin/template/get_industry?";
         private const string GetTemplateIdUrl = "https://api.weixin.qq.com/cgi-bin/template/api_add_template?";
+        private const string GetAllPrivateTemplateUrl = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?";
 
         /// <summary>
         /// 请求微信公众号的 API 发送指定的模板消息。
@@ -99,6 +100,15 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
             return WeChatOfficialApiRequester.RequestAsync<CreateTemplateResponse>(GetTemplateIdUrl,
                 HttpMethod.Post,
                 new CreateTemplateRequest(templateShortId));
+        }
+
+        /// <summary>
+        /// 获取已添加至账号下所有模版列表。
+        /// </summary>
+        public Task<GetAllPrivateTemplateResponse> GetAllPrivateTemplateAsync()
+        {
+            return WeChatOfficialApiRequester.RequestAsync<GetAllPrivateTemplateResponse>(GetAllPrivateTemplateUrl,
+                HttpMethod.Get);
         }
     }
 }
