@@ -24,6 +24,9 @@ jobs:
           regex_flags: 'gim'
           search_string: '${{ steps.commonProps.outputs.content }}'
 
+      - name: dotnet restore
+        run: dotnet restore -s "https://api.nuget.org/v3/index.json"
+
       - name: dotnet build
         run: dotnet build -c Release
 
