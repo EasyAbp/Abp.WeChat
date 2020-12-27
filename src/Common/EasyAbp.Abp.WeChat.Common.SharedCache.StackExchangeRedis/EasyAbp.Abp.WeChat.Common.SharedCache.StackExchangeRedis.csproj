@@ -19,8 +19,4 @@
     <Content Remove="Localization\StackExchangeRedis\*.json" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Infrastructure" />
-  </ItemGroup>
-
 </Project>
