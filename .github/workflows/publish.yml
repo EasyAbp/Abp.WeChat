@@ -4,10 +4,6 @@ on:
     branches:
       - master
       - main
-  pull_request:
-    branches:
-      - master
-      - main
 jobs:
   publish:
     runs-on: windows-latest
