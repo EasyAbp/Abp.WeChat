@@ -69,6 +69,9 @@ public class XXXHttpApiModule : AbpModule
 ```csharp
 public class WeChatPaymentHandler : IWeChatPayHandler
 {
+  	// 定义当前的处理器为标准处理器。
+  	public WeChatHandlerType Type => WeChatHandlerType.Normal;
+  
     public Task HandleAsync(WeChatPayHandlerContext context)
     {
         Console.WriteLine("接受到了数据");
@@ -101,11 +104,14 @@ WeChatPay 模块默认提供了参数校验处理器，各个处理器的调用�
 
 >开发人员也可以自己编写回调接口，只需要在配置的时候，参数传递自己的回调接口 URL 即可。
 
-用户如果需要对退款通知进行处理，只需要实现一个或多个 `IWeChatPayRefundHandler` 处理器即可。当框架接受到微信通知时，会触发开发人员编写的处理器，并将微信结果传递给这些处理器。
+用户如果需要对退款通知进行处理，只需要实现一个或多个 `IWeChatPayHandler` 处理器即可。当框架接受到微信通知时，会触发开发人员编写的处理器，并将微信结果传递给这些处理器。
 
 ```csharp
-public class XXXAAAHandler : IWeChatPayRefundHandler
+public class XXXAAAHandler : IWeChatPayHandler
 {
+  	// 定义当前处理器的类型为退款。
+    public WeChatHandlerType Type => WeChatHandlerType.Refund;
+  
     public Task HandleAsync(XmlDocument xmlDocument)
     {
         Console.WriteLine("接受到了数据");
@@ -121,7 +127,7 @@ public class XXXDomainModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddSingleton<IWeChatPayRefundHandler, XXXAAAHandler>();
+        context.Services.AddSingleton<IWeChatPayHandler, XXXAAAHandler>();
     }
 }
 ```
