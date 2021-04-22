@@ -12,6 +12,7 @@ using EasyAbp.Abp.WeChat.Common.Infrastructure.Signature;
 using EasyAbp.Abp.WeChat.Official.HttpApi.Models;
 using EasyAbp.Abp.WeChat.Official.Infrastructure;
 using EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve;
+using EasyAbp.Abp.WeChat.Official.Services.Login;
 
 namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
 {
@@ -28,10 +29,13 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
 
         private readonly IJsTicketAccessor _jsTicketAccessor;
 
+        private readonly LoginService _loginService;
+
         public WeChatController(SignatureChecker signatureChecker,
             IHttpClientFactory httpClientFactory,
             IJsTicketAccessor jsTicketAccessor,
             ISignatureGenerator signatureGenerator,
+            LoginService loginService,
             IWeChatOfficialOptionsResolver optionsResolver)
         {
             _signatureChecker = signatureChecker;
@@ -39,6 +43,7 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
             _jsTicketAccessor = jsTicketAccessor;
             _signatureGenerator = signatureGenerator;
             _optionsResolver = optionsResolver;
+            _loginService = loginService;
         }
 
         [HttpGet]
@@ -67,17 +72,9 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
 
         [HttpGet]
         [Route("access-token-by-code")]
-        public virtual async Task<ActionResult> GetAccessTokenByCode([FromQuery] string code)
+        public virtual async Task<Code2AccessTokenResponse> GetAccessTokenByCode([FromQuery] string code)
         {
-            var client = _httpClientFactory.CreateClient();
-            var options = await _optionsResolver.ResolveAsync();
-            var requestUrl =
-                $@"https://api.weixin.qq.com/sns/oauth2/access_token?grant_type={GrantTypes.AuthorizationCode}&appid={options.AppId}&secret={options.AppSecret}&code={code}";
-
-            var resultStr = await (await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUrl)))
-                .Content.ReadAsStringAsync();
-
-            return Content(resultStr, "application/json; encoding=utf-8");
+            return await _loginService.Code2SessionAsync(code);
         }
 
         [HttpGet]
