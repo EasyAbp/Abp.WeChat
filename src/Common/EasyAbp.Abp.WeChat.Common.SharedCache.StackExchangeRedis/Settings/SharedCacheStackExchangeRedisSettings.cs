@@ -1,4 +1,4 @@
-﻿﻿namespace EasyAbp.Abp.WeChat.Common.SharedCache.StackExchangeRedis.Settings
+﻿namespace EasyAbp.Abp.WeChat.Common.SharedCache.StackExchangeRedis.Settings
 {
     public static class SharedCacheStackExchangeRedisSettings
     {
