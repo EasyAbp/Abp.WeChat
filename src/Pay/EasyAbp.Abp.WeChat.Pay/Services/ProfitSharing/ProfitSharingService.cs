@@ -15,14 +15,14 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
     /// </summary>
     public class ProfitSharingService : WeChatPayService
     {
-        protected readonly string ProfitSharingUrl = "https://api.mch.weixin.qq.com/secapi/pay/profitsharing";
-        protected readonly string MultiProfitSharingUrl = "https://api.mch.weixin.qq.com/secapi/pay/multiprofitsharing";
-        protected readonly string ProfitSharingQueryUrl = "https://api.mch.weixin.qq.com/pay/profitsharingquery";
-        protected readonly string ProfitSharingAddReceiverUrl = "https://api.mch.weixin.qq.com/pay/profitsharingaddreceiver";
-        protected readonly string ProfitSharingRemoveReceiverUrl = "https://api.mch.weixin.qq.com/pay/profitsharingremovereceiver";
-        protected readonly string ProfitSharingFinishUrl = "https://api.mch.weixin.qq.com/secapi/pay/profitsharingfinish";
-        protected readonly string ProfitSharingReturnUrl = "https://api.mch.weixin.qq.com/secapi/pay/profitsharingreturn";
-        protected readonly string ProfitSharingReturnQueryUrl = "https://api.mch.weixin.qq.com/pay/profitsharingreturnquery";
+        protected const string ProfitSharingUrl = "https://api.mch.weixin.qq.com/secapi/pay/profitsharing";
+        protected const string MultiProfitSharingUrl = "https://api.mch.weixin.qq.com/secapi/pay/multiprofitsharing";
+        protected const string ProfitSharingQueryUrl = "https://api.mch.weixin.qq.com/pay/profitsharingquery";
+        protected const string ProfitSharingAddReceiverUrl = "https://api.mch.weixin.qq.com/pay/profitsharingaddreceiver";
+        protected const string ProfitSharingRemoveReceiverUrl = "https://api.mch.weixin.qq.com/pay/profitsharingremovereceiver";
+        protected const string ProfitSharingFinishUrl = "https://api.mch.weixin.qq.com/secapi/pay/profitsharingfinish";
+        protected const string ProfitSharingReturnUrl = "https://api.mch.weixin.qq.com/secapi/pay/profitsharingreturn";
+        protected const string ProfitSharingReturnQueryUrl = "https://api.mch.weixin.qq.com/pay/profitsharingreturnquery";
 
         /// <summary>
         /// 单次分账请求按照传入的分账接收方账号和资金进行分账，同时会将订单剩余的待分账金额解冻给特约商户。故操作成功后，订单不能再进行分账，也不能进行分账完结。<br/><br/>

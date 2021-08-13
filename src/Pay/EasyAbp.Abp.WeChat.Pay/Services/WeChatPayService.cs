@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.Extensions.DependencyInjection;
@@ -78,5 +79,20 @@ namespace EasyAbp.Abp.WeChat.Pay.Services
         }
 
         protected virtual Task<IWeChatPayOptions> GetAbpWeChatPayOptions() => AbpWeChatPayOptionsResolver.ResolveAsync();
+
+        protected virtual async ValueTask<bool> CurrentIsSandboxModeAsync()
+        {
+            return (await GetAbpWeChatPayOptions()).IsSandBox;
+        }
+
+        protected virtual async ValueTask<string> GetRequestUrl(string standardUrl)
+        {
+            if (await CurrentIsSandboxModeAsync())
+            {
+                return Regex.Replace(standardUrl, "/pay/", "/sandboxnew/pay/");
+            }
+
+            return standardUrl;
+        }
     }
 }

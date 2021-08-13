@@ -12,11 +12,15 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
     /// </summary>
     public class ServiceProviderPayService : WeChatPayService
     {
-        protected readonly string UnifiedOrderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
-        protected readonly string RefundUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
-        protected readonly string OrderQueryUrl = "https://api.mch.weixin.qq.com/pay/orderquery";
-        protected readonly string CloseOrderUrl = "https://api.mch.weixin.qq.com/pay/closeorder";
-        protected readonly string RefundQueryUrl = "https://api.mch.weixin.qq.com/pay/refundquery";
+        #region > 原始 URL 常量定义 <
+
+        protected const string UnifiedOrderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+        protected const string RefundUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
+        protected const string OrderQueryUrl = "https://api.mch.weixin.qq.com/pay/orderquery";
+        protected const string CloseOrderUrl = "https://api.mch.weixin.qq.com/pay/closeorder";
+        protected const string RefundQueryUrl = "https://api.mch.weixin.qq.com/pay/refundquery";
+
+        #endregion
 
         /// <summary>
         /// 除付款码支付场景以外，商户系统先调用该接口在微信支付服务后台生成预支付交易单，返回正确的预支付交易会话标识后再按不同场景生成交易串调起支付。

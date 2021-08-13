@@ -12,11 +12,15 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
     /// </summary>
     public class OrdinaryMerchantPayService : WeChatPayService
     {
-        protected readonly string UnifiedOrderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
-        protected readonly string RefundUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
-        protected readonly string OrderQueryUrl = "https://api.mch.weixin.qq.com/pay/orderquery";
-        protected readonly string CloseOrderUrl = "https://api.mch.weixin.qq.com/pay/closeorder";
-        protected readonly string RefundQueryUrl = "https://api.mch.weixin.qq.com/pay/refundquery";
+        #region > 原始 URL 常量定义 <
+
+        protected const string UnifiedOrderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+        protected const string RefundUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
+        protected const string OrderQueryUrl = "https://api.mch.weixin.qq.com/pay/orderquery";
+        protected const string CloseOrderUrl = "https://api.mch.weixin.qq.com/pay/closeorder";
+        protected const string RefundQueryUrl = "https://api.mch.weixin.qq.com/pay/refundquery";
+
+        #endregion
 
         #region > 统一下单接口 <
 
@@ -81,13 +85,13 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             {
                 request.AddParameter("profit_sharing", "Y");
             }
-            
+
             var options = await GetAbpWeChatPayOptions();
 
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(UnifiedOrderUrl, request);
+            return await RequestAndGetReturnValueAsync(await GetRequestUrl(UnifiedOrderUrl), request);
         }
 
         /// <summary>
@@ -136,7 +140,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             string refundDescription = null)
         {
             var options = await GetAbpWeChatPayOptions();
-            
+
             var request = new WeChatPayParameters();
             request.AddParameter("appid", appId);
             request.AddParameter("mch_id", mchId);
@@ -151,7 +155,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(RefundUrl, request);
+            return await RequestAndGetReturnValueAsync(await GetRequestUrl(RefundUrl), request);
         }
 
         #endregion
@@ -191,13 +195,13 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             {
                 request.AddParameter("out_trade_no", orderNo);
             }
-            
+
             var options = await GetAbpWeChatPayOptions();
 
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(OrderQueryUrl, request);
+            return await RequestAndGetReturnValueAsync(await GetRequestUrl(OrderQueryUrl), request);
         }
 
         #endregion
@@ -229,7 +233,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(CloseOrderUrl, request);
+            return await RequestAndGetReturnValueAsync(await GetRequestUrl(CloseOrderUrl), request);
         }
 
         #endregion
