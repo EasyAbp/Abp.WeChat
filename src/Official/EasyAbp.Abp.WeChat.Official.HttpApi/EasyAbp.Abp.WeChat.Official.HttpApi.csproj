@@ -3,7 +3,7 @@
     <Import Project="..\..\..\common.props" />
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>EasyAbp.Abp.WeChat.Official.HttpApi</RootNamespace>
         <Description>ABP vNext微信模块，提供对微信公众号业务的支持。</Description>
         <LangVersion>8</LangVersion>
