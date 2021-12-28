@@ -4,7 +4,7 @@
     <Import Project="..\..\Directory.Build.props" />
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>EasyAbp.Abp.WeChat.Official.Tests</RootNamespace>
     </PropertyGroup>
 
