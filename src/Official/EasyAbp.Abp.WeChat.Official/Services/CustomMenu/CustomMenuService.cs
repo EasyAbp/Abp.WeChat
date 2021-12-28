@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
-using EasyAbp.Abp.WeChat.Official.Services.CustomMenu.Models;
-using Newtonsoft.Json;
+using EasyAbp.Abp.WeChat.Official.Services.CustomMenu.Request;
+using EasyAbp.Abp.WeChat.Official.Services.CustomMenu.Response;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.CustomMenu
 {
