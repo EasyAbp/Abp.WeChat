@@ -53,4 +53,22 @@ public class UserTagServiceTests : AbpWeChatOfficialTestBase
         response.ErrorCode.ShouldBe(0);
         response.ErrorMessage.ShouldBe("ok");
     }
+
+    [Fact]
+    public async Task Should_Update_TestTag_To_TestTagModified()
+    {
+        var newTag = await _userTagService.CreateAsync("TestTag");
+        var response = await _userTagService.UpdateAsync(newTag.Tag.Id, "TestTagModified");
+
+        var modifyTag = (await _userTagService.GetCreatedTagsAsync()).Tags.FirstOrDefault(x => x.Id == newTag.Tag.Id);
+
+        response.ErrorCode.ShouldBe(0);
+        response.ErrorMessage.ShouldBe("ok");
+
+        modifyTag.ShouldNotBeNull();
+        modifyTag.Name.ShouldBe("TestTagModified");
+        
+        // Clean up
+        await _userTagService.DeleteAsync(newTag.Tag.Id);
+    }
 }

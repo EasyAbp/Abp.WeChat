@@ -1,7 +1,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
-using EasyAbp.Abp.WeChat.Official.Services.CustomMenu.Request;
 using EasyAbp.Abp.WeChat.Official.Services.User.Request;
 using EasyAbp.Abp.WeChat.Official.Services.User.Response;
 
@@ -41,6 +40,14 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(DeleteApiUrl,
                 HttpMethod.Post,
                 new DeleteUserTagRequest(tagId)
+            );
+        }
+
+        public Task<OfficialCommonResponse> UpdateAsync(long tagId, string name)
+        {
+            return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(UpdateApiUrl,
+                HttpMethod.Post,
+                new UpdateUserTagRequest(tagId, name)
             );
         }
     }
