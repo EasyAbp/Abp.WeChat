@@ -9,11 +9,11 @@ using Xunit;
 
 namespace EasyAbp.Abp.WeChat.Pay.Tests.Infrastructure
 {
-    public class RefundResolveHandler_Tests : AbpWeChatPayTestBase
+    public class RefundResolveHandlerTests : AbpWeChatPayTestBase
     {
         protected readonly IWeChatPayHandler WeChatPayHandler;
 
-        public RefundResolveHandler_Tests()
+        public RefundResolveHandlerTests()
         {
             WeChatPayHandler = GetRequiredService<RefundResolveHandler>();
         }

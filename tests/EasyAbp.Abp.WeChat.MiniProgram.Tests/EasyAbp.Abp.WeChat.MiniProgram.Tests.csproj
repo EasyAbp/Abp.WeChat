@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\..\common.props"/>
-    <Import Project="..\..\Directory.Build.props"/>
+    <Import Project="..\..\common.props" />
+    <Import Project="..\..\Directory.Build.props" />
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
@@ -9,13 +9,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\MiniProgram\EasyAbp.Abp.WeChat.MiniProgram\EasyAbp.Abp.WeChat.MiniProgram.csproj"/>
-        <ProjectReference Include="..\EasyAbp.Abp.WeChat.Common.Tests\EasyAbp.Abp.WeChat.Common.Tests.csproj"/>
+        <ProjectReference Include="..\..\src\MiniProgram\EasyAbp.Abp.WeChat.MiniProgram\EasyAbp.Abp.WeChat.MiniProgram.csproj" />
+        <ProjectReference Include="..\EasyAbp.Abp.WeChat.Common.Tests\EasyAbp.Abp.WeChat.Common.Tests.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNetTestSdkVersion)"/>
-        <PackageReference Include="NETStandard.Library" Version="2.0.3"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNetTestSdkVersion)" />
+        <PackageReference Include="NETStandard.Library" Version="2.0.3" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

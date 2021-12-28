@@ -9,11 +9,11 @@ using Xunit;
 
 namespace EasyAbp.Abp.WeChat.Pay.Tests.Services
 {
-    public class HttpClientCertificate_Tests : AbpWeChatPayTestBase
+    public class HttpClientCertificateTests : AbpWeChatPayTestBase
     {
         private readonly IBlobContainer _blobContainer;
 
-        public HttpClientCertificate_Tests()
+        public HttpClientCertificateTests()
         {
             _blobContainer = GetRequiredService<IBlobContainer>();
         }

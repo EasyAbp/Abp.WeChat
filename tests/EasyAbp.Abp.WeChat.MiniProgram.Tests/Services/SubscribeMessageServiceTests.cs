@@ -6,14 +6,14 @@ using Xunit;
 
 namespace EasyAbp.Abp.WeChat.MiniProgram.Tests.Services
 {
-    public class SubscribeMessageService_Tests : AbpWeChatMiniProgramTestBase
+    public class SubscribeMessageServiceTests : AbpWeChatMiniProgramTestBase
     {
         private const string OpenId = "on7qq1HZmDVgYTmzz8r3tayh-wqw";
         private const string TemplateId = "mguHAOQ5opP5MrAQGzg8C0FilbCgnUu8RmHQLLTW-v0";
         
         private readonly SubscribeMessageService _subscribeMessageService;
 
-        public SubscribeMessageService_Tests()
+        public SubscribeMessageServiceTests()
         {
             _subscribeMessageService = GetRequiredService<SubscribeMessageService>();
         }

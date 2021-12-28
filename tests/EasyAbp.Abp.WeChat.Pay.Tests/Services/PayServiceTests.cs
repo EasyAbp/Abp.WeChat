@@ -6,11 +6,11 @@ using EasyAbp.Abp.WeChat.Pay.Services.Pay;
 
 namespace EasyAbp.Abp.WeChat.Pay.Tests.Services
 {
-    public class PayService_Tests : AbpWeChatPayTestBase
+    public class PayServiceTests : AbpWeChatPayTestBase
     {
         private readonly OrdinaryMerchantPayService _ordinaryMerchantPayService;
 
-        public PayService_Tests()
+        public PayServiceTests()
         {
             _ordinaryMerchantPayService = GetRequiredService<OrdinaryMerchantPayService>();
         }

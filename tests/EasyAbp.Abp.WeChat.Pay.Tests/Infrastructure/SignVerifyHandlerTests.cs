@@ -7,11 +7,11 @@ using Xunit;
 
 namespace EasyAbp.Abp.WeChat.Pay.Tests.Infrastructure
 {
-    public class SignVerifyHandler_Tests : AbpWeChatPayTestBase
+    public class SignVerifyHandlerTests : AbpWeChatPayTestBase
     {
         private readonly IWeChatPayHandler _signVerifyHandler;
 
-        public SignVerifyHandler_Tests()
+        public SignVerifyHandlerTests()
         {
             _signVerifyHandler = GetRequiredService<IWeChatPayHandler>();
         }

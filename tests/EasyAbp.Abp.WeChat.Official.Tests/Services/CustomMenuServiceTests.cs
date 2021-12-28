@@ -7,11 +7,11 @@ using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Tests.Services
 {
-    public class CustomMenuService_Tests : AbpWeChatOfficialTestBase
+    public class CustomMenuServiceTests : AbpWeChatOfficialTestBase
     {
         private readonly CustomMenuService _customMenuService;
 
-        public CustomMenuService_Tests()
+        public CustomMenuServiceTests()
         {
             _customMenuService = GetRequiredService<CustomMenuService>();
         }

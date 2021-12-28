@@ -5,11 +5,11 @@ using Xunit;
 
 namespace EasyAbp.Abp.WeChat.MiniProgram.Tests.Services
 {
-    public class LoginService_Tests : AbpWeChatMiniProgramTestBase
+    public class LoginServiceTests : AbpWeChatMiniProgramTestBase
     {
         private readonly LoginService _loginService;
 
-        public LoginService_Tests()
+        public LoginServiceTests()
         {
             _loginService = GetRequiredService<LoginService>();
         }

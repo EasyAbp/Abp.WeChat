@@ -5,11 +5,11 @@ using Xunit;
 
 namespace EasyAbp.Abp.WeChat.MiniProgram.Tests.Services
 {
-    public class ACodeService_Tests : AbpWeChatMiniProgramTestBase
+    public class ACodeServiceTests : AbpWeChatMiniProgramTestBase
     {
         private readonly ACodeService _aCodeService;
 
-        public ACodeService_Tests()
+        public ACodeServiceTests()
         {
             _aCodeService = GetRequiredService<ACodeService>();
         }

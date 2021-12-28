@@ -6,11 +6,11 @@ using EasyAbp.Abp.WeChat.Pay.Models;
 
 namespace EasyAbp.Abp.WeChat.Pay.Tests.Infrastructure
 {
-    public class SignatureGenerator_Tests : AbpWeChatPayTestBase
+    public class SignatureGeneratorTests : AbpWeChatPayTestBase
     {
         private readonly ISignatureGenerator _signatureGenerator;
 
-        public SignatureGenerator_Tests()
+        public SignatureGeneratorTests()
         {
             _signatureGenerator = GetRequiredService<ISignatureGenerator>();
         }

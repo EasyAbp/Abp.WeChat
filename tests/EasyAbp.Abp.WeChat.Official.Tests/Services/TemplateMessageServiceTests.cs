@@ -6,14 +6,14 @@ using EasyAbp.Abp.WeChat.Official.Services.TemplateMessage;
 
 namespace EasyAbp.Abp.WeChat.Official.Tests.Services
 {
-    public class TemplateMessageService_Tests : AbpWeChatOfficialTestBase
+    public class TemplateMessageServiceTests : AbpWeChatOfficialTestBase
     {
         private readonly TemplateMessageService _templateMessageService;
 
         private const string OpenId = "on7qq1HZmDVgYTmzz8r3tayh-wqw";
         private const string TemplateId = "KbYdb1K23gXbaXfO1NCZ2xw4iHPO5zHqcpp5nnXx8Xs";
 
-        public TemplateMessageService_Tests()
+        public TemplateMessageServiceTests()
         {
             _templateMessageService = GetRequiredService<TemplateMessageService>();
         }
