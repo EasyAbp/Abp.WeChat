@@ -65,3 +65,11 @@ public class XXXHttpApiModule : AbpModule
 
 开发人员如果需要使用模板消息服务，只需要注入 `TemplateMessageService` 类型即可，该类型的生命周期为 **瞬时对象** 。
 
+### 3.3 用户管理服务
+
+开发人员如果需要使用用户管理服务，只需要注入对应的服务即可。以下为具体的服务类型表，开发人员可自行参考文档进行注入使用。
+
+| 类型名称         | 生命周期  | 微信官方文档                                                 |
+| ---------------- | --------- | ------------------------------------------------------------ |
+| `UserTagService` | Transient | [点击访问](https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html) |
+

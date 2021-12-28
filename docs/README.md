@@ -4,6 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/EasyAbp.Abp.WeChat.Common.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.Abp.WeChat.Common)
 [![NuGet Download](https://img.shields.io/nuget/dt/EasyAbp.Abp.WeChat.Common.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.Abp.WeChat.Common)
 [![GitHub stars](https://img.shields.io/github/stars/EasyAbp/Abp.WeChat?style=social)](https://www.github.com/EasyAbp/Abp.WeChat)
+[![Discord online](https://badgen.net/discord/online-members/S6QaezrCRq?label=Discord)](https://discord.gg/S6QaezrCRq)
 
 Abp 微信 SDK 模块，包含对微信小程序、公众号、企业微信、开放平台、第三方平台等相关接口封装。
 
@@ -80,6 +81,20 @@ TODO: ...
 | 删除模板           | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
 | 事件推送           | ![NotSupport](https://img.shields.io/badge/-%E4%B8%8D%E6%94%AF%E6%8C%81-red.svg) |
 
+#### 3.2.3 用户管理
+
+**用户标签管理**
+
+| 功能                   | 是否支持                                                     |
+| ---------------------- | ------------------------------------------------------------ |
+| 创建标签               | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
+| 获取公众号已创建的标签 | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
+| 编辑标签               | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
+| 删除标签               | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
+| 获取标签下粉丝列表     | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
+| 批量为用户打标签       | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
+| 批量为用户取消标签     | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
+
 ### 3.3 微信小程序
 
 #### 3.3.1 微信登录
@@ -94,9 +109,9 @@ TODO: ...
 | ---------------- | ------------------------------------------------------------ |
 |  获取小程序码 Unlimited  | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
 
-
 #### 3.3.3 订阅消息
 
 | 功能             | 是否支持                                                     |
 | ---------------- | ------------------------------------------------------------ |
 |  发送订阅消息     | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
+
