@@ -1,7 +1,7 @@
 using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
 using Newtonsoft.Json;
 
-namespace EasyAbp.Abp.WeChat.Official.Services.User.Request
+namespace EasyAbp.Abp.WeChat.Official.Services.User.Response
 {
     public class CreateUserTagResponse : OfficialCommonResponse
     {

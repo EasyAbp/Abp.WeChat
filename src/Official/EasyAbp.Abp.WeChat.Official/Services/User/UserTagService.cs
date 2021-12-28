@@ -35,5 +35,13 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
                 HttpMethod.Get
             );
         }
+
+        public Task<OfficialCommonResponse> DeleteAsync(long tagId)
+        {
+            return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(DeleteApiUrl,
+                HttpMethod.Post,
+                new DeleteUserTagRequest(tagId)
+            );
+        }
     }
 }

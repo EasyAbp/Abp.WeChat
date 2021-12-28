@@ -3,19 +3,16 @@ using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.User.Request
 {
-    public class CreateUserTagRequest : OfficialCommonRequest
+    public class DeleteUserTagRequest : OfficialCommonRequest
     {
-        /// <summary>
-        /// 需要创建的标签定义。
-        /// </summary>
-        [JsonProperty("tag")]
+        [JsonProperty("tag")] 
         public UserTagDefinition Tag { get; protected set; }
 
-        public CreateUserTagRequest(string name)
+        public DeleteUserTagRequest(long tagId)
         {
             Tag = new UserTagDefinition
             {
-                Name = name
+                Id = tagId
             };
         }
     }
