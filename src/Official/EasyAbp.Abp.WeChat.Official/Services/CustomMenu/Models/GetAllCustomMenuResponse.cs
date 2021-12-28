@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace EasyAbp.Abp.WeChat.Official.Services.CustomMenu
+namespace EasyAbp.Abp.WeChat.Official.Services.CustomMenu.Models
 {
     public class GetAllCustomMenuResponse
     {

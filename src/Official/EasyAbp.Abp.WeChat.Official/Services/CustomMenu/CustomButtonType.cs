@@ -63,5 +63,20 @@ namespace EasyAbp.Abp.WeChat.Official.Services.CustomMenu
         /// 文消息 URL，永久素材类型只支持图文消息。请注意：永久素材 Id 必须是在 “素材管理/新增永久素材” 接口上传后获得的合法 Id。
         /// </summary>
         public const string RedirectGraphicMessage = "view_limited";
+
+        /// <summary>
+        /// 点击之后打开小程序。
+        /// </summary>
+        public const string MiniProgram = "miniprogram";
+
+        /// <summary>
+        /// 用户点击 <see cref="Article"/> 类型按钮后，微信客户端将会以卡片形式，下发开发者在按钮中填写的图文消息。
+        /// </summary>
+        public const string Article = "article_id";
+
+        /// <summary>
+        /// 类似 <see cref="RedirectGraphicMessage"/>，但不使用 media_id 而使用 article_id。
+        /// </summary>
+        public const string ArticleViewLimited = "article_view_limited";
     }
 }
