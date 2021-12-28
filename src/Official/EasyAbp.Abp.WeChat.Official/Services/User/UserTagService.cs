@@ -56,7 +56,15 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         {
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(BatchTaggingApiUrl,
                 HttpMethod.Post,
-                new BatchTaggingRequest(tagId, openIds)
+                new BatchTagOperationRequest(tagId, openIds)
+            );
+        }
+
+        public Task<OfficialCommonResponse> BatchUnTaggingAsync(long tagId, List<string> openIds)
+        {
+            return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(BatchUnTaggingApiUrl,
+                HttpMethod.Post,
+                new BatchTagOperationRequest(tagId, openIds)
             );
         }
     }
