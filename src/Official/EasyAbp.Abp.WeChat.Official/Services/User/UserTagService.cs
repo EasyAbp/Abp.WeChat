@@ -75,5 +75,13 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
                 new GetTagsByUserRequest(openId)
             );
         }
+
+        public Task<GetUsersByTagResponse> GetUsersByTagAsync(long tagId, string firstOpenId = null)
+        {
+            return WeChatOfficialApiRequester.RequestAsync<GetUsersByTagResponse>(GetUsersByTagApiUrl,
+                HttpMethod.Get,
+                new GetUsersByTagRequest(tagId, firstOpenId)
+            );
+        }
     }
 }
