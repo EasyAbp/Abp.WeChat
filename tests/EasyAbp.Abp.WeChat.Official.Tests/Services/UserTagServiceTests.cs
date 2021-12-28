@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Official.Services.User;
@@ -67,8 +68,80 @@ public class UserTagServiceTests : AbpWeChatOfficialTestBase
 
         modifyTag.ShouldNotBeNull();
         modifyTag.Name.ShouldBe("TestTagModified");
-        
+
         // Clean up
         await _userTagService.DeleteAsync(newTag.Tag.Id);
+    }
+
+    [Fact]
+    public async Task Should_Tagging_One_User()
+    {
+        var testTag = await _userTagService.CreateAsync("TestTag");
+        var response = await _userTagService.BatchTaggingAsync(testTag.Tag.Id, new List<string>
+        {
+            "on7qq1HZmDVgYTmzz8r3tayh-wqw"
+        });
+
+        response.ErrorCode.ShouldBe(0);
+
+        // Query the user's tag.
+        var users = await _userTagService.GetUsersByTagAsync(testTag.Tag.Id);
+
+        users.ErrorCode.ShouldBe(0);
+        users.Data.OpenIds.Count.ShouldBeGreaterThan(0);
+
+        // Clean up
+        await _userTagService.DeleteAsync(testTag.Tag.Id);
+    }
+
+    [Fact]
+    public async Task Should_Tagging_One_User_And_UnTagging_User()
+    {
+        var testTag = await _userTagService.CreateAsync("TestTag");
+        var response = await _userTagService.BatchTaggingAsync(testTag.Tag.Id, new List<string>
+        {
+            "on7qq1HZmDVgYTmzz8r3tayh-wqw"
+        });
+
+        response.ErrorCode.ShouldBe(0);
+
+        // Query the user's tag.
+        var users = await _userTagService.GetUsersByTagAsync(testTag.Tag.Id);
+
+        users.ErrorCode.ShouldBe(0);
+        users.Data.OpenIds.Count.ShouldBeGreaterThan(0);
+        
+        var userTags = await _userTagService.GetTagsByUserAsync("on7qq1HZmDVgYTmzz8r3tayh-wqw");
+        userTags.ErrorCode.ShouldBe(0);
+        userTags.TagIds.Count.ShouldBeGreaterThan(0);
+
+        // UnTagging the user.
+        var res1 = await _userTagService.BatchUnTaggingAsync(testTag.Tag.Id, new List<string>
+        {
+            "on7qq1HZmDVgYTmzz8r3tayh-wqw"
+        });
+        res1.ErrorCode.ShouldBe(0);
+        
+        // User should be untagged.
+        var res2 = await _userTagService.GetTagsByUserAsync("on7qq1HZmDVgYTmzz8r3tayh-wqw");
+        res2.ErrorCode.ShouldBe(0);
+        res2.TagIds.Count.ShouldBe(0);
+        
+        // Clean up
+        await _userTagService.DeleteAsync(testTag.Tag.Id);
+    }
+
+    [Fact]
+    public async Task CleanUp()
+    {
+        // var allTags = await _userTagService.GetCreatedTagsAsync();
+        //
+        // // Clean up
+        // foreach (var tag in allTags.Tags)
+        // {
+        //     await _userTagService.DeleteAsync(tag.Id);
+        // }
+
+        await Task.CompletedTask;
     }
 }

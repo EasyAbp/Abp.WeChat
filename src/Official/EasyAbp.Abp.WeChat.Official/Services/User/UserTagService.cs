@@ -71,7 +71,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         public Task<GetTagsByUserResponse> GetTagsByUserAsync(string openId)
         {
             return WeChatOfficialApiRequester.RequestAsync<GetTagsByUserResponse>(GetTagsByUserApiUrl,
-                HttpMethod.Get,
+                HttpMethod.Post,
                 new GetTagsByUserRequest(openId)
             );
         }
