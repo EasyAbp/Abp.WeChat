@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
@@ -48,6 +49,14 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(UpdateApiUrl,
                 HttpMethod.Post,
                 new UpdateUserTagRequest(tagId, name)
+            );
+        }
+
+        public Task<OfficialCommonResponse> BatchTaggingAsync(long tagId, List<string> openIds)
+        {
+            return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(BatchTaggingApiUrl,
+                HttpMethod.Post,
+                new BatchTaggingRequest(tagId, openIds)
             );
         }
     }
