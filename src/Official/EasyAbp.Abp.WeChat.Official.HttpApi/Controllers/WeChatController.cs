@@ -5,7 +5,6 @@ using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
-using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Common.Extensions;
 using EasyAbp.Abp.WeChat.Common.Infrastructure;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Signature;
