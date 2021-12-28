@@ -23,4 +23,13 @@ public class UserTagServiceTests : AbpWeChatOfficialTestBase
         userTag.Tag.ShouldNotBeNull();
         userTag.Tag.Name.ShouldBe("TestTag");
     }
+
+    [Fact]
+    public async Task Should_Return_OneTags()
+    {
+        var allTags = await _userTagService.GetCreatedTagsAsync();
+        
+        allTags.ErrorCode.ShouldBe(0);
+        allTags.Tags.Count.ShouldBeGreaterThan(0);
+    }
 }

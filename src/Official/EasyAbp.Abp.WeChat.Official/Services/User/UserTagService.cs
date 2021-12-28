@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
 using EasyAbp.Abp.WeChat.Official.Services.CustomMenu.Request;
 using EasyAbp.Abp.WeChat.Official.Services.User.Request;
+using EasyAbp.Abp.WeChat.Official.Services.User.Response;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.User
 {
@@ -25,6 +26,13 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
             return WeChatOfficialApiRequester.RequestAsync<CreateUserTagResponse>(CreateApiUrl,
                 HttpMethod.Post,
                 new CreateUserTagRequest(name)
+            );
+        }
+
+        public Task<GetAllUserTagListResponse> GetCreatedTagsAsync()
+        {
+            return WeChatOfficialApiRequester.RequestAsync<GetAllUserTagListResponse>(GetCreatedTagsApiUrl,
+                HttpMethod.Get
             );
         }
     }

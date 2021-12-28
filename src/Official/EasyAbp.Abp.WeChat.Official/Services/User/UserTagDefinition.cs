@@ -15,5 +15,11 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// 标签下面的用户数量。
+        /// </summary>
+        [JsonProperty("count")]
+        public long Count { get; set; }
     }
 }
