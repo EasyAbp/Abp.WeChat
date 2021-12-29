@@ -3,8 +3,8 @@
 [![ABP version](https://img.shields.io/badge/dynamic/xml?style=flat-square&color=yellow&label=abp&query=%2F%2FProject%2FPropertyGroup%2FAbpVersion&url=https%3A%2F%2Fraw.githubusercontent.com%2FEasyAbp%2FAbp.WeChat%2Fmaster%2FDirectory.Build.props)](https://abp.io)
 [![NuGet](https://img.shields.io/nuget/v/EasyAbp.Abp.WeChat.Common.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.Abp.WeChat.Common)
 [![NuGet Download](https://img.shields.io/nuget/dt/EasyAbp.Abp.WeChat.Common.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.Abp.WeChat.Common)
-[![GitHub stars](https://img.shields.io/github/stars/EasyAbp/Abp.WeChat?style=social)](https://www.github.com/EasyAbp/Abp.WeChat)
 [![Discord online](https://badgen.net/discord/online-members/S6QaezrCRq?label=Discord)](https://discord.gg/S6QaezrCRq)
+[![GitHub stars](https://img.shields.io/github/stars/EasyAbp/Abp.WeChat?style=social)](https://www.github.com/EasyAbp/Abp.WeChat)
 
 Abp 微信 SDK 模块，包含对微信小程序、公众号、企业微信、开放平台、第三方平台等相关接口封装。
 

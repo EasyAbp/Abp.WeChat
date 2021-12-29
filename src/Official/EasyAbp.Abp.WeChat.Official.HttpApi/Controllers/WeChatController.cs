@@ -2,6 +2,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
+using EasyAbp.Abp.WeChat.Common;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
@@ -15,10 +16,11 @@ using EasyAbp.Abp.WeChat.Official.Services.Login;
 
 namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
 {
-    [RemoteService]
+    [RemoteService(Name = AbpWeChatRemoteServiceConsts.RemoteServiceName)]
+    [Area(AbpWeChatRemoteServiceConsts.ModuleName)]
     [ControllerName("WeChat")]
     [Route("/wechat")]
-    public class WeChatController : AbpController
+    public class WeChatController : AbpControllerBase
     {
         private readonly IWeChatOfficialOptionsResolver _optionsResolver;
         private readonly IHttpClientFactory _httpClientFactory;

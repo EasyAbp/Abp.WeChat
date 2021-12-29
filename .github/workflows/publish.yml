@@ -42,8 +42,16 @@ jobs:
           cd dest
           del * -Exclude EasyAbp.*
           del * -Exclude *.${{ steps.getVersion.outputs.first_match }}.nupkg
-          del *.HttpApi.Client.ConsoleTestApp*
-          del *.Host.Shared*
+          del *.Blazor.Host.*
+          del *.Blazor.Server.Host.*
+          del *.Host.Shared.*
+          del *.HttpApi.Host.*
+          del *.IdentityServer.*
+          del *.Web.Host.*
+          del *.Web.Unified.*
+          del *.HttpApi.Client.ConsoleTestApp.*
+          del *.Tests.*
+          del *.TestBase.*
           dir -name
 
       - name: dotnet nuget push to GitHub

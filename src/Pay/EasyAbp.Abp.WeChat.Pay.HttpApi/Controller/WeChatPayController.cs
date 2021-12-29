@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Xml;
+using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Common.Extensions;
 using EasyAbp.Abp.WeChat.Common.Infrastructure;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Signature;
@@ -11,16 +13,16 @@ using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 
 namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
 {
-    [RemoteService]
+    [RemoteService(Name = AbpWeChatRemoteServiceConsts.RemoteServiceName)]
+    [Area(AbpWeChatRemoteServiceConsts.ModuleName)]
     [ControllerName("WeChatPay")]
     [Route("/wechat-pay")]
-    public class WeChatPayController : AbpController
+    public class WeChatPayController : AbpControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISignatureGenerator _signatureGenerator;
@@ -42,7 +44,8 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         [Route("notify")]
         public virtual async Task<ActionResult> Notify()
         {
-            var handlers = ServiceProvider.GetServices<IWeChatPayHandler>().Where(h => h.Type == WeChatHandlerType.Normal);
+            var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayHandler>>()
+                .Where(h => h.Type == WeChatHandlerType.Normal);
 
             Request.EnableBuffering();
             using (var streamReader = new StreamReader(_httpContextAccessor.HttpContext.Request.Body))
@@ -78,7 +81,8 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         [Route("refund-notify")]
         public virtual async Task<ActionResult> RefundNotify()
         {
-            var handlers = ServiceProvider.GetServices<IWeChatPayHandler>().Where(h => h.Type == WeChatHandlerType.Refund);
+            var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayHandler>>()
+                .Where(h => h.Type == WeChatHandlerType.Refund);
 
             Request.EnableBuffering();
             using (var streamReader = new StreamReader(_httpContextAccessor.HttpContext.Request.Body))
