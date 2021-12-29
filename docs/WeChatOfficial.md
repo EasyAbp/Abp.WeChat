@@ -1,8 +1,15 @@
+## 一、API 支持情况
 
+| 功能                          | 是否支持                                                     |
+| ----------------------------- | ------------------------------------------------------------ |
+| 自定义菜单                    | ![Support](https://img.shields.io/badge/-50%-orange.svg)     |
+| [用户管理] - 用户标签管理     | ![Support](https://img.shields.io/badge/-100%-brightgreen.svg) |
+| [用户管理] - 黑名单管理       | ![Support](https://img.shields.io/badge/-100%-brightgreen.svg) |
+| [基础消息能力] - 模板消息接口 | ![Support](https://img.shields.io/badge/-100%-brightgreen.svg) |
 
-## 一、基本模块配置
+## 二、基本模块配置
 
-### 1.1 模块的引用
+### 2.1 模块的引用
 
 添加 **EasyAbp.Abp.WeChat.Official** 模块的 NuGet 包或者项目引用到 **Domain** 层，并在对应的模块上面添加 `[DependsOn]` 特性标签。
 
@@ -24,7 +31,7 @@ public class XXXHttpApiModule : AbpModule
 }
 ```
 
-### 1.2 模块的配置
+### 2.2 模块的配置
 
 微信模块的配置参数都存放在 `AbpWeChatOfficialOptions` 内部，开发人员只需要在启动模块的 `ConfigureService()` 方法中进行配置即可，下面是最小启动配置。
 
@@ -51,21 +58,21 @@ public class XXXHttpApiModule : AbpModule
 
 进行上述配置以后，你的项目就集成了微信公众号功能。现在，你可以在任意地方注入服务类，通过服务类快捷地调用微信公众平台所提供的 API 接口服务。
 
-## 二、默认启用的接口
+## 三、默认启用的接口
 
 // TODO。
 
-## 三、服务的使用
+## 四、服务的使用
 
-### 3.1 自定义菜单服务
+### 4.1 自定义菜单服务
 
 开发人员如果需要使用自定义菜单服务，只需要注入 `CustomMenuService` 类型即可，该类型的生命周期为 **瞬时对象** 。
 
-### 3.2 模板消息服务
+### 4.2 模板消息服务
 
 开发人员如果需要使用模板消息服务，只需要注入 `TemplateMessageService` 类型即可，该类型的生命周期为 **瞬时对象** 。
 
-### 3.3 用户管理服务
+### 4.3 用户管理服务
 
 开发人员如果需要使用用户管理服务，只需要注入对应的服务即可。以下为具体的服务类型表，开发人员可自行参考文档进行注入使用。
 
