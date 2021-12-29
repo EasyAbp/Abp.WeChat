@@ -2,10 +2,10 @@
 
 | 功能                          | 是否支持                                                     |
 | ----------------------------- | ------------------------------------------------------------ |
-| 自定义菜单                    | ![Support](https://img.shields.io/badge/-50%-orange.svg)     |
-| [用户管理] - 用户标签管理     | ![Support](https://img.shields.io/badge/-100%-brightgreen.svg) |
-| [用户管理] - 黑名单管理       | ![Support](https://img.shields.io/badge/-100%-brightgreen.svg) |
-| [基础消息能力] - 模板消息接口 | ![Support](https://img.shields.io/badge/-100%-brightgreen.svg) |
+| 自定义菜单                    | ![Support](https://img.shields.io/badge/-50%25-orange.svg)     |
+| [用户管理] - 用户标签管理     | ![Support](https://img.shields.io/badge/-100%25-brightgreen.svg) |
+| [用户管理] - 黑名单管理       | ![Support](https://img.shields.io/badge/-100%25-brightgreen.svg) |
+| [基础消息能力] - 模板消息接口 | ![Support](https://img.shields.io/badge/-100%25-brightgreen.svg) |
 
 ## 二、基本模块配置
 
