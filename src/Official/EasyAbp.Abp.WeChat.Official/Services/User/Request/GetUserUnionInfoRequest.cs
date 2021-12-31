@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.User.Request
 {
-    internal class GetUserUnionInfoRequest : OfficialCommonRequest
+    public class GetUserUnionInfoRequest : OfficialCommonRequest
     {
         /// <summary>
         /// 普通用户的标识，对当前公众号唯一。

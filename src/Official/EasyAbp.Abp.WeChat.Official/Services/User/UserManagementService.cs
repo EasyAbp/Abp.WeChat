@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
 using EasyAbp.Abp.WeChat.Official.Services.User.Request;
@@ -11,6 +12,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         protected const string GetOfficialUserListUrl = "https://api.weixin.qq.com/cgi-bin/user/get?";
         protected const string UpdateUserRemarkUrl = "https://api.weixin.qq.com/cgi-bin/user/info/updateremark?";
         protected const string GetUserUnionInfoUrl = "https://api.weixin.qq.com/cgi-bin/user/info?";
+        protected const string BatchGetUserUnionInfoUrl = "https://api.weixin.qq.com/cgi-bin/user/info/batchget?";
 
         /// <summary>
         /// 获取用户列表，公众号可通过本接口来获取帐号的关注者列表。<br/>
@@ -46,6 +48,17 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
             return WeChatOfficialApiRequester.RequestAsync<UnionUserInfoResponse>(GetUserUnionInfoUrl,
                 HttpMethod.Get,
                 new GetUserUnionInfoRequest(openId, language));
+        }
+
+        /// <summary>
+        /// 批量获取用户基本信息，公众号可通过本接口来批量获取用户基本信息。
+        /// </summary>
+        /// <param name="userIds">需要查询的用户 OPENID 列表，最多支持 100 个。</param>
+        public Task<BatchUnionUserInfoResponse> BatchGetUserUnionInfoAsync(List<GetUserUnionInfoRequest> userIds)
+        {
+            return WeChatOfficialApiRequester.RequestAsync<BatchUnionUserInfoResponse>(BatchGetUserUnionInfoUrl,
+                HttpMethod.Post,
+                new BatchGetUserUnionInfoRequest(userIds));
         }
     }
 }
