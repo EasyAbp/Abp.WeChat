@@ -22,4 +22,13 @@ public class UserManagementServiceTests : AbpWeChatOfficialTestBase
         openIdsResponse.Count.ShouldBeGreaterThan(0);
         openIdsResponse.NextOpenId.ShouldNotBeNullOrEmpty();
     }
+
+    [Fact]
+    public async Task Should_Update_User_Remark_And_Return_Ok_Message()
+    {
+        var response = await _userManagementService.UpdateUserRemarkAsync("on7qq1HZmDVgYTmzz8r3tayh-wqw", "RealZony");
+        
+        response.ErrorMessage.ShouldBe("ok");
+        response.ErrorCode.ShouldBe(0);
+    }
 }
