@@ -31,4 +31,16 @@ public class UserManagementServiceTests : AbpWeChatOfficialTestBase
         response.ErrorMessage.ShouldBe("ok");
         response.ErrorCode.ShouldBe(0);
     }
+
+    [Fact]
+    public async Task Should_Return_User_Union_Info()
+    {
+        var response = await _userManagementService.GetUserUnionInfoAsync("on7qq1HZmDVgYTmzz8r3tayh-wqw");
+        
+        response.ShouldNotBeNull();
+        response.ErrorCode.ShouldBe(0);
+        response.OpenId.ShouldBe("on7qq1HZmDVgYTmzz8r3tayh-wqw");
+        response.Remark.ShouldBe("RealZony");
+        response.SubscribeScene.ShouldBe(SubscribeSceneType.AddSceneQrCode);
+    }
 }

@@ -10,6 +10,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
     {
         protected const string GetOfficialUserListUrl = "https://api.weixin.qq.com/cgi-bin/user/get?";
         protected const string UpdateUserRemarkUrl = "https://api.weixin.qq.com/cgi-bin/user/info/updateremark?";
+        protected const string GetUserUnionInfoUrl = "https://api.weixin.qq.com/cgi-bin/user/info?";
 
         /// <summary>
         /// 获取用户列表，公众号可通过本接口来获取帐号的关注者列表。<br/>
@@ -33,6 +34,18 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(UpdateUserRemarkUrl,
                 HttpMethod.Post,
                 new UpdateUserRemarkRequest(openId, remark));
+        }
+
+        /// <summary>
+        /// 获取用户基本信息，公众号可通过本接口来获取帐号的关注者基本信息。
+        /// </summary>
+        /// <param name="openId">普通用户的标识，对当前公众号唯一。</param>
+        /// <param name="language">返回国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语。</param>
+        public Task<UnionUserInfoResponse> GetUserUnionInfoAsync(string openId, string language = null)
+        {
+            return WeChatOfficialApiRequester.RequestAsync<UnionUserInfoResponse>(GetUserUnionInfoUrl,
+                HttpMethod.Get,
+                new GetUserUnionInfoRequest(openId, language));
         }
     }
 }

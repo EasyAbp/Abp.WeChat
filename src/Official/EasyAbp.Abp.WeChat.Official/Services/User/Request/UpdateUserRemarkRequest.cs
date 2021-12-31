@@ -22,7 +22,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User.Request
         /// </summary>
         /// <param name="openId">微信公众号的用户唯一标识。</param>
         /// <param name="remark">新的备注名，长度必须小于 30 字符。</param>
-        public UpdateUserRemarkRequest(string openId, string remark)
+        internal UpdateUserRemarkRequest(string openId, string remark)
         {
             OpenId = openId;
             Remark = remark;
