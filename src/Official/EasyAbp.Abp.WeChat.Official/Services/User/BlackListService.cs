@@ -21,9 +21,9 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// 当列表数量较多的时候，可以采用分批拉取的方式。
         /// </summary>
         /// <param name="beginOpenId">起始 OPENID，如果传递则从该 OPENID 往后拉取。默认则从头开始拉取。</param>
-        public Task<GetBlackListResponse> GetBlackListAsync(string beginOpenId = null)
+        public Task<OfficialUserListResponse> GetBlackListAsync(string beginOpenId = null)
         {
-            return WeChatOfficialApiRequester.RequestAsync<GetBlackListResponse>(GetBlackListUrl,
+            return WeChatOfficialApiRequester.RequestAsync<OfficialUserListResponse>(GetBlackListUrl,
                 HttpMethod.Post,
                 new GetBlackListRequest(beginOpenId));
         }

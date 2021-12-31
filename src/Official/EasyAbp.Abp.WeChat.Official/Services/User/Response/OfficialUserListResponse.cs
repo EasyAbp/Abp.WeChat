@@ -4,16 +4,18 @@ using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.User.Response
 {
-    public class GetBlackListResponse : OfficialCommonResponse
+    public class OfficialUserListResponse : OfficialCommonResponse
     {
         [JsonProperty("total")] public int Total { get; protected set; }
 
         [JsonProperty("count")] public int Count { get; protected set; }
 
-        [JsonProperty("data")] public BlackListData Data { get; protected set; }
+        [JsonProperty("data")] public OfficialOpenIdsData Data { get; protected set; }
+
+        [JsonProperty("next_openid")] public string NextOpenId { get; protected set; }
     }
 
-    public class BlackListData
+    public class OfficialOpenIdsData
     {
         [JsonProperty("openid")] public List<string> OpenIds { get; protected set; }
     }
