@@ -22,6 +22,8 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
             _accessTokenAccessor = accessTokenAccessor;
         }
 
+        #region > Public Methods <
+
         public async Task<string> RequestAsync(string targetUrl,
             HttpMethod method,
             IOfficialRequest officialRequest = null,
@@ -55,6 +57,30 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
 
             return JsonConvert.DeserializeObject<TResponse>(resultStr);
         }
+
+        public async Task<TResponse> RequestFromDataAsync<TResponse>(string targetUrl,
+            MultipartFormDataContent formDataContent,
+            IOfficialRequest officialRequest = null,
+            bool withAccessToken = true)
+        {
+            var client = _httpClientFactory.CreateClient();
+            targetUrl = targetUrl.EnsureEndsWith('?');
+
+            if (withAccessToken)
+            {
+                targetUrl += $"access_token={await _accessTokenAccessor.GetAccessTokenAsync()}";
+            }
+
+            var requestMsg = BuildHttpGetRequestMessage(targetUrl, officialRequest);
+            requestMsg.Method = HttpMethod.Post;
+            requestMsg.Content = formDataContent;
+
+            return JsonConvert.DeserializeObject<TResponse>(await (await client.SendAsync(requestMsg)).Content.ReadAsStringAsync());
+        }
+
+        #endregion
+
+        #region > Private Methods <
 
         private HttpRequestMessage BuildHttpGetRequestMessage(string targetUrl, IOfficialRequest officialRequest)
         {
@@ -102,5 +128,7 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
 
             return queryStringBuilder.ToString().TrimEnd('&');
         }
+
+        #endregion
     }
 }

@@ -15,5 +15,10 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
             HttpMethod method,
             IOfficialRequest officialRequest = null,
             bool withAccessToken = true);
+
+        Task<TResponse> RequestFromDataAsync<TResponse>(string targetUrl,
+            MultipartFormDataContent formDataContent,
+            IOfficialRequest officialRequest = null,
+            bool withAccessToken = true);
     }
 }
