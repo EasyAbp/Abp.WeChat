@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
@@ -73,9 +74,15 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
 
             var requestMsg = BuildHttpGetRequestMessage(targetUrl, officialRequest);
             requestMsg.Method = HttpMethod.Post;
+
+            // 处理 HttpClient 提交表单的问题。
+            // 链接: https://www.cnblogs.com/myzony/p/12114507.html
+            var boundaryValue = formDataContent.Headers.ContentType.Parameters.Single(p => p.Name == "boundary");
+            boundaryValue.Value = boundaryValue.Value.Replace("\"", String.Empty);
             requestMsg.Content = formDataContent;
 
-            return JsonConvert.DeserializeObject<TResponse>(await (await client.SendAsync(requestMsg)).Content.ReadAsStringAsync());
+            var responseString = await (await client.SendAsync(requestMsg)).Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<TResponse>(responseString);
         }
 
         #endregion

@@ -18,6 +18,12 @@ namespace EasyAbp.Abp.WeChat.Official.Services.MediaManagement.Response
         public string MediaId { get; private set; }
 
         /// <summary>
+        /// 缩略图上传成功以后，获取该文件的临时唯一标识。
+        /// </summary>
+        [JsonProperty("thumb_media_id")]
+        public string ThumbMediaId { get; set; }
+
+        /// <summary>
         /// 媒体文件上传的时间戳。
         /// </summary>
         [JsonProperty("created_at")]
