@@ -84,3 +84,8 @@ public class XXXHttpApiModule : AbpModule
 | `BlackListService`      | 黑名单管理服务，管理公众号的黑名单。                         | [点击访问](https://developers.weixin.qq.com/doc/offiaccount/User_Management/Manage_blacklist.html) | ![Support](https://img.shields.io/badge/-100%25-brightgreen.svg) |
 | `UserManagementService` | 用户管理服务，提供以下服务:<br />- 设置用户备注名。<br />- 获取用户基本信息(UnionID 机制)。<br />- 获取用户列表。 | [点击访问](https://developers.weixin.qq.com/doc/offiaccount/User_Management/Configuring_user_notes.html) | ![Support](https://img.shields.io/badge/-100%25-brightgreen.svg) |
 
+## 四、如何实现其他未支持接口
+
+目前本仓库主要由 [real-zony](https://github.com/real-zony) 进行维护，部分不支持的接口可能一时半会儿无法实现。你可以参考源码，继承 `CommonService` 调用基类的 `WeChatOfficialApiRequester` 对象发起 API 请求。
+
+所有请求都需要实现 `OfficialCommonRequest` 基类，所有响应都需要实现 `OfficialCommonResponse` 基类。
