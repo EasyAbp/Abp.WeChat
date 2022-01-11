@@ -1,8 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\..\common.props" />
-    <Import Project="..\..\Directory.Build.props" />
-
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>EasyAbp.Abp.WeChat.Pay.Tests</RootNamespace>
