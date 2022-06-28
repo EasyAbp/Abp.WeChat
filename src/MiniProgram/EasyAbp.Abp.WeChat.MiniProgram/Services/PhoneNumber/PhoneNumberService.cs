@@ -15,12 +15,9 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Services.Login
         }
 
         /// <summary>
-        /// 登录凭证校验。通过 wx.login 接口获得临时登录凭证 code 后传到开发者服务器调用此接口完成登录流程。
+        /// code换取用户手机号。 每个 code 只能使用一次，code的有效期为5min
         /// </summary>
-        /// <param name="appId">小程序 appId</param>
-        /// <param name="appSecret">小程序 appSecret</param>
-        /// <param name="jsCode">登录时获取的 code</param>
-        /// <param name="grantType">授权类型，此处只需填写 authorization_code</param>
+        /// <param name="code">手机号获取凭证</param>
         public Task<GetPhoneNumberResponse> GetPhoneNumberAsync(string code)
         {
             const string targetUrl = "https://api.weixin.qq.com/wxa/business/getuserphonenumber";
