@@ -1,4 +1,4 @@
-﻿using EasyAbp.Abp.WeChat.MiniProgram.Services.Login;
+﻿using EasyAbp.Abp.WeChat.MiniProgram.Services.PhoneNumber;
 using Shouldly;
 using System.Threading.Tasks;
 using Xunit;

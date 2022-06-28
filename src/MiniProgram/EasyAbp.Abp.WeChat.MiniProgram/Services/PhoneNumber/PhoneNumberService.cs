@@ -1,9 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.OptionsResolve;
-using EasyAbp.Abp.WeChat.MiniProgram.Services.PhoneNumber;
 
-namespace EasyAbp.Abp.WeChat.MiniProgram.Services.Login
+namespace EasyAbp.Abp.WeChat.MiniProgram.Services.PhoneNumber
 {
     /// <summary>
     /// 小程序手机号服务。
