@@ -21,7 +21,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.Login
         /// </summary>
         /// <param name="code">登录时获取的 code</param>
         /// <param name="grantType">授权类型，此处只需填写 authorization_code</param>
-        public async Task<Code2AccessTokenResponse> Code2SessionAsync(string code, string grantType = "authorization_code")
+        public virtual async Task<Code2AccessTokenResponse> Code2SessionAsync(string code, string grantType = "authorization_code")
         {
             var options = await _optionsResolver.ResolveAsync();
 

@@ -22,7 +22,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
             _accessTokenAccessor = accessTokenAccessor;
         }
 
-        public async Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IMiniProgramRequest miniProgramRequest = null, bool withAccessToken = true)
+        public virtual async Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method, IMiniProgramRequest miniProgramRequest = null, bool withAccessToken = true)
         {
             var responseMessage =
                 await RequestGetHttpResponseMessageAsync(targetUrl, method, miniProgramRequest, withAccessToken);
@@ -32,7 +32,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
             return JsonConvert.DeserializeObject<TResponse>(resultStr);
         }
 
-        public async Task<TResponse> RequestGetBinaryDataAsync<TResponse>(string targetUrl, HttpMethod method,
+        public virtual async Task<TResponse> RequestGetBinaryDataAsync<TResponse>(string targetUrl, HttpMethod method,
             IMiniProgramRequest miniProgramRequest = null, bool withAccessToken = true) where TResponse : IHasBinaryData
         {
             var responseMessage =

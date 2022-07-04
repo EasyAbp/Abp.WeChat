@@ -48,7 +48,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="receipt">传入 Y 时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效。</param>
         /// <param name="sceneInfo">该字段常用于线下活动时的场景信息上报，支持上报实际门店信息，商户也可以按需求自己上报相关信息。</param>
         /// <param name="isProfitSharing">该笔订单是否参与分账操作。</param>
-        public async Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string deviceInfo, string body, string detail, string attach,
+        public virtual async Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string deviceInfo, string body, string detail, string attach,
             string outTradeNo, string feeType, int totalFee, string billCreateIp, string timeStart, string timeExpire,
             string goodsTag, string notifyUrl, string tradeType, string productId, string limitPay, string openId,
             string receipt, string sceneInfo, bool isProfitSharing = false)
@@ -106,7 +106,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="tradeType">交易类型，请参考 <see cref="TradeType"/> 的定义。</param>
         /// <param name="openId">当 <paramref name="tradeType"/> 参数为 <see cref="TradeType.JsApi"/> 时，此参数必填。</param>
         /// <param name="isProfitSharing">该笔订单是否参与分账操作。</param>
-        public async Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string body, string attach, string outTradeNo, int totalFee,
+        public virtual async Task<XmlDocument> UnifiedOrderAsync(string appId, string mchId, string body, string attach, string outTradeNo, int totalFee,
             string tradeType, string openId, bool isProfitSharing = false)
         {
             var options = await GetAbpWeChatPayOptions();
@@ -135,7 +135,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="refundFee">本次需要进行退款的金额，单位为分。注意该金额不能大于原始订单的总金额。</param>
         /// <param name="refundDescription">退款说明，当订单退款金额小于 1 元时，不会在退款消息中体现。</param>
         /// <returns>请求的结果，会被转换为 <see cref="XmlDocument"/> 实例并返回。</returns>
-        public async Task<XmlDocument> RefundAsync(string appId, string mchId, string orderNo, string refundOrderNo,
+        public virtual async Task<XmlDocument> RefundAsync(string appId, string mchId, string orderNo, string refundOrderNo,
             int orderTotalFee, int refundFee,
             string refundDescription = null)
         {
@@ -175,7 +175,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="orderNo">商户订单号，该订单号是商户系统内部生成的唯一编号。</param>
         /// <returns>请求的结果，会被转换为 <see cref="XmlDocument"/> 实例并返回。</returns>
         /// <exception cref="ArgumentException">当微信订单号和商户订单号都为 null 时，会抛出本异常。</exception>
-        public async Task<XmlDocument> OrderQueryAsync(string appId, string mchId, string weChatOrderNo = null, string orderNo = null)
+        public virtual async Task<XmlDocument> OrderQueryAsync(string appId, string mchId, string weChatOrderNo = null, string orderNo = null)
         {
             if (string.IsNullOrEmpty(weChatOrderNo) && string.IsNullOrEmpty(orderNo))
             {
@@ -219,7 +219,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
         /// <param name="mchId">微信支付分配的商户号。</param>
         /// <param name="orderNo">商户订单号，该订单号是商户系统内部生成的唯一编号。</param>
         /// <returns>请求的结果，会被转换为 <see cref="XmlDocument"/> 实例并返回。</returns>
-        public async Task<XmlDocument> CloseOrderAsync(string appId, string mchId, string orderNo)
+        public virtual async Task<XmlDocument> CloseOrderAsync(string appId, string mchId, string orderNo)
         {
             var request = new WeChatPayParameters();
             request.AddParameter("appid", appId);

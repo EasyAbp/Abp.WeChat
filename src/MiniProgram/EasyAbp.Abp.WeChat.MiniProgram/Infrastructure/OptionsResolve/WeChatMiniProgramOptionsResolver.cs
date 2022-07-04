@@ -18,7 +18,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.OptionsResolve
             _options = abpWeChatMiniProgramResolveOptions.Value;
         }
 
-        public async Task<IWeChatMiniProgramOptions> ResolveAsync()
+        public virtual async Task<IWeChatMiniProgramOptions> ResolveAsync()
         {
             using (var serviceScope = _serviceProvider.CreateScope())
             {
