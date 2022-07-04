@@ -20,7 +20,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers
             WeChatPayOptionsResolver = weChatPayOptionsResolver;
         }
 
-        public async Task HandleAsync(WeChatPayHandlerContext context)
+        public virtual async Task HandleAsync(WeChatPayHandlerContext context)
         {
             var encryptedXml = context.WeChatRequestXmlData.SelectSingleNode("/xml/req_info")?.InnerText;
             if (encryptedXml == null)
@@ -44,7 +44,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers
         /// <param name="decryptStr">已经被加密的字符串。</param>
         /// <param name="key">密钥。</param>
         /// <returns>完成 AES 解密的数据。</returns>
-        private string Decrypt(string decryptStr, string key)
+        protected virtual string Decrypt(string decryptStr, string key)
         {
             var keyBytes = Encoding.UTF8.GetBytes(key);
             var dataBytes = Convert.FromBase64String(decryptStr);

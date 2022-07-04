@@ -25,7 +25,7 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
 
         #region > Public Methods <
 
-        public async Task<string> RequestAsync(string targetUrl,
+        public virtual async Task<string> RequestAsync(string targetUrl,
             HttpMethod method,
             IOfficialRequest officialRequest = null,
             bool withAccessToken = true)
@@ -46,7 +46,7 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
             return await (await client.SendAsync(requestMsg)).Content.ReadAsStringAsync();
         }
 
-        public async Task<TResponse> RequestAsync<TResponse>(string targetUrl,
+        public virtual async Task<TResponse> RequestAsync<TResponse>(string targetUrl,
             HttpMethod method,
             IOfficialRequest officialRequest = null,
             bool withAccessToken = true)
@@ -59,7 +59,7 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
             return JsonConvert.DeserializeObject<TResponse>(resultStr);
         }
 
-        public async Task<TResponse> RequestFromDataAsync<TResponse>(string targetUrl,
+        public virtual async Task<TResponse> RequestFromDataAsync<TResponse>(string targetUrl,
             MultipartFormDataContent formDataContent,
             IOfficialRequest officialRequest = null,
             bool withAccessToken = true)

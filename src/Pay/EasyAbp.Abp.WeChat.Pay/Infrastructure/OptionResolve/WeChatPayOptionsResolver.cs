@@ -22,7 +22,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve
             _options = options.Value;
         }
 
-        public async Task<IWeChatPayOptions> ResolveAsync()
+        public virtual async Task<IWeChatPayOptions> ResolveAsync()
         {
             using (var serviceScope = _serviceProvider.CreateScope())
             {

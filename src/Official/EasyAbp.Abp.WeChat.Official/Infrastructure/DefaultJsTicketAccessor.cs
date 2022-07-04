@@ -24,7 +24,7 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
             _distributedCache = distributedCache;
         }
 
-        public async Task<string> GetTicketJsonAsync()
+        public virtual async Task<string> GetTicketJsonAsync()
         {
             var accessToken = await _accessTokenAccessor.GetAccessTokenAsync();
 
@@ -43,7 +43,7 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
                 });
         }
 
-        public async Task<string> GetTicketAsync()
+        public virtual async Task<string> GetTicketAsync()
         {
             var json = await GetTicketJsonAsync();
             var jObj = JObject.Parse(json);

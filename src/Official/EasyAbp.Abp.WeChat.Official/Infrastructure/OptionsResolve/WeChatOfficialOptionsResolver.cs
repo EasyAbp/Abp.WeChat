@@ -39,7 +39,7 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve
             return new AbpWeChatOfficialOptions();
         }
 
-        public async ValueTask<IWeChatOfficialOptions> ResolveAsync()
+        public virtual async ValueTask<IWeChatOfficialOptions> ResolveAsync()
         {
             using (var scope = _serviceProvider.CreateScope())
             {
