@@ -75,7 +75,7 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
         [Route("access-token-by-code")]
         public virtual async Task<Code2AccessTokenResponse> GetAccessTokenByCode([FromQuery] string code)
         {
-            return await _loginService.Code2SessionAsync(code);
+            return await _loginService.Code2AccessTokenAsync(code);
         }
 
         [HttpGet]
