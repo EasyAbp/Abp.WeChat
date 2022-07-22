@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace EasyAbp.Abp.WeChat.Official.Services.Login
 {
     /// <summary>
-    /// 发送模板消息时，需要传递的请求参数。
+    /// 通过 code 换取网页授权access_token时，需要传递的请求参数。
     /// </summary>
     public class Code2AccessTokenRequest : OfficialCommonRequest
     {
