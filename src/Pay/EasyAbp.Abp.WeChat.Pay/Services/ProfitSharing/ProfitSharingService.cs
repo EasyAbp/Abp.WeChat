@@ -37,7 +37,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
         /// <param name="receivers">分账接收方列表，不超过 50 个接收对象。</param>
         /// <param name="subAppId">微信分配的子商户公众账号 Id，可为空。</param>
         /// <exception cref="ArgumentException">当参数校验出现错误时，会抛出本异常。</exception>
-        public async Task<XmlDocument> ProfitSharingAsync(string mchId, string subMchId, string appId, string transactionId, string outOrderNo,
+        public virtual async Task<XmlDocument> ProfitSharingAsync(string mchId, string subMchId, string appId, string transactionId, string outOrderNo,
             IList<ProfitSharingReceiver> receivers, string subAppId = null)
         {
             if (receivers.Count > 50)
@@ -82,7 +82,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
         /// <param name="receivers">分账接收方列表，不超过 50 个接收对象。</param>
         /// <param name="subAppId">微信分配的子商户公众账号 Id，可为空。</param>
         /// <exception cref="ArgumentException">当参数校验出现错误时，会抛出本异常。</exception>
-        public async Task<XmlDocument> MultiProfitSharingAsync(string mchId, string subMchId, string appId, string transactionId, string outOrderNo,
+        public virtual async Task<XmlDocument> MultiProfitSharingAsync(string mchId, string subMchId, string appId, string transactionId, string outOrderNo,
             IList<ProfitSharingReceiver> receivers, string subAppId = null)
         {
             if (receivers.Count > 50)
@@ -120,7 +120,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
         /// <param name="outOrderNo">
         /// 查询分账结果，输入申请分账时的商户分账单号。 <br/>
         /// 查询分账完结的执行结果，输入发起分账完结时的商户分账单号。</param>
-        public async Task<XmlDocument> ProfitSharingQueryAsync(string mchId, string subMchId, string transactionId, string outOrderNo)
+        public virtual async Task<XmlDocument> ProfitSharingQueryAsync(string mchId, string subMchId, string transactionId, string outOrderNo)
         {
             var request = new WeChatPayParameters();
             request.AddParameter("mch_id", mchId);
@@ -146,7 +146,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
         /// <param name="appId">微信分配的公众账号 Id。</param>
         /// <param name="newReceiver">需要新增的分账接收方对象。</param>
         /// <param name="subAppId">微信分配的子商户公众账号 Id，可空。</param>
-        public async Task<XmlDocument> ProfitSharingAddReceiverAsync(string mchId, string subMchId, string appId, ProfitSharingReceiverDefinition newReceiver, string subAppId = null)
+        public virtual async Task<XmlDocument> ProfitSharingAddReceiverAsync(string mchId, string subMchId, string appId, ProfitSharingReceiverDefinition newReceiver, string subAppId = null)
         {
             var request = new WeChatPayParameters();
             request.AddParameter("mch_id", mchId);
@@ -175,7 +175,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
         /// <param name="receiverType">分账接收方类型，参考 (<see cref="ProfitSharingReceiverType"/>)。</param>
         /// <param name="receiverAccount">分账接收方帐号。</param>
         /// <param name="subAppId">微信分配的子商户公众账号 Id，可空。</param>
-        public async Task<XmlDocument> ProfitSharingRemoveReceiverAsync(string mchId, string subMchId, string appId, string receiverType, string receiverAccount, string subAppId = null)
+        public virtual async Task<XmlDocument> ProfitSharingRemoveReceiverAsync(string mchId, string subMchId, string appId, string receiverType, string receiverAccount, string subAppId = null)
         {
             var request = new WeChatPayParameters();
             request.AddParameter("mch_id", mchId);
@@ -207,7 +207,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
         /// <param name="transactionId">微信支付订单号，不能传递商户系统自己生成的订单号。</param>
         /// <param name="outOrderNo">服务商系统内部的分账单号，在服务商系统内部唯一（单次分账、多次分账、完结分账应使用不同的商户分账单号），同一分账单号多次请求等同一次。</param>
         /// <param name="description">分账完结的原因描述。</param>
-        public async Task<XmlDocument> ProfitSharingFinishAsync(string mchId, string subMchId, string appId, string transactionId, string outOrderNo, string description)
+        public virtual async Task<XmlDocument> ProfitSharingFinishAsync(string mchId, string subMchId, string appId, string transactionId, string outOrderNo, string description)
         {
             var request = new WeChatPayParameters();
             request.AddParameter("mch_id", mchId);
@@ -246,7 +246,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
         /// <param name="returnAmount">需要从分账接收方回退的金额，单位为分，只能为整数，不能超过原始分账单分出给该接收方的金额。</param>
         /// <param name="description">分账回退的原因描述。</param>
         /// <param name="subAppId">微信分配的子商户公众账号 Id，可空。</param>
-        public async Task<XmlDocument> ProfitSharingReturnAsync(string mchId, string subMchId, string appId, string outOrderNo, string outReturnNo, string returnAccountType,
+        public virtual async Task<XmlDocument> ProfitSharingReturnAsync(string mchId, string subMchId, string appId, string outOrderNo, string outReturnNo, string returnAccountType,
             string returnAccount, int returnAmount, string description, string subAppId = null)
         {
             var request = new WeChatPayParameters();
@@ -280,7 +280,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
         /// <param name="appId">微信分配的公众账号 Id。</param>
         /// <param name="outOrderNo">原发起分账请求时使用的商户后台系统的分账单号。</param>
         /// <param name="outReturnNo">此回退单号是商户在自己后台生成的一个新的回退单号，在商户后台唯一。</param>
-        public async Task<XmlDocument> ProfitSharingReturnQueryAsync(string mchId, string subMchId, string appId, string outOrderNo, string outReturnNo)
+        public virtual async Task<XmlDocument> ProfitSharingReturnQueryAsync(string mchId, string subMchId, string appId, string outOrderNo, string outReturnNo)
         {
             var request = new WeChatPayParameters();
             request.AddParameter("mch_id", mchId);

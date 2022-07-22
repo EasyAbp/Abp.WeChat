@@ -17,7 +17,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<XmlDocument> RequestAsync(string url, string body)
+        public virtual async Task<XmlDocument> RequestAsync(string url, string body)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, url)
             {

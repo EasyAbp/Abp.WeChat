@@ -89,6 +89,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services
         {
             if (await CurrentIsSandboxModeAsync())
             {
+                // Todo: 原仿真测试系统已不再维护，下线时间2022年5月31日，如有问题请通过新版文档中心技术咨询进行反馈。请需要进行支付测试的商户按照下面新的仿真测试系统说明文档进行接入测试 https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=23_1&index=1
                 return Regex.Replace(standardUrl, "/pay/", "/sandboxnew/pay/");
             }
 

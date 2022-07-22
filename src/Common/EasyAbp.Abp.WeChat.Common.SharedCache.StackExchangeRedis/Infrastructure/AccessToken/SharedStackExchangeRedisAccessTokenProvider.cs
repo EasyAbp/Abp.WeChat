@@ -30,7 +30,7 @@ namespace EasyAbp.Abp.WeChat.Common.SharedCache.StackExchangeRedis.Infrastructur
             _httpClientFactory = httpClientFactory;
         }
         
-        public async Task<string> GetAccessTokenAsync(string appId, string appSecret)
+        public virtual async Task<string> GetAccessTokenAsync(string appId, string appSecret)
         {
             var redisCache = new AbpRedisCache(new RedisCacheOptions
             {
