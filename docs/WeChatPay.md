@@ -57,8 +57,8 @@ public class XXXHttpApiModule : AbpModule
             // 微信支付的 API 密钥信息，会在后续进行签名时被使用。
             op.ApiKey = "000000000000000000000000000";
             // 支付回调地址，用于接收支付结果通知。
-            // 如果使用了 HttpApi 模块的 Controller，则默认是 域名 + /WeChatPay/Notify 路由。
-            op.NotifyUrl = "http://xxx.xxxx.com/WeChatPay/Notify";
+            // 如果使用了 HttpApi 模块的 Controller，则默认是 域名 + /wechat-pay/notify 路由。
+            op.NotifyUrl = "http://xxx.xxxx.com/wechat-pay/notify";
         });
     }
 }
