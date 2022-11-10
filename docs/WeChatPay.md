@@ -78,7 +78,7 @@ public class XXXHttpApiModule : AbpModule
 
 ### 3.1 支付回调接口
 
-支付通知接口的默认路由是 `/WeChatPay/Notify`，当开发人员调用了统一下单接口之后，微信会将支付结果通过异步回调的方式请求 **支付通知接口**，该参数可以通过注入 `AbpWeChatPayOptions.NotifyUrl` 进行读取或设置。
+支付通知接口的默认路由是 `/wechat-pay/notify`，当开发人员调用了统一下单接口之后，微信会将支付结果通过异步回调的方式请求 **支付通知接口**，该参数可以通过注入 `AbpWeChatPayOptions.NotifyUrl` 进行读取或设置。
 
 > 开发人员也可以自己编写回调接口，只需要在配置的时候，参数传递自己的回调接口 URL 即可。
 
