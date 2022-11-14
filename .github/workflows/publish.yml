@@ -34,6 +34,9 @@ jobs:
       - name: dotnet build
         run: dotnet build -c Release
 
+#      - name: dotnet test
+#        run: dotnet test --no-restore --no-build
+
       - name: dotnet pack
         run: dotnet pack -c Release --no-build -o dest
 
@@ -47,6 +50,7 @@ jobs:
           del *.Host.Shared.*
           del *.HttpApi.Host.*
           del *.IdentityServer.*
+          del *.AuthServer.*
           del *.Web.Host.*
           del *.Web.Unified.*
           del *.HttpApi.Client.ConsoleTestApp.*
