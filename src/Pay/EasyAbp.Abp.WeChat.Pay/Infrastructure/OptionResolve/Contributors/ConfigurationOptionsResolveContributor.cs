@@ -10,7 +10,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve.Contributors
 
         public string Name => ContributorName;
 
-        public Task ResolveAsync(WeChatPayOptionsResolverContext context)
+        public virtual Task ResolveAsync(WeChatPayOptionsResolverContext context)
         {
             context.Options = context.ServiceProvider.GetRequiredService<IOptions<AbpWeChatPayOptions>>().Value;
             return Task.CompletedTask;

@@ -16,7 +16,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Services.PhoneNumber
         /// code换取用户手机号。 每个 code 只能使用一次，code的有效期为5min
         /// </summary>
         /// <param name="code">手机号获取凭证</param>
-        public Task<GetPhoneNumberResponse> GetPhoneNumberAsync(string code)
+        public virtual Task<GetPhoneNumberResponse> GetPhoneNumberAsync(string code)
         {
             const string targetUrl = "https://api.weixin.qq.com/wxa/business/getuserphonenumber";
 

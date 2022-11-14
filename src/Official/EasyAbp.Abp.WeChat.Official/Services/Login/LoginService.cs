@@ -21,7 +21,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.Login
         /// </summary>
         /// <param name="code">登录时获取的 code</param>
         /// <param name="grantType">授权类型，此处只需填写 authorization_code</param>
-        public async Task<Code2AccessTokenResponse> Code2AccessTokenAsync(string code, string grantType = "authorization_code")
+        public virtual async Task<Code2AccessTokenResponse> Code2AccessTokenAsync(string code, string grantType = "authorization_code")
         {
             var options = await _optionsResolver.ResolveAsync();
 
@@ -35,7 +35,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.Login
         /// <param name="appSecret">公众号 appSecret</param>
         /// <param name="code">登录时获取的 code</param>
         /// <param name="grantType">授权类型，此处只需填写 authorization_code</param>
-        public Task<Code2AccessTokenResponse> Code2AccessTokenAsync(string appId, string appSecret, string code, string grantType = "authorization_code")
+        public virtual Task<Code2AccessTokenResponse> Code2AccessTokenAsync(string appId, string appSecret, string code, string grantType = "authorization_code")
         {
             const string targetUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?";
 
@@ -50,7 +50,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.Login
         /// <param name="accessToken">网页授权接口调用凭证,注意：此access_token与基础支持的access_token不同</param>
         /// <param name="openId">用户的唯一标识</param>
         /// <param name="language">返回国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语</param>
-        public Task<AccessToken2UserInfoResponse> AccessToken2UserInfoAsync(string accessToken, string openId, string language = "zh_CN")
+        public virtual Task<AccessToken2UserInfoResponse> AccessToken2UserInfoAsync(string accessToken, string openId, string language = "zh_CN")
         {
             const string targetUrl = "https://api.weixin.qq.com/sns/userinfo?";
 

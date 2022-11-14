@@ -19,7 +19,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// 一次拉取调用最多拉取 10000 个关注者的 OpenID，可以通过多次拉取的方式来满足需求。
         /// </summary>
         /// <param name="firstOpenId">第一个拉取的OPENID，不填默认从头开始拉取。</param>
-        public Task<OfficialUserListResponse> GetOfficialUserListAsync(string firstOpenId = null)
+        public virtual Task<OfficialUserListResponse> GetOfficialUserListAsync(string firstOpenId = null)
         {
             return WeChatOfficialApiRequester.RequestAsync<OfficialUserListResponse>(GetOfficialUserListUrl,
                 HttpMethod.Get,
@@ -31,7 +31,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// </summary>
         /// <param name="openId">微信公众号的用户唯一标识。</param>
         /// <param name="remark">新的备注名，长度必须小于 30 字符。</param>
-        public Task<OfficialCommonResponse> UpdateUserRemarkAsync(string openId, string remark)
+        public virtual Task<OfficialCommonResponse> UpdateUserRemarkAsync(string openId, string remark)
         {
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(UpdateUserRemarkUrl,
                 HttpMethod.Post,
@@ -43,7 +43,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// </summary>
         /// <param name="openId">普通用户的标识，对当前公众号唯一。</param>
         /// <param name="language">返回国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语。</param>
-        public Task<UnionUserInfoResponse> GetUserUnionInfoAsync(string openId, string language = null)
+        public virtual Task<UnionUserInfoResponse> GetUserUnionInfoAsync(string openId, string language = null)
         {
             return WeChatOfficialApiRequester.RequestAsync<UnionUserInfoResponse>(GetUserUnionInfoUrl,
                 HttpMethod.Get,
@@ -54,7 +54,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// 批量获取用户基本信息，公众号可通过本接口来批量获取用户基本信息。
         /// </summary>
         /// <param name="userIds">需要查询的用户 OPENID 列表，最多支持 100 个。</param>
-        public Task<BatchUnionUserInfoResponse> BatchGetUserUnionInfoAsync(List<GetUserUnionInfoRequest> userIds)
+        public virtual Task<BatchUnionUserInfoResponse> BatchGetUserUnionInfoAsync(List<GetUserUnionInfoRequest> userIds)
         {
             return WeChatOfficialApiRequester.RequestAsync<BatchUnionUserInfoResponse>(BatchGetUserUnionInfoUrl,
                 HttpMethod.Post,

@@ -13,7 +13,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.OptionsResolve.Contribut
 
         public string Name => ContributorName;
 
-        public Task ResolveAsync(WeChatMiniProgramOptionsResolveContext context)
+        public virtual Task ResolveAsync(WeChatMiniProgramOptionsResolveContext context)
         {
             var asyncLocal = context.ServiceProvider.GetRequiredService<IWeChatMiniProgramAsyncLocalAccessor>();
 

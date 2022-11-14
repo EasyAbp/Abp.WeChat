@@ -25,7 +25,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.MediaManagement
         /// <param name="fileData">需要上传的素材数据。</param>
         /// <param name="type">素材的类型，参考 <see cref="MediaType"/> 的定义。</param>
         /// <param name="fileName">素材的文件名。</param>
-        public Task<UploadedTempMediaResponse> UploadTempMediaAsync(Stream fileData, string type, string fileName)
+        public virtual Task<UploadedTempMediaResponse> UploadTempMediaAsync(Stream fileData, string type, string fileName)
         {
             var postContent = new MultipartFormDataContent();
             postContent.AddV2(new StreamContent(fileData), fileName, fileName);

@@ -35,7 +35,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Services.Login
         /// <param name="appSecret">小程序 appSecret</param>
         /// <param name="jsCode">登录时获取的 code</param>
         /// <param name="grantType">授权类型，此处只需填写 authorization_code</param>
-        public Task<Code2SessionResponse> Code2SessionAsync(string appId, string appSecret, string jsCode, string grantType = "authorization_code")
+        public virtual Task<Code2SessionResponse> Code2SessionAsync(string appId, string appSecret, string jsCode, string grantType = "authorization_code")
         {
             const string targetUrl = "https://api.weixin.qq.com/sns/jscode2session?";
 

@@ -19,7 +19,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Services.SubscribeMessage
         /// <param name="data">模板内容，格式形如 { "key1": { "value": any }, "key2": { "value": any } }</param>
         /// <param name="miniProgramState">跳转小程序类型：developer为开发版；trial为体验版；formal为正式版；默认为正式版</param>
         /// <param name="lang">进入小程序查看”的语言类型，支持zh_CN(简体中文)、en_US(英文)、zh_HK(繁体中文)、zh_TW(繁体中文)，默认为zh_CN</param>
-        public Task<SendSubscribeMessageResponse> SendAsync(
+        public virtual Task<SendSubscribeMessageResponse> SendAsync(
             [NotNull] string toUser,
             [NotNull] string templateId,
             [CanBeNull] string page,

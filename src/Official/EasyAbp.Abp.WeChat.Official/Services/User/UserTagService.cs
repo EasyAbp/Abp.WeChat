@@ -25,7 +25,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// 创建新的用户标签。
         /// </summary>
         /// <param name="name">标签名称。</param>
-        public Task<CreateUserTagResponse> CreateAsync(string name)
+        public virtual Task<CreateUserTagResponse> CreateAsync(string name)
         {
             return WeChatOfficialApiRequester.RequestAsync<CreateUserTagResponse>(CreateApiUrl,
                 HttpMethod.Post,
@@ -36,7 +36,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// <summary>
         /// 获取当前公众号的所有用户标签列表。
         /// </summary>
-        public Task<GetAllUserTagListResponse> GetCreatedTagsAsync()
+        public virtual Task<GetAllUserTagListResponse> GetCreatedTagsAsync()
         {
             return WeChatOfficialApiRequester.RequestAsync<GetAllUserTagListResponse>(GetCreatedTagsApiUrl,
                 HttpMethod.Get
@@ -47,7 +47,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// 根据标签 ID，删除指定的标签。
         /// </summary>
         /// <param name="tagId">标签的唯一 ID。</param>
-        public Task<OfficialCommonResponse> DeleteAsync(long tagId)
+        public virtual Task<OfficialCommonResponse> DeleteAsync(long tagId)
         {
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(DeleteApiUrl,
                 HttpMethod.Post,
@@ -60,7 +60,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// </summary>
         /// <param name="tagId">标签的唯一 ID。</param>
         /// <param name="name">新的标签名称。</param>
-        public Task<OfficialCommonResponse> UpdateAsync(long tagId, string name)
+        public virtual Task<OfficialCommonResponse> UpdateAsync(long tagId, string name)
         {
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(UpdateApiUrl,
                 HttpMethod.Post,
@@ -73,7 +73,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// </summary>
         /// <param name="tagId">需要打上的标签 ID。</param>
         /// <param name="openIds">需要打标签的用户 OPEN ID 集合。</param>
-        public Task<OfficialCommonResponse> BatchTaggingAsync(long tagId, List<string> openIds)
+        public virtual Task<OfficialCommonResponse> BatchTaggingAsync(long tagId, List<string> openIds)
         {
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(BatchTaggingApiUrl,
                 HttpMethod.Post,
@@ -86,7 +86,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// </summary>
         /// <param name="tagId">需要取消的标签 ID。</param>
         /// <param name="openIds">需要取消标签的用户 OPEN ID 集合。</param>
-        public Task<OfficialCommonResponse> BatchUnTaggingAsync(long tagId, List<string> openIds)
+        public virtual Task<OfficialCommonResponse> BatchUnTaggingAsync(long tagId, List<string> openIds)
         {
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(BatchUnTaggingApiUrl,
                 HttpMethod.Post,
@@ -98,7 +98,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// 获取用户身上的标签列表。
         /// </summary>
         /// <param name="openId">需要查询用户的 OPENID。</param>
-        public Task<GetTagsByUserResponse> GetTagsByUserAsync(string openId)
+        public virtual Task<GetTagsByUserResponse> GetTagsByUserAsync(string openId)
         {
             return WeChatOfficialApiRequester.RequestAsync<GetTagsByUserResponse>(GetTagsByUserApiUrl,
                 HttpMethod.Post,
@@ -111,7 +111,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// </summary>
         /// <param name="tagId">标签的唯一 ID。</param>
         /// <param name="firstOpenId">起始粉丝的 OPENID，将会从指定的 OPENID 往后拉取粉丝数据。</param>
-        public Task<GetUsersByTagResponse> GetUsersByTagAsync(long tagId, string firstOpenId = null)
+        public virtual Task<GetUsersByTagResponse> GetUsersByTagAsync(long tagId, string firstOpenId = null)
         {
             return WeChatOfficialApiRequester.RequestAsync<GetUsersByTagResponse>(GetUsersByTagApiUrl,
                 HttpMethod.Post,

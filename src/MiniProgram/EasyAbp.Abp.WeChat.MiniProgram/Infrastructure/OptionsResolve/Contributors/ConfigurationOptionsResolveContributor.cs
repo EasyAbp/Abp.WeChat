@@ -9,7 +9,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.OptionsResolve.Contribut
         public const string ContributorName = "Configuration";
         public string Name => ContributorName;
 
-        public Task ResolveAsync(WeChatMiniProgramOptionsResolveContext context)
+        public virtual Task ResolveAsync(WeChatMiniProgramOptionsResolveContext context)
         {
             context.Options = context.ServiceProvider.GetRequiredService<IOptions<AbpWeChatMiniProgramOptions>>().Value;
             

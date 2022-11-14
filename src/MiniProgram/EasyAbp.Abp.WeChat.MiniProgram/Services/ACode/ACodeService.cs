@@ -17,7 +17,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Services.ACode
         /// <param name="autoColor">自动配置线条颜色，如果颜色依然是黑色，则说明不建议配置主色调，默认 false</param>
         /// <param name="lineColor">auto_color 为 false 时生效，使用 rgb 设置颜色 例如 {"r":"xxx","g":"xxx","b":"xxx"} 十进制表示</param>
         /// <param name="isHyaline">是否需要透明底色，为 true 时，生成透明底色的小程序</param>
-        public Task<GetUnlimitedACodeResponse> GetUnlimitedACodeAsync(string scene, string page = null,
+        public virtual Task<GetUnlimitedACodeResponse> GetUnlimitedACodeAsync(string scene, string page = null,
             short width = 430, bool autoColor = false, LineColorModel lineColor = null, bool isHyaline = false)
         {
             const string targetUrl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit";

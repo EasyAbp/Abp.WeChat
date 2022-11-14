@@ -21,7 +21,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// 当列表数量较多的时候，可以采用分批拉取的方式。
         /// </summary>
         /// <param name="beginOpenId">起始 OPENID，如果传递则从该 OPENID 往后拉取。默认则从头开始拉取。</param>
-        public Task<OfficialUserListResponse> GetBlackListAsync(string beginOpenId = null)
+        public virtual Task<OfficialUserListResponse> GetBlackListAsync(string beginOpenId = null)
         {
             return WeChatOfficialApiRequester.RequestAsync<OfficialUserListResponse>(GetBlackListUrl,
                 HttpMethod.Post,
@@ -32,7 +32,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// 拉黑指定用户，每次最多拉黑 20 个用户。
         /// </summary>
         /// <param name="openIds">需要拉黑的用户 OPENID。</param>
-        public Task<OfficialCommonResponse> BatchBlackListAsync(List<string> openIds)
+        public virtual Task<OfficialCommonResponse> BatchBlackListAsync(List<string> openIds)
         {
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(BatchBlackListUrl,
                 HttpMethod.Post,
@@ -43,7 +43,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User
         /// 取消拉黑指定用户，每次最多取消拉黑 20 个用户。
         /// </summary>
         /// <param name="openIds">需要取消拉黑的用户 OPENID。</param>
-        public Task<OfficialCommonResponse> BatchUnBlackListAsync(List<string> openIds)
+        public virtual Task<OfficialCommonResponse> BatchUnBlackListAsync(List<string> openIds)
         {
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(BatchUnBlackListUrl,
                 HttpMethod.Post,

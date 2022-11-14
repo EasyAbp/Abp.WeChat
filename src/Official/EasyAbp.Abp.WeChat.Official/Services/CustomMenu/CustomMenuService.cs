@@ -20,7 +20,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.CustomMenu
         /// 根据指定的参数创建自定义菜单，本方法相当于全量覆盖，执行之后微信公众号的原有菜单信息将会被覆盖。
         /// </summary>
         /// <param name="customButtons">最新的自定义菜单集合。</param>
-        public Task<OfficialCommonResponse> CreateCustomMenuAsync(List<CustomButton> customButtons)
+        public virtual Task<OfficialCommonResponse> CreateCustomMenuAsync(List<CustomButton> customButtons)
         {
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(CreateApiUrl, HttpMethod.Post,
                 new CreateCustomMenuRequest
@@ -33,12 +33,12 @@ namespace EasyAbp.Abp.WeChat.Official.Services.CustomMenu
         /// 删除当前公众号所有自定义菜单。另请注意，在个性化菜单时，调用此接口会删除默认菜单及全部个性化菜单。
         /// </summary>
         /// <returns></returns>
-        public Task<OfficialCommonResponse> DeleteCustomMenuAsync()
+        public virtual Task<OfficialCommonResponse> DeleteCustomMenuAsync()
         {
             return WeChatOfficialApiRequester.RequestAsync<OfficialCommonResponse>(DeleteApiUrl, HttpMethod.Get);
         }
 
-        public Task<GetAllCustomMenuResponse> GetAllCustomMenuAsync()
+        public virtual Task<GetAllCustomMenuResponse> GetAllCustomMenuAsync()
         {
             return WeChatOfficialApiRequester.RequestAsync<GetAllCustomMenuResponse>(GetDetailApiUrl, HttpMethod.Get);
         }
