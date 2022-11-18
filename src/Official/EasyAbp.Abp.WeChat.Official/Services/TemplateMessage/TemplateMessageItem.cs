@@ -9,7 +9,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
     /// </summary>
     public class TemplateMessageItem
     {
-        protected TemplateMessageItem()
+        public TemplateMessageItem()
         {
             
         }
