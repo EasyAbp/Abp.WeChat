@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ using EasyAbp.Abp.WeChat.Common.Infrastructure;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Signature;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
+using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve.Contributors;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,16 +26,17 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
     [Route("/wechat-pay")]
     public class WeChatPayController : AbpControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISignatureGenerator _signatureGenerator;
+        private readonly IWeChatPayAsyncLocal _weChatPayAsyncLocal;
         private readonly IWeChatPayOptionsResolver _optionsResolver;
 
-        public WeChatPayController(IHttpContextAccessor httpContextAccessor,
+        public WeChatPayController(
             ISignatureGenerator signatureGenerator,
+            IWeChatPayAsyncLocal weChatPayAsyncLocal,
             IWeChatPayOptionsResolver optionsResolver)
         {
-            _httpContextAccessor = httpContextAccessor;
             _signatureGenerator = signatureGenerator;
+            _weChatPayAsyncLocal = weChatPayAsyncLocal;
             _optionsResolver = optionsResolver;
         }
 
@@ -42,13 +45,23 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         /// </summary>
         [HttpPost]
         [Route("notify")]
-        public virtual async Task<ActionResult> Notify()
+        [Route("notify/tenant-id/{tenantId}")]
+        [Route("notify/app-id/{appId}")]
+        [Route("notify/tenant-id/{tenantId}/app-id/{appId}")]
+        public virtual async Task<ActionResult> Notify([CanBeNull] string tenantId, [CanBeNull] string appId)
         {
+            using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId));
+
+            // 如果指定了 appId，请务必实现 IHttpApiWeChatOfficialOptionsProvider
+            var options = await ResolveOptionsAsync(appId);
+
+            using var changeOptions = _weChatPayAsyncLocal.Change(options);
+
             var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayHandler>>()
                 .Where(h => h.Type == WeChatHandlerType.Normal);
 
             Request.EnableBuffering();
-            using (var streamReader = new StreamReader(_httpContextAccessor.HttpContext.Request.Body))
+            using (var streamReader = new StreamReader(HttpContext.Request.Body))
             {
                 var result = await streamReader.ReadToEndAsync();
 
@@ -79,13 +92,23 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         /// </summary>
         [HttpPost]
         [Route("refund-notify")]
-        public virtual async Task<ActionResult> RefundNotify()
+        [Route("refund-notify/tenant-id/{tenantId}")]
+        [Route("refund-notify/app-id/{appId}")]
+        [Route("refund-notify/tenant-id/{tenantId}/app-id/{appId}")]
+        public virtual async Task<ActionResult> RefundNotify([CanBeNull] string tenantId, [CanBeNull] string appId)
         {
+            using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId));
+
+            // 如果指定了 appId，请务必实现 IHttpApiWeChatOfficialOptionsProvider
+            var options = await ResolveOptionsAsync(appId);
+
+            using var changeOptions = _weChatPayAsyncLocal.Change(options);
+
             var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayHandler>>()
                 .Where(h => h.Type == WeChatHandlerType.Refund);
 
             Request.EnableBuffering();
-            using (var streamReader = new StreamReader(_httpContextAccessor.HttpContext.Request.Body))
+            using (var streamReader = new StreamReader(HttpContext.Request.Body))
             {
                 var result = await streamReader.ReadToEndAsync();
 
@@ -123,6 +146,11 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         {
             if (string.IsNullOrEmpty(prepayId)) throw new UserFriendlyException("请传入有效的预支付订单 Id。");
 
+            // 如果指定了 appId，请务必实现 IHttpApiWeChatOfficialOptionsProvider
+            var options = await ResolveOptionsAsync(appId);
+
+            using var changeOptions = _weChatPayAsyncLocal.Change(options);
+
             var nonceStr = RandomStringHelper.GetRandomString();
             var timeStamp = DateTimeHelper.GetNowTimeStamp();
             var package = $"prepay_id={prepayId}";
@@ -147,6 +175,12 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
                 signType,
                 paySign = paySignStr
             });
+        }
+
+        protected virtual async Task<IWeChatPayOptions> ResolveOptionsAsync(string appId)
+        {
+            var provider = LazyServiceProvider.LazyGetRequiredService<IHttpApiWeChatPayOptionsProvider>();
+            return appId.IsNullOrWhiteSpace() ? await _optionsResolver.ResolveAsync() : await provider.GetAsync(appId);
         }
 
         private string BuildSuccessXml()
