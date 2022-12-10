@@ -52,7 +52,7 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId));
 
-            // 如果指定了 appId，请务必实现 IHttpApiWeChatOfficialOptionsProvider
+            // 如果指定了 appId，请务必实现 IHttpApiWeChatPayOptionsProvider
             var options = await ResolveOptionsAsync(appId);
 
             using var changeOptions = _weChatPayAsyncLocal.Change(options);
@@ -99,7 +99,7 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId));
 
-            // 如果指定了 appId，请务必实现 IHttpApiWeChatOfficialOptionsProvider
+            // 如果指定了 appId，请务必实现 IHttpApiWeChatPayOptionsProvider
             var options = await ResolveOptionsAsync(appId);
 
             using var changeOptions = _weChatPayAsyncLocal.Change(options);
@@ -146,7 +146,7 @@ namespace EasyAbp.Abp.WeChat.Pay.HttpApi.Controller
         {
             if (string.IsNullOrEmpty(prepayId)) throw new UserFriendlyException("请传入有效的预支付订单 Id。");
 
-            // 如果指定了 appId，请务必实现 IHttpApiWeChatOfficialOptionsProvider
+            // 如果指定了 appId，请务必实现 IHttpApiWeChatPayOptionsProvider
             var options = await ResolveOptionsAsync(appId);
 
             using var changeOptions = _weChatPayAsyncLocal.Change(options);
