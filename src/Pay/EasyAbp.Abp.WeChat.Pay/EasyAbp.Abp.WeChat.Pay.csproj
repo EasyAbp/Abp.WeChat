@@ -6,7 +6,6 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>EasyAbp.Abp.WeChat.Pay</RootNamespace>
         <Description>ABP vNext微信模块，提供对微信支付业务的支持。</Description>
-        <LangVersion>8</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>

@@ -1,0 +1,16 @@
+using System.Threading.Tasks;
+
+namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform;
+
+/// <summary>
+/// 授权事件通知处理者
+/// </summary>
+public interface IWeChatThirdPartyPlatformAuthEventHandler
+{
+    /// <summary>
+    /// 仅处理此 InfoType 的事件，有效值参考 <see cref="WeChatThirdPartyPlatformAuthEventInfoTypes"/>
+    /// </summary>
+    public string InfoType { get; }
+
+    Task HandleAsync(WeChatThirdPartyPlatformAuthEventHandlerContext context);
+}
