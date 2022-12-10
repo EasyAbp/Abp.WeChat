@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="..\..\..\common.props" />
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <RootNamespace>EasyAbp.Abp.WeChat.OpenPlatform</RootNamespace>
+        <Description>ABP vNext开放平台模块，提供对微信开放平台业务的支持。</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="$(AbpVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\EasyAbp.Abp.WeChat.OpenPlatform\EasyAbp.Abp.WeChat.OpenPlatform.csproj" />
+    </ItemGroup>
+
+</Project>

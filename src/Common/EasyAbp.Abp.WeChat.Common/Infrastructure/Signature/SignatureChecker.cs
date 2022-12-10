@@ -4,7 +4,7 @@ using System.Text;
 using EasyAbp.Abp.WeChat.Common.Exceptions;
 using Volo.Abp.DependencyInjection;
 
-namespace EasyAbp.Abp.WeChat.MiniProgram.Infrastructure
+namespace EasyAbp.Abp.WeChat.Common.Infrastructure.Signature
 {
     public class SignatureChecker : ITransientDependency
     {

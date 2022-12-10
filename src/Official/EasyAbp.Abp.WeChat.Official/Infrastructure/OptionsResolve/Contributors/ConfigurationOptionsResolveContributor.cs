@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve
+namespace EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve.Contributors
 {
     public class ConfigurationOptionsResolveContributor : IWeChatOfficialOptionsResolveContributor
     {
