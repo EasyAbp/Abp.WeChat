@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.AccessToken;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform;
 
@@ -12,5 +13,12 @@ public interface IWeChatThirdPartyPlatformAppEventHandler
     /// </summary>
     public string Event { get; }
 
+    /// <summary>
+    /// 事件处理实现
+    /// 请注意，此方法中如有需要调用微信 API，请在第一行使用：
+    /// using var changeOptions = WeChatXxxxAsyncLocal.Change(new AbpWeChatXxxxOptions { AppId = context.AuthorizerAppId; })
+    /// 不要设置 AppSecret，此时会自动使用微信第三方平台的 authorizer_access_token
+    /// 见 <see cref="HybridAccessTokenProvider"/>
+    /// </summary>
     Task HandleAsync(WeChatThirdPartyPlatformAppEventHandlerContext context);
 }

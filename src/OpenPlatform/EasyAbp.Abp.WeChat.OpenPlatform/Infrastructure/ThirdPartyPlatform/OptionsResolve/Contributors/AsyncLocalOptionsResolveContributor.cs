@@ -57,20 +57,20 @@ public class WeChatThirdPartyPlatformAsyncLocalAccessor : IWeChatThirdPartyPlatf
     }
 }
 
-public interface IWeChatOpenPlatformAsyncLocal
+public interface IWeChatThirdPartyPlatformAsyncLocal
 {
     IWeChatThirdPartyPlatformOptions CurrentOptions { get; }
 
     IDisposable Change(IWeChatThirdPartyPlatformOptions weChatThirdPartyPlatformOptions);
 }
 
-public class WeChatOpenPlatformAsyncLocal : IWeChatOpenPlatformAsyncLocal, ITransientDependency
+public class WeChatThirdPartyPlatformAsyncLocal : IWeChatThirdPartyPlatformAsyncLocal, ITransientDependency
 {
     public IWeChatThirdPartyPlatformOptions CurrentOptions { get; private set; }
 
     private readonly IWeChatThirdPartyPlatformAsyncLocalAccessor _weChatThirdPartyPlatformAsyncLocalAccessor;
 
-    public WeChatOpenPlatformAsyncLocal(IWeChatThirdPartyPlatformAsyncLocalAccessor weChatThirdPartyPlatformAsyncLocalAccessor)
+    public WeChatThirdPartyPlatformAsyncLocal(IWeChatThirdPartyPlatformAsyncLocalAccessor weChatThirdPartyPlatformAsyncLocalAccessor)
     {
         _weChatThirdPartyPlatformAsyncLocalAccessor = weChatThirdPartyPlatformAsyncLocalAccessor;
             
