@@ -8,8 +8,9 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.Services;
 public abstract class CommonService : ITransientDependency
 {
     public IServiceProvider ServiceProvider { get; set; }
-        
+
     protected readonly object ServiceLocker = new object();
+
     protected TService LazyLoadService<TService>(ref TService service)
     {
         if (service == null)
@@ -26,9 +27,8 @@ public abstract class CommonService : ITransientDependency
         return service;
     }
 
-    protected IAccessTokenAccessor AccessTokenAccessor => LazyLoadService(ref _accessTokenAccessor);
-    private IAccessTokenAccessor _accessTokenAccessor;
+    protected IWeChatOpenPlatformApiRequester WeChatOpenPlatformApiRequester =>
+        LazyLoadService(ref _weChatOpenPlatformApiRequester);
 
-    protected IWeChatOpenPlatformApiRequester WeChatOpenPlatformApiRequester => LazyLoadService(ref _weChatOpenPlatformApiRequester);
     private IWeChatOpenPlatformApiRequester _weChatOpenPlatformApiRequester;
 }

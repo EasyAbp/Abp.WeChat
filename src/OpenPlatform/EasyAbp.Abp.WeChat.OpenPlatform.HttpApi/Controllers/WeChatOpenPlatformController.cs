@@ -6,8 +6,8 @@ using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Encryption;
 using EasyAbp.Abp.WeChat.Common.Models;
 using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.Models.ThirdPartyPlatform;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.OptionsResolve;
 using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform;
+using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.OptionsResolve;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp;
@@ -23,11 +23,11 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.Controllers;
 public class WeChatOpenPlatformController : AbpControllerBase
 {
     private readonly IWeChatNotificationEncryptor _weChatNotificationEncryptor;
-    private readonly IWeChatOpenPlatformOptionsResolver _optionsResolver;
+    private readonly IWeChatThirdPartyPlatformOptionsResolver _optionsResolver;
 
     public WeChatOpenPlatformController(
         IWeChatNotificationEncryptor weChatNotificationEncryptor,
-        IWeChatOpenPlatformOptionsResolver optionsResolver)
+        IWeChatThirdPartyPlatformOptionsResolver optionsResolver)
     {
         _weChatNotificationEncryptor = weChatNotificationEncryptor;
         _optionsResolver = optionsResolver;
