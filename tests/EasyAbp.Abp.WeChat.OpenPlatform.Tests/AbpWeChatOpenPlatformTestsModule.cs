@@ -9,7 +9,7 @@ public class AbpWeChatOpenPlatformTestsModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        Configure<AbpWeChatOpenPlatformOptions>(op =>
+        Configure<AbpWeChatThirdPartyPlatformOptions>(op =>
         {
             op.AppId = AbpWeChatOpenPlatformTestsConsts.AppId;
             op.Token = AbpWeChatOpenPlatformTestsConsts.Token;

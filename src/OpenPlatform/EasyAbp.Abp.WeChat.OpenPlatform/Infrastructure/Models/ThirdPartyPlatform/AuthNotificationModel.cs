@@ -11,11 +11,13 @@ public class AuthNotificationModel : ExtensibleObject
 
     public string InfoType => this.GetProperty<string>("InfoType");
 
-    public string AuthorizerAppid => this.GetProperty<string>("AuthorizerAppid");
+    public string AuthorizerAppId => this.GetProperty<string>("AuthorizerAppid");
 
     public string AuthorizationCode => this.GetProperty<string>("AuthorizationCode");
 
     public int AuthorizationCodeExpiredTime => this.GetProperty<int>("AuthorizationCodeExpiredTime");
 
     public string PreAuthCode => this.GetProperty<string>("PreAuthCode");
+
+    public string ComponentVerifyTicket => this.GetProperty<string>("ComponentVerifyTicket");
 }
