@@ -1,6 +1,6 @@
 ﻿using EasyAbp.Abp.WeChat.Common;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.OptionsResolve;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.OptionsResolve.Contributors;
+using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.OptionsResolve;
+using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.OptionsResolve.Contributors;
 using Volo.Abp.Modularity;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform;
@@ -10,11 +10,11 @@ public class AbpWeChatOpenPlatformModule : AbpModule
 {
     public override void PostConfigureServices(ServiceConfigurationContext context)
     {
-        Configure<AbpWeChatOpenPlatformResolveOptions>(options =>
+        Configure<AbpWeChatThirdPartyPlatformResolveOptions>(options =>
         {
-            if (!options.WeChatOpenPlatformOptionsResolveContributors.Exists(x => x.Name == AsyncLocalOptionsResolveContributor.ContributorName))
+            if (!options.WeChatThirdPartyPlatformOptionsResolveContributors.Exists(x => x.Name == AsyncLocalOptionsResolveContributor.ContributorName))
             {
-                options.WeChatOpenPlatformOptionsResolveContributors.Insert(0, new AsyncLocalOptionsResolveContributor());
+                options.WeChatThirdPartyPlatformOptionsResolveContributors.Insert(0, new AsyncLocalOptionsResolveContributor());
             }
         });
     }

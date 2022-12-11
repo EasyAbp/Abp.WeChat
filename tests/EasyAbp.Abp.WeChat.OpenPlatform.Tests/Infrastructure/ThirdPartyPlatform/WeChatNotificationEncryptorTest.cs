@@ -14,7 +14,7 @@ public class WeChatNotificationEncryptorTest : AbpWeChatOpenPlatformTestBase
     {
         var encryptor = GetRequiredService<IWeChatNotificationEncryptor>();
         
-        var options = new AbpWeChatOpenPlatformOptions
+        var options = new AbpWeChatThirdPartyPlatformOptions
         {
             Token = AbpWeChatOpenPlatformTestsConsts.Token,
             AppId = AbpWeChatOpenPlatformTestsConsts.AppId,

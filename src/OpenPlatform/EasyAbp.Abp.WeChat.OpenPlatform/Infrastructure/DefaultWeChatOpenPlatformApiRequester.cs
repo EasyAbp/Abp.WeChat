@@ -14,30 +14,20 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure;
 public class DefaultWeChatOpenPlatformApiRequester : IWeChatOpenPlatformApiRequester, ITransientDependency
 {
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IAccessTokenAccessor _accessTokenAccessor;
 
-    public DefaultWeChatOpenPlatformApiRequester(IHttpClientFactory httpClientFactory,
-        IAccessTokenAccessor accessTokenAccessor)
+    public DefaultWeChatOpenPlatformApiRequester(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
-        _accessTokenAccessor = accessTokenAccessor;
     }
 
     #region > Public Methods <
 
-    public virtual async Task<string> RequestAsync(string targetUrl,
-        HttpMethod method,
-        IOpenPlatformRequest openPlatformRequest = null,
-        bool withAccessToken = true)
+    public virtual async Task<string> RequestAsync(
+        string targetUrl, HttpMethod method, IOpenPlatformRequest openPlatformRequest = null)
     {
         var client = _httpClientFactory.CreateClient();
 
         targetUrl = targetUrl.EnsureEndsWith('?');
-
-        if (withAccessToken)
-        {
-            targetUrl += $"access_token={await _accessTokenAccessor.GetAccessTokenAsync()}";
-        }
 
         var requestMsg = method == HttpMethod.Get
             ? BuildHttpGetRequestMessage(targetUrl, openPlatformRequest)
@@ -46,31 +36,19 @@ public class DefaultWeChatOpenPlatformApiRequester : IWeChatOpenPlatformApiReque
         return await (await client.SendAsync(requestMsg)).Content.ReadAsStringAsync();
     }
 
-    public virtual async Task<TResponse> RequestAsync<TResponse>(string targetUrl,
-        HttpMethod method,
-        IOpenPlatformRequest openPlatformRequest = null,
-        bool withAccessToken = true)
+    public virtual async Task<TResponse> RequestAsync<TResponse>(
+        string targetUrl, HttpMethod method, IOpenPlatformRequest openPlatformRequest = null)
     {
-        var resultStr = await RequestAsync(targetUrl,
-            method,
-            openPlatformRequest,
-            withAccessToken);
+        var resultStr = await RequestAsync(targetUrl, method, openPlatformRequest);
 
         return JsonConvert.DeserializeObject<TResponse>(resultStr);
     }
 
-    public virtual async Task<TResponse> RequestFromDataAsync<TResponse>(string targetUrl,
-        MultipartFormDataContent formDataContent,
-        IOpenPlatformRequest openPlatformRequest = null,
-        bool withAccessToken = true)
+    public virtual async Task<TResponse> RequestFromDataAsync<TResponse>(
+        string targetUrl, MultipartFormDataContent formDataContent, IOpenPlatformRequest openPlatformRequest = null)
     {
         var client = _httpClientFactory.CreateClient();
         targetUrl = targetUrl.EnsureEndsWith('?');
-
-        if (withAccessToken)
-        {
-            targetUrl += $"access_token={await _accessTokenAccessor.GetAccessTokenAsync()}";
-        }
 
         var requestMsg = BuildHttpGetRequestMessage(targetUrl, openPlatformRequest);
         requestMsg.Method = HttpMethod.Post;
