@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Common.Models;
+using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.Models.ThirdPartyPlatform;
 
-namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform;
+namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.EventNotification;
 
 /// <summary>
 /// 授权事件通知处理者
@@ -12,5 +14,5 @@ public interface IWeChatThirdPartyPlatformAuthEventHandler
     /// </summary>
     public string InfoType { get; }
 
-    Task HandleAsync(WeChatThirdPartyPlatformAuthEventHandlerContext context);
+    Task<WeChatEventHandlingResult> HandleAsync(AuthNotificationModel model);
 }
