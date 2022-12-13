@@ -7,15 +7,9 @@
         <RootNamespace>EasyAbp.Abp.WeChat.Common</RootNamespace>
         <Description>ABP vNext微信模块，定义了微信公众号与微信支付公用的组件。</Description>
     </PropertyGroup>
-    
+
     <ItemGroup>
-        <PackageReference Include="Volo.Abp.Caching" Version="$(AbpVersion)" />
         <PackageReference Include="Volo.Abp.Core" Version="$(AbpVersion)" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <ProjectReference Include="..\EasyAbp.Abp.WeChat.Common.Abstractions\EasyAbp.Abp.WeChat.Common.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

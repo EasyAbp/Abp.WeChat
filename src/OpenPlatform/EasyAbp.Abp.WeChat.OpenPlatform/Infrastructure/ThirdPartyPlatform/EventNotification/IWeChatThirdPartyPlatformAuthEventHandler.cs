@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using EasyAbp.Abp.WeChat.Common.Models;
+using EasyAbp.Abp.WeChat.Common.EventHandling;
 using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.Models.ThirdPartyPlatform;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.EventNotification;

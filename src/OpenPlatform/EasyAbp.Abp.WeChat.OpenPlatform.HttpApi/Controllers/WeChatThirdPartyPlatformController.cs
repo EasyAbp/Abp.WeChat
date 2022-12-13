@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common;
+using EasyAbp.Abp.WeChat.OpenPlatform.EventHandling;
 using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.Models.ThirdPartyPlatform;
 using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.EventNotification;
 using JetBrains.Annotations;
