@@ -8,8 +8,8 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve
         string Name { get; }
 
         [Obsolete("Please use asynchronous method.")]
-        void Resolve(WeChatOfficialResolveContext context);
+        void Resolve(WeChatOfficialOptionsResolveContext context);
 
-        ValueTask ResolveAsync(WeChatOfficialResolveContext context);
+        ValueTask ResolveAsync(WeChatOfficialOptionsResolveContext context);
     }
 }

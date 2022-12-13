@@ -9,12 +9,12 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve.Contributors
         public const string ContributorName = "Configuration";
         public string Name => ContributorName;
 
-        public void Resolve(WeChatOfficialResolveContext context)
+        public void Resolve(WeChatOfficialOptionsResolveContext context)
         {
             context.Options = context.ServiceProvider.GetRequiredService<IOptions<AbpWeChatOfficialOptions>>().Value;
         }
 
-        public ValueTask ResolveAsync(WeChatOfficialResolveContext context)
+        public ValueTask ResolveAsync(WeChatOfficialOptionsResolveContext context)
         {
             context.Options = context.ServiceProvider.GetRequiredService<IOptions<AbpWeChatOfficialOptions>>().Value;
 

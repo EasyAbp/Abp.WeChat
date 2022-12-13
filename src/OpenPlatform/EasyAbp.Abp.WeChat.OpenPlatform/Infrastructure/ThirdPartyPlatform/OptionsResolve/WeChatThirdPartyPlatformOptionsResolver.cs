@@ -23,7 +23,7 @@ public class WeChatThirdPartyPlatformOptionsResolver : IWeChatThirdPartyPlatform
     {
         using (var serviceScope = _serviceProvider.CreateScope())
         {
-            var context = new WeChatOpenPlatformResolveContext(serviceScope.ServiceProvider);
+            var context = new WeChatThirdPartyPlatformOptionsResolveContext(serviceScope.ServiceProvider);
 
             foreach (var resolver in _options.WeChatThirdPartyPlatformOptionsResolveContributors)
             {
@@ -43,7 +43,7 @@ public class WeChatThirdPartyPlatformOptionsResolver : IWeChatThirdPartyPlatform
     {
         using (var scope = _serviceProvider.CreateScope())
         {
-            var context = new WeChatOpenPlatformResolveContext(scope.ServiceProvider);
+            var context = new WeChatThirdPartyPlatformOptionsResolveContext(scope.ServiceProvider);
 
             foreach (var contributor in _options.WeChatThirdPartyPlatformOptionsResolveContributors)
             {

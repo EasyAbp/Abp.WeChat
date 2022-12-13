@@ -9,12 +9,12 @@ public class ConfigurationOptionsResolveContributor : IWeChatThirdPartyPlatformO
     public const string ContributorName = "Configuration";
     public string Name => ContributorName;
 
-    public void Resolve(WeChatOpenPlatformResolveContext context)
+    public void Resolve(WeChatThirdPartyPlatformOptionsResolveContext context)
     {
         context.Options = context.ServiceProvider.GetRequiredService<IOptions<AbpWeChatThirdPartyPlatformOptions>>().Value;
     }
 
-    public ValueTask ResolveAsync(WeChatOpenPlatformResolveContext context)
+    public ValueTask ResolveAsync(WeChatThirdPartyPlatformOptionsResolveContext context)
     {
         context.Options = context.ServiceProvider.GetRequiredService<IOptions<AbpWeChatThirdPartyPlatformOptions>>().Value;
 
