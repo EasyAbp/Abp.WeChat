@@ -16,16 +16,15 @@ using Volo.Abp.ObjectExtending;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.Controllers;
 
-[RemoteService(Name = AbpWeChatRemoteServiceConsts.RemoteServiceName)]
 [Area(AbpWeChatRemoteServiceConsts.ModuleName)]
-[ControllerName("WeChatOpenPlatform")]
-[Route("/wechat/open-platform")]
-public class WeChatOpenPlatformController : AbpControllerBase
+[ControllerName("WeChatThirdPartyPlatform")]
+[Route("/wechat/third-party-platform")]
+public class WeChatThirdPartyPlatformController : AbpControllerBase
 {
     private readonly IWeChatNotificationEncryptor _weChatNotificationEncryptor;
     private readonly IWeChatThirdPartyPlatformOptionsResolver _optionsResolver;
 
-    public WeChatOpenPlatformController(
+    public WeChatThirdPartyPlatformController(
         IWeChatNotificationEncryptor weChatNotificationEncryptor,
         IWeChatThirdPartyPlatformOptionsResolver optionsResolver)
     {
