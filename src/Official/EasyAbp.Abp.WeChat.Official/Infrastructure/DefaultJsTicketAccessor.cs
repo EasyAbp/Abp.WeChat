@@ -5,7 +5,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json.Linq;
 using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
-using EasyAbp.Abp.WeChat.Common;
+using EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve;
 
 namespace EasyAbp.Abp.WeChat.Official.Infrastructure
 {
@@ -13,22 +13,28 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IAccessTokenAccessor _accessTokenAccessor;
+        private readonly IWeChatOfficialOptionsResolver _weChatOfficialOptionsResolver;
         private readonly IDistributedCache<string> _distributedCache;
 
-        public DefaultJsTicketAccessor(IHttpClientFactory httpClientFactory,
+        public DefaultJsTicketAccessor(
+            IHttpClientFactory httpClientFactory,
             IAccessTokenAccessor accessTokenAccessor,
+            IWeChatOfficialOptionsResolver weChatOfficialOptionsResolver,
             IDistributedCache<string> distributedCache)
         {
             _httpClientFactory = httpClientFactory;
             _accessTokenAccessor = accessTokenAccessor;
+            _weChatOfficialOptionsResolver = weChatOfficialOptionsResolver;
             _distributedCache = distributedCache;
         }
 
         public virtual async Task<string> GetTicketJsonAsync()
         {
+            var options = await _weChatOfficialOptionsResolver.ResolveAsync();
+
             var accessToken = await _accessTokenAccessor.GetAccessTokenAsync();
 
-            return await _distributedCache.GetOrAddAsync("CurrentJsTicket",
+            return await _distributedCache.GetOrAddAsync(await GetJsTicketAsync(options),
                 async () =>
                 {
                     var client = _httpClientFactory.CreateClient();
@@ -41,6 +47,11 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(115)
                 });
+        }
+
+        protected virtual async Task<string> GetJsTicketAsync(IWeChatOfficialOptions options)
+        {
+            return $"WeChatJsTicket:{options.AppId}";
         }
 
         public virtual async Task<string> GetTicketAsync()
