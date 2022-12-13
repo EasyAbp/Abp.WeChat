@@ -1,4 +1,4 @@
-namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform;
+namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.EventNotification;
 
 public static class WeChatThirdPartyPlatformAuthEventInfoTypes
 {

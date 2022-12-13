@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Common.Models;
 using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.AccessToken;
+using JetBrains.Annotations;
 
-namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform;
+namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.EventNotification;
 
 /// <summary>
 /// 微信应用事件通知处理者
@@ -20,5 +22,6 @@ public interface IWeChatThirdPartyPlatformAppEventHandler
     /// 不要设置 AppSecret，此时会自动使用微信第三方平台的 authorizer_access_token
     /// 见 <see cref="HybridAccessTokenProvider"/>
     /// </summary>
-    Task HandleAsync(WeChatThirdPartyPlatformAppEventHandlerContext context);
+    Task<WeChatEventHandlingResult> HandleAsync(
+        [CanBeNull] string componentAppId, [NotNull] string appId, WeChatAppNotificationModel model);
 }

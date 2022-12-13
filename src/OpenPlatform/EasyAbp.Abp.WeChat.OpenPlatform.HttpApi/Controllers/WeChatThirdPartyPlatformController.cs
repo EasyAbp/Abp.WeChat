@@ -1,21 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common;
-using EasyAbp.Abp.WeChat.Common.Infrastructure.Encryption;
-using EasyAbp.Abp.WeChat.Common.Models;
 using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.Models.ThirdPartyPlatform;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.OptionsResolve;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.OptionsResolve.Contributors;
+using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.EventNotification;
 using JetBrains.Annotations;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
-using Volo.Abp.ObjectExtending;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.Controllers;
 
@@ -24,18 +16,11 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.Controllers;
 [Route("/wechat/third-party-platform")]
 public class WeChatThirdPartyPlatformController : AbpControllerBase
 {
-    private readonly IWeChatThirdPartyPlatformAsyncLocal _weChatThirdPartyPlatformAsyncLocal;
-    private readonly IWeChatNotificationEncryptor _weChatNotificationEncryptor;
-    private readonly IWeChatThirdPartyPlatformOptionsResolver _optionsResolver;
+    private readonly IWeChatThirdPartyPlatformEventHandlingService _handlingService;
 
-    public WeChatThirdPartyPlatformController(
-        IWeChatThirdPartyPlatformAsyncLocal weChatThirdPartyPlatformAsyncLocal,
-        IWeChatNotificationEncryptor weChatNotificationEncryptor,
-        IWeChatThirdPartyPlatformOptionsResolver optionsResolver)
+    public WeChatThirdPartyPlatformController(IWeChatThirdPartyPlatformEventHandlingService handlingService)
     {
-        _weChatThirdPartyPlatformAsyncLocal = weChatThirdPartyPlatformAsyncLocal;
-        _weChatNotificationEncryptor = weChatNotificationEncryptor;
-        _optionsResolver = optionsResolver;
+        _handlingService = handlingService;
     }
 
     /// <summary>
@@ -50,32 +35,11 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
     {
         using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId));
 
-        var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatThirdPartyPlatformAuthEventHandler>>();
+        var result = await _handlingService.NotifyAuthAsync(await CreateRequestModelAsync());
 
-        Request.EnableBuffering();
-        using (var streamReader = new StreamReader(HttpContext.Request.Body))
+        if (!result.Success)
         {
-            var model = await DecryptMsgAsync<AuthNotificationModel>(await streamReader.ReadToEndAsync());
-            var context = new WeChatThirdPartyPlatformAuthEventHandlerContext
-            {
-                Model = model
-            };
-
-            // 如果你拥有不止一个第三方平台，请务必实现 IHttpApiWeChatThirdPartyOptionsProvider
-            var options = await ResolveOptionsAsync(model.AppId);
-            using var changeOptions = _weChatThirdPartyPlatformAsyncLocal.Change(options);
-
-            foreach (var handler in handlers.Where(x => x.InfoType == model.InfoType))
-            {
-                await handler.HandleAsync(context);
-
-                if (!context.IsSuccess)
-                {
-                    return BadRequest();
-                }
-            }
-
-            Request.Body.Position = 0;
+            return BadRequest();
         }
 
         return Ok("success");
@@ -94,65 +58,30 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
     {
         using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId));
 
-        // 如果你拥有不止一个第三方平台，请务必实现 IHttpApiWeChatThirdPartyOptionsProvider
-        var options = await ResolveOptionsAsync(componentAppId);
+        var result = await _handlingService.NotifyAppAsync(componentAppId, appId, await CreateRequestModelAsync());
 
-        using var changeOptions = _weChatThirdPartyPlatformAsyncLocal.Change(options);
-
-        var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatThirdPartyPlatformAppEventHandler>>();
-
-        Request.EnableBuffering();
-        using (var streamReader = new StreamReader(HttpContext.Request.Body))
+        if (!result.Success)
         {
-            var model = await DecryptMsgAsync<WeChatAppNotificationModel>(await streamReader.ReadToEndAsync());
-            var context = new WeChatThirdPartyPlatformAppEventHandlerContext
-            {
-                ComponentAppId = componentAppId,
-                AuthorizerAppId = appId,
-                Model = model
-            };
-
-            foreach (var handler in handlers.Where(x => x.Event == context.Model.Event))
-            {
-                await handler.HandleAsync(context);
-
-                if (!context.IsSuccess)
-                {
-                    return BadRequest();
-                }
-            }
-
-            Request.Body.Position = 0;
+            return BadRequest();
         }
 
         return Ok("success");
     }
 
-    protected virtual async Task<T> DecryptMsgAsync<T>(string postData) where T : ExtensibleObject, new()
+    protected virtual async Task<WeChatEventNotificationRequestModel> CreateRequestModelAsync()
     {
-        var options = await _optionsResolver.ResolveAsync();
+        using var streamReader = new StreamReader(HttpContext.Request.Body);
 
-        return await _weChatNotificationEncryptor.DecryptPostDataAsync<T>(
-            options.Token,
-            options.EncodingAesKey,
-            options.AppId,
-            HttpContext.Request.Query["msg_signature"].FirstOrDefault(),
-            HttpContext.Request.Query["timestamp"].FirstOrDefault(),
-            HttpContext.Request.Query["nonce"].FirstOrDefault(),
-            postData);
-    }
+        var postData = await streamReader.ReadToEndAsync();
 
-    protected virtual async Task<IWeChatThirdPartyPlatformOptions> ResolveOptionsAsync(string componentAppId)
-    {
-        var options = await _optionsResolver.ResolveAsync();
+        Request.Body.Position = 0;
 
-        if (componentAppId.IsNullOrWhiteSpace() || componentAppId == options.AppId)
+        return new WeChatEventNotificationRequestModel
         {
-            return options;
-        }
-
-        var provider = LazyServiceProvider.LazyGetRequiredService<IHttpApiWeChatThirdPartyPlatformOptionsProvider>();
-
-        return await provider.GetAsync(componentAppId);
+            PostData = postData,
+            MsgSignature = HttpContext.Request.Query["msg_signature"].FirstOrDefault(),
+            Timestamp = HttpContext.Request.Query["timestamp"].FirstOrDefault(),
+            Notice = HttpContext.Request.Query["nonce"].FirstOrDefault()
+        };
     }
 }

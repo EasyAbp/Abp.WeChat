@@ -1,9 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform;
+using EasyAbp.Abp.WeChat.Common.Models;
+using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.Models.ThirdPartyPlatform;
 using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.VerifyTicket;
 
-namespace EasyAbp.Abp.WeChat.OpenPlatform.Handlers;
+namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.EventNotification;
 
 public class TicketRecordingWeChatThirdPartyPlatformAuthEventHandler : IWeChatThirdPartyPlatformAuthEventHandler
 {
@@ -17,13 +18,15 @@ public class TicketRecordingWeChatThirdPartyPlatformAuthEventHandler : IWeChatTh
         _componentVerifyTicketStore = componentVerifyTicketStore;
     }
 
-    public virtual async Task HandleAsync(WeChatThirdPartyPlatformAuthEventHandlerContext context)
+    public virtual async Task<WeChatEventHandlingResult> HandleAsync(AuthNotificationModel model)
     {
-        if (context.Model.ComponentVerifyTicket.IsNullOrWhiteSpace())
+        if (model.ComponentVerifyTicket.IsNullOrWhiteSpace())
         {
-            return;
+            return new WeChatEventHandlingResult(false, "缺少 ComponentVerifyTicket");
         }
 
-        await _componentVerifyTicketStore.SetAsync(context.Model.AppId, context.Model.ComponentVerifyTicket);
+        await _componentVerifyTicketStore.SetAsync(model.AppId, model.ComponentVerifyTicket);
+
+        return new WeChatEventHandlingResult(true);
     }
 }
