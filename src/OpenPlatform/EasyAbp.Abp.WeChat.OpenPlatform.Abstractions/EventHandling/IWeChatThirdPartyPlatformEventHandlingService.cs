@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using EasyAbp.Abp.WeChat.Common.Models;
+using EasyAbp.Abp.WeChat.Common.EventHandling;
 using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.Models.ThirdPartyPlatform;
 using JetBrains.Annotations;
 
-namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.EventNotification;
+namespace EasyAbp.Abp.WeChat.OpenPlatform.EventHandling;
 
 public interface IWeChatThirdPartyPlatformEventHandlingService
 {

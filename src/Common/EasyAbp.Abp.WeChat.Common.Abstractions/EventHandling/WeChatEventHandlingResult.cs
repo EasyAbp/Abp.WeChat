@@ -1,4 +1,4 @@
-﻿namespace EasyAbp.Abp.WeChat.Common.Models;
+﻿namespace EasyAbp.Abp.WeChat.Common.EventHandling;
 
 public class WeChatEventHandlingResult
 {

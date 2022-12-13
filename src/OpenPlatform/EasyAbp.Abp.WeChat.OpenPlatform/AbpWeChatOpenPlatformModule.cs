@@ -5,7 +5,10 @@ using Volo.Abp.Modularity;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform;
 
-[DependsOn(typeof(AbpWeChatCommonModule))]
+[DependsOn(
+    typeof(AbpWeChatCommonModule),
+    typeof(AbpWeChatOpenPlatformAbstractionsModule)
+)]
 public class AbpWeChatOpenPlatformModule : AbpModule 
 {
     public override void PostConfigureServices(ServiceConfigurationContext context)
