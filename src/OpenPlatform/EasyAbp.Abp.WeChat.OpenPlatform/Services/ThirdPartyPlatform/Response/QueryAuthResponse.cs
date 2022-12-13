@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.Models;
 using Newtonsoft.Json;
 
@@ -24,16 +25,16 @@ public class QueryAuthResponseAuthorizationInfo
     public string AuthorizerRefreshToken { get; set; }
 
     [JsonProperty("func_info")]
-    public QueryAuthResponseFuncInfo FuncInfo { get; set; }
+    public List<QueryAuthResponseFuncInfoItem> FuncInfo { get; set; }
 }
 
-public class QueryAuthResponseFuncInfo
+public class QueryAuthResponseFuncInfoItem
 {
     [JsonProperty("funcscope_category")]
-    public QueryAuthResponseFuncscopeCategory FuncscopeCategory { get; set; }
+    public QueryAuthResponseFuncScopeCategory FuncScopeCategory { get; set; }
 }
 
-public class QueryAuthResponseFuncscopeCategory
+public class QueryAuthResponseFuncScopeCategory
 {
     [JsonProperty("id")]
     public int Id { get; set; }
