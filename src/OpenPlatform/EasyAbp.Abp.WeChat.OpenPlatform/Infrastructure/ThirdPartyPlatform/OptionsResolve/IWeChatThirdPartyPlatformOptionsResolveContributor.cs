@@ -8,7 +8,7 @@ public interface IWeChatThirdPartyPlatformOptionsResolveContributor
     string Name { get; }
 
     [Obsolete("Please use asynchronous method.")]
-    void Resolve(WeChatOpenPlatformResolveContext context);
+    void Resolve(WeChatThirdPartyPlatformOptionsResolveContext context);
 
-    ValueTask ResolveAsync(WeChatOpenPlatformResolveContext context);
+    ValueTask ResolveAsync(WeChatThirdPartyPlatformOptionsResolveContext context);
 }

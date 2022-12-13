@@ -13,7 +13,7 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve.Contributors
 
         public string Name => ContributorName;
 
-        public void Resolve(WeChatOfficialResolveContext context)
+        public void Resolve(WeChatOfficialOptionsResolveContext context)
         {
             var asyncLocal = context.ServiceProvider.GetRequiredService<IWeChatOfficialAsyncLocalAccessor>();
 
@@ -23,7 +23,7 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve.Contributors
             }
         }
 
-        public ValueTask ResolveAsync(WeChatOfficialResolveContext context)
+        public ValueTask ResolveAsync(WeChatOfficialOptionsResolveContext context)
         {
             var asyncLocal = context.ServiceProvider.GetRequiredService<IWeChatOfficialAsyncLocalAccessor>();
 

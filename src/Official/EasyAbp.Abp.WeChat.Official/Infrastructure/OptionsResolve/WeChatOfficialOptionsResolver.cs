@@ -23,7 +23,7 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve
         {
             using (var serviceScope = _serviceProvider.CreateScope())
             {
-                var context = new WeChatOfficialResolveContext(serviceScope.ServiceProvider);
+                var context = new WeChatOfficialOptionsResolveContext(serviceScope.ServiceProvider);
 
                 foreach (var resolver in _options.WeChatOfficialOptionsResolveContributors)
                 {
@@ -43,7 +43,7 @@ namespace EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve
         {
             using (var scope = _serviceProvider.CreateScope())
             {
-                var context = new WeChatOfficialResolveContext(scope.ServiceProvider);
+                var context = new WeChatOfficialOptionsResolveContext(scope.ServiceProvider);
 
                 foreach (var contributor in _options.WeChatOfficialOptionsResolveContributors)
                 {

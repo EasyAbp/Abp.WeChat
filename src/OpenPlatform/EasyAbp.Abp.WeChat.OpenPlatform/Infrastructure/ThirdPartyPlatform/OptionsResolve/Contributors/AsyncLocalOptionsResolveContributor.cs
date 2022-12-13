@@ -13,7 +13,7 @@ public class AsyncLocalOptionsResolveContributor : IWeChatThirdPartyPlatformOpti
 
     public string Name => ContributorName;
 
-    public void Resolve(WeChatOpenPlatformResolveContext context)
+    public void Resolve(WeChatThirdPartyPlatformOptionsResolveContext context)
     {
         var asyncLocal = context.ServiceProvider.GetRequiredService<IWeChatThirdPartyPlatformAsyncLocalAccessor>();
 
@@ -23,7 +23,7 @@ public class AsyncLocalOptionsResolveContributor : IWeChatThirdPartyPlatformOpti
         }
     }
 
-    public ValueTask ResolveAsync(WeChatOpenPlatformResolveContext context)
+    public ValueTask ResolveAsync(WeChatThirdPartyPlatformOptionsResolveContext context)
     {
         var asyncLocal = context.ServiceProvider.GetRequiredService<IWeChatThirdPartyPlatformAsyncLocalAccessor>();
 
