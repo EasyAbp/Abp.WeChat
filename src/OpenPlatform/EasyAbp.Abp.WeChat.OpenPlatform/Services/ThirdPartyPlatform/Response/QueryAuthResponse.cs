@@ -5,8 +5,8 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.Services.ThirdPartyPlatform.Response;
 
 public class QueryAuthResponse : OpenPlatformCommonResponse
 {
-    [JsonProperty("pre_auth_code")]
-    public string PreAuthCode { get; set; }
+    [JsonProperty("authorization_info")]
+    public QueryAuthResponseAuthorizationInfo AuthorizationInfo { get; set; }
 }
 
 public class QueryAuthResponseAuthorizationInfo
