@@ -4,7 +4,7 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.Auth
 
 public interface IAuthorizerRefreshTokenStore
 {
-    Task<string> GetOrNullAsync(string authorizerAppId);
+    Task<string> GetOrNullAsync(string componentAppId, string authorizerAppId);
 
-    Task SetAsync(string authorizerAppId, string authorizerRefreshToken);
+    Task SetAsync(string componentAppId, string authorizerAppId, string authorizerRefreshToken);
 }
