@@ -1,6 +1,4 @@
-using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Distributed;
 using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
 
@@ -28,11 +26,7 @@ public class CacheAuthorizerRefreshTokenStore : IAuthorizerRefreshTokenStore, IS
 
     public virtual async Task SetAsync(string componentAppId, string authorizerAppId, string authorizerRefreshToken)
     {
-        await _cache.SetAsync(await GetCacheKeyAsync(componentAppId, authorizerAppId), authorizerRefreshToken,
-            new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(115)
-            });
+        await _cache.SetAsync(await GetCacheKeyAsync(componentAppId, authorizerAppId), authorizerRefreshToken);
     }
 
     protected virtual async Task<string> GetCacheKeyAsync(string componentAppId, string authorizerAppId) =>
