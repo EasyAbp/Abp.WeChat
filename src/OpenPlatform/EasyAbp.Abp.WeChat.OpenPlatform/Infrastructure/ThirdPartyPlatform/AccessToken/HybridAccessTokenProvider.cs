@@ -77,7 +77,8 @@ public class HybridAccessTokenProvider : IAccessTokenProvider, ISingletonDepende
             {
                 ComponentAppId = thirdPartyPlatformOptions.AppId,
                 AuthorizerAppId = appId,
-                AuthorizerRefreshToken = await _authorizerRefreshTokenStore.GetOrNullAsync(appId)
+                AuthorizerRefreshToken =
+                    await _authorizerRefreshTokenStore.GetOrNullAsync(thirdPartyPlatformOptions.AppId, appId)
             });
 
         if (response.AuthorizerAccessToken.IsNullOrWhiteSpace())
