@@ -4,15 +4,12 @@ public class WeChatEventHandlingResult
 {
     public bool Success { get; set; }
 
-    public string FailureReason { get; set; }
-
     public WeChatEventHandlingResult()
     {
     }
 
-    public WeChatEventHandlingResult(bool success, string failureReason = null)
+    public WeChatEventHandlingResult(bool success)
     {
         Success = success;
-        FailureReason = failureReason;
     }
 }
