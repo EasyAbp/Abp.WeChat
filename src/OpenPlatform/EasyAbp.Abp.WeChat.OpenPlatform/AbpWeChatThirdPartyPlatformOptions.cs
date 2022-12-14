@@ -1,4 +1,4 @@
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.OptionsResolve;
+using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.Options;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform;
 

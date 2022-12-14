@@ -7,8 +7,8 @@ using EasyAbp.Abp.WeChat.Common.Infrastructure.Encryption;
 using EasyAbp.Abp.WeChat.Common.Models;
 using EasyAbp.Abp.WeChat.OpenPlatform.EventHandling;
 using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.Models.ThirdPartyPlatform;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.OptionsResolve;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.OptionsResolve.Contributors;
+using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.Options;
+using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.Options.OptionsResolving.Contributors;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.ObjectExtending;
@@ -19,20 +19,20 @@ public class WeChatThirdPartyPlatformEventHandlingService :
     IWeChatThirdPartyPlatformEventHandlingService, ITransientDependency
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly IWeChatThirdPartyPlatformAsyncLocal _weChatThirdPartyPlatformAsyncLocal;
+    private readonly IWeChatThirdPartyPlatformAsyncLocal _asyncLocal;
+    private readonly IWeChatThirdPartyPlatformOptionsProvider _optionsProvider;
     private readonly IWeChatNotificationEncryptor _weChatNotificationEncryptor;
-    private readonly IWeChatThirdPartyPlatformOptionsResolver _optionsResolver;
 
     public WeChatThirdPartyPlatformEventHandlingService(
         IServiceProvider serviceProvider,
-        IWeChatThirdPartyPlatformAsyncLocal weChatThirdPartyPlatformAsyncLocal,
-        IWeChatNotificationEncryptor weChatNotificationEncryptor,
-        IWeChatThirdPartyPlatformOptionsResolver optionsResolver)
+        IWeChatThirdPartyPlatformAsyncLocal asyncLocal,
+        IWeChatThirdPartyPlatformOptionsProvider optionsProvider,
+        IWeChatNotificationEncryptor weChatNotificationEncryptor)
     {
         _serviceProvider = serviceProvider;
-        _weChatThirdPartyPlatformAsyncLocal = weChatThirdPartyPlatformAsyncLocal;
+        _asyncLocal = asyncLocal;
+        _optionsProvider = optionsProvider;
         _weChatNotificationEncryptor = weChatNotificationEncryptor;
-        _optionsResolver = optionsResolver;
     }
 
     /// <summary>
@@ -40,13 +40,14 @@ public class WeChatThirdPartyPlatformEventHandlingService :
     /// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/component_verify_ticket.html
     /// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Before_Develop/authorize_event.html#infotype-%E8%AF%B4%E6%98%8E
     /// </summary>
-    public virtual async Task<WeChatEventHandlingResult> NotifyAuthAsync(WeChatEventNotificationRequestModel request)
+    public virtual async Task<WeChatEventHandlingResult> NotifyAuthAsync(string componentAppId,
+        WeChatEventNotificationRequestModel request)
     {
-        var model = await DecryptMsgAsync<AuthNotificationModel>(request);
+        var options = await _optionsProvider.GetAsync(componentAppId);
 
-        var options = await _optionsResolver.ResolveAsync();
+        using var changeOptions = _asyncLocal.Change(options);
 
-        using var changeOptions = _weChatThirdPartyPlatformAsyncLocal.Change(options);
+        var model = await DecryptMsgAsync<AuthNotificationModel>(options, request);
 
         var handlers = _serviceProvider.GetService<IEnumerable<IWeChatThirdPartyPlatformAuthEventHandler>>();
 
@@ -67,20 +68,20 @@ public class WeChatThirdPartyPlatformEventHandlingService :
     /// 微信应用事件通知接口，开发人员需要实现 <see cref="IWeChatThirdPartyPlatformAppEventHandler"/> 处理器来处理回调请求。
     /// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/operation/thirdparty/prepare.html
     /// </summary>
-    public virtual async Task<WeChatEventHandlingResult> NotifyAppAsync(string componentAppId, string appId,
-        WeChatEventNotificationRequestModel request)
+    public virtual async Task<WeChatEventHandlingResult> NotifyAppAsync(string componentAppId,
+        string authorizerAppId, WeChatEventNotificationRequestModel request)
     {
-        var options = await _optionsResolver.ResolveAsync();
+        var options = await _optionsProvider.GetAsync(componentAppId);
 
-        using var changeOptions = _weChatThirdPartyPlatformAsyncLocal.Change(options);
+        using var changeOptions = _asyncLocal.Change(options);
+
+        var model = await DecryptMsgAsync<WeChatAppNotificationModel>(options, request);
 
         var handlers = _serviceProvider.GetService<IEnumerable<IWeChatThirdPartyPlatformAppEventHandler>>();
 
-        var model = await DecryptMsgAsync<WeChatAppNotificationModel>(request);
-
         foreach (var handler in handlers.Where(x => x.Event == model.Event))
         {
-            var result = await handler.HandleAsync(componentAppId, appId, model);
+            var result = await handler.HandleAsync(options.AppId, authorizerAppId, model);
 
             if (!result.Success)
             {
@@ -91,11 +92,9 @@ public class WeChatThirdPartyPlatformEventHandlingService :
         return new WeChatEventHandlingResult(true);
     }
 
-    protected virtual async Task<T> DecryptMsgAsync<T>(WeChatEventNotificationRequestModel request)
-        where T : ExtensibleObject, new()
+    protected virtual async Task<T> DecryptMsgAsync<T>(IWeChatThirdPartyPlatformOptions options,
+        WeChatEventNotificationRequestModel request) where T : ExtensibleObject, new()
     {
-        var options = await _optionsResolver.ResolveAsync();
-
         return await _weChatNotificationEncryptor.DecryptPostDataAsync<T>(
             options.Token,
             options.EncodingAesKey,
