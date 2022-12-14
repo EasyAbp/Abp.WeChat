@@ -21,38 +21,42 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.Acce
 public class HybridAccessTokenProvider : IAccessTokenProvider, ISingletonDependency
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly IAuthorizerAccessTokenCache _cache;
     private readonly IAuthorizerRefreshTokenStore _authorizerRefreshTokenStore;
     private readonly IWeChatThirdPartyPlatformOptionsResolver _weChatThirdPartyPlatformOptionsResolver;
     private readonly IComponentAccessTokenProvider _componentAccessTokenProvider;
     private readonly IWeChatOpenPlatformApiRequester _weChatOpenPlatformApiRequester;
-    private readonly IDistributedCache<string> _distributedCache;
 
     public HybridAccessTokenProvider(
         IServiceProvider serviceProvider,
+        IAuthorizerAccessTokenCache cache,
         IAuthorizerRefreshTokenStore authorizerRefreshTokenStore,
         IWeChatThirdPartyPlatformOptionsResolver weChatThirdPartyPlatformOptionsResolver,
         IComponentAccessTokenProvider componentAccessTokenProvider,
-        IWeChatOpenPlatformApiRequester weChatOpenPlatformApiRequester,
-        IDistributedCache<string> distributedCache)
+        IWeChatOpenPlatformApiRequester weChatOpenPlatformApiRequester)
     {
         _serviceProvider = serviceProvider;
+        _cache = cache;
         _authorizerRefreshTokenStore = authorizerRefreshTokenStore;
         _weChatThirdPartyPlatformOptionsResolver = weChatThirdPartyPlatformOptionsResolver;
         _componentAccessTokenProvider = componentAccessTokenProvider;
         _weChatOpenPlatformApiRequester = weChatOpenPlatformApiRequester;
-        _distributedCache = distributedCache;
     }
 
     public virtual async Task<string> GetAccessTokenAsync(string appId, string appSecret)
     {
         if (appSecret.IsNullOrWhiteSpace())
         {
-            return await _distributedCache.GetOrAddAsync($"CurrentAccessToken:{appId}",
-                async () => await RequestAuthorizerAccessTokenAsync(appId),
-                () => new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(115)
-                });
+            var options = await _weChatThirdPartyPlatformOptionsResolver.ResolveAsync();
+
+            var accessToken = await _cache.GetAsync(options.AppId, appId);
+
+            if (accessToken.IsNullOrWhiteSpace())
+            {
+                await _cache.SetAsync(options.AppId, appId, await RequestAuthorizerAccessTokenAsync(options, appId));
+            }
+
+            return accessToken;
         }
 
         var defaultAccessTokenProvider = _serviceProvider.GetRequiredService<DefaultAccessTokenProvider>();
@@ -64,21 +68,20 @@ public class HybridAccessTokenProvider : IAccessTokenProvider, ISingletonDepende
     /// 获取/刷新接口调用令牌
     /// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/api_authorizer_token.html
     /// </summary>
-    protected virtual async Task<string> RequestAuthorizerAccessTokenAsync(string appId)
+    protected virtual async Task<string> RequestAuthorizerAccessTokenAsync(
+        IWeChatThirdPartyPlatformOptions options, string appId)
     {
-        var thirdPartyPlatformOptions = await _weChatThirdPartyPlatformOptionsResolver.ResolveAsync();
-
         const string authorizerTokenApiUrl = "https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token";
 
-        var url = await AppendComponentAccessTokenAsync(authorizerTokenApiUrl, thirdPartyPlatformOptions);
+        var url = await AppendComponentAccessTokenAsync(authorizerTokenApiUrl, options);
 
         var response = await _weChatOpenPlatformApiRequester.RequestAsync<AuthorizerTokenResponse>(
             url, HttpMethod.Post, new AuthorizerTokenRequest
             {
-                ComponentAppId = thirdPartyPlatformOptions.AppId,
+                ComponentAppId = options.AppId,
                 AuthorizerAppId = appId,
                 AuthorizerRefreshToken =
-                    await _authorizerRefreshTokenStore.GetOrNullAsync(thirdPartyPlatformOptions.AppId, appId)
+                    await _authorizerRefreshTokenStore.GetOrNullAsync(options.AppId, appId)
             });
 
         if (response.AuthorizerAccessToken.IsNullOrWhiteSpace())
