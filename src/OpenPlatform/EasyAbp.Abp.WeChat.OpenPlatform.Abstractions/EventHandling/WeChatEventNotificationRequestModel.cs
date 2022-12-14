@@ -1,4 +1,4 @@
-﻿namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.Models.ThirdPartyPlatform;
+﻿namespace EasyAbp.Abp.WeChat.OpenPlatform.EventHandling;
 
 public class WeChatEventNotificationRequestModel
 {

@@ -5,15 +5,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 
-namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.OptionsResolve.Contributors;
+namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.Options.OptionsResolving.Contributors;
 
-public class AsyncLocalOptionsResolveContributor : IWeChatThirdPartyPlatformOptionsResolveContributor
+public class AsyncLocalOptionsResolvingContributor : IWeChatThirdPartyPlatformOptionsResolvingContributor
 {
     public const string ContributorName = "AsyncLocal";
 
     public string Name => ContributorName;
 
-    public void Resolve(WeChatThirdPartyPlatformOptionsResolveContext context)
+    public void Resolve(WeChatThirdPartyPlatformOptionsResolvingContext context)
     {
         var asyncLocal = context.ServiceProvider.GetRequiredService<IWeChatThirdPartyPlatformAsyncLocalAccessor>();
 
@@ -23,7 +23,7 @@ public class AsyncLocalOptionsResolveContributor : IWeChatThirdPartyPlatformOpti
         }
     }
 
-    public ValueTask ResolveAsync(WeChatThirdPartyPlatformOptionsResolveContext context)
+    public ValueTask ResolveAsync(WeChatThirdPartyPlatformOptionsResolvingContext context)
     {
         var asyncLocal = context.ServiceProvider.GetRequiredService<IWeChatThirdPartyPlatformAsyncLocalAccessor>();
 

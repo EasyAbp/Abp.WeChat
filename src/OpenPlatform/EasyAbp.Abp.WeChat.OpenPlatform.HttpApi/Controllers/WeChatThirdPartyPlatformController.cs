@@ -31,12 +31,15 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
     /// </summary>
     [HttpPost]
     [Route("notify/auth")]
+    [Route("notify/auth/component-app-id/{componentAppId}")]
+    [Route("notify/auth/tenant-id/{tenantId}/component-app-id/{componentAppId}")]
     [Route("notify/auth/tenant-id/{tenantId}")]
-    public virtual async Task<ActionResult> NotifyAuthAsync([CanBeNull] string tenantId)
+    public virtual async Task<ActionResult> NotifyAuthAsync(
+        [CanBeNull] string tenantId, [CanBeNull] string componentAppId)
     {
-        using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId));
+        using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-        var result = await _handlingService.NotifyAuthAsync(await CreateRequestModelAsync());
+        var result = await _handlingService.NotifyAuthAsync(componentAppId, await CreateRequestModelAsync());
 
         if (!result.Success)
         {
@@ -57,7 +60,7 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
     public virtual async Task<ActionResult> NotifyAppAsync(
         [CanBeNull] string tenantId, [CanBeNull] string componentAppId, [NotNull] string appId)
     {
-        using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId));
+        using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
         var result = await _handlingService.NotifyAppAsync(componentAppId, appId, await CreateRequestModelAsync());
 

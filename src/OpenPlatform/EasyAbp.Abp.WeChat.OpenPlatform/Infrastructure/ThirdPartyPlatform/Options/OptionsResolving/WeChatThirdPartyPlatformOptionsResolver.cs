@@ -4,15 +4,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Volo.Abp.DependencyInjection;
 
-namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.OptionsResolve;
+namespace EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.Options.OptionsResolving;
 
 public class WeChatThirdPartyPlatformOptionsResolver : IWeChatThirdPartyPlatformOptionsResolver, ITransientDependency
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly AbpWeChatThirdPartyPlatformResolveOptions _options;
+    private readonly AbpWeChatThirdPartyPlatformResolvingOptions _options;
 
     public WeChatThirdPartyPlatformOptionsResolver(IServiceProvider serviceProvider,
-        IOptions<AbpWeChatThirdPartyPlatformResolveOptions> abpWeChatOpenPlatformResolveOptions)
+        IOptions<AbpWeChatThirdPartyPlatformResolvingOptions> abpWeChatOpenPlatformResolveOptions)
     {
         _serviceProvider = serviceProvider;
         _options = abpWeChatOpenPlatformResolveOptions.Value;
@@ -23,7 +23,7 @@ public class WeChatThirdPartyPlatformOptionsResolver : IWeChatThirdPartyPlatform
     {
         using (var serviceScope = _serviceProvider.CreateScope())
         {
-            var context = new WeChatThirdPartyPlatformOptionsResolveContext(serviceScope.ServiceProvider);
+            var context = new WeChatThirdPartyPlatformOptionsResolvingContext(serviceScope.ServiceProvider);
 
             foreach (var resolver in _options.WeChatThirdPartyPlatformOptionsResolveContributors)
             {
@@ -43,7 +43,7 @@ public class WeChatThirdPartyPlatformOptionsResolver : IWeChatThirdPartyPlatform
     {
         using (var scope = _serviceProvider.CreateScope())
         {
-            var context = new WeChatThirdPartyPlatformOptionsResolveContext(scope.ServiceProvider);
+            var context = new WeChatThirdPartyPlatformOptionsResolvingContext(scope.ServiceProvider);
 
             foreach (var contributor in _options.WeChatThirdPartyPlatformOptionsResolveContributors)
             {

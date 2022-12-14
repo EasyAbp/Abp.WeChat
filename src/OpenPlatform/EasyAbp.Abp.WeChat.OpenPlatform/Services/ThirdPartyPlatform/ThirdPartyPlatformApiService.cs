@@ -1,7 +1,8 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.OptionsResolve;
+using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.Options;
+using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.Options.OptionsResolving;
 using EasyAbp.Abp.WeChat.OpenPlatform.Services.ThirdPartyPlatform.Request;
 using EasyAbp.Abp.WeChat.OpenPlatform.Services.ThirdPartyPlatform.Response;
 

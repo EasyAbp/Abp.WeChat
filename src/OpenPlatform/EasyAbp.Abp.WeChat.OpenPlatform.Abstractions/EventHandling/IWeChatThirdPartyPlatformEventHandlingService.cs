@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.EventHandling;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.Models.ThirdPartyPlatform;
 using JetBrains.Annotations;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.EventHandling;
 
 public interface IWeChatThirdPartyPlatformEventHandlingService
 {
-    Task<WeChatEventHandlingResult> NotifyAuthAsync(WeChatEventNotificationRequestModel request);
+    Task<WeChatEventHandlingResult> NotifyAuthAsync([CanBeNull] string componentAppId,
+        WeChatEventNotificationRequestModel request);
 
-    Task<WeChatEventHandlingResult> NotifyAppAsync([CanBeNull] string componentAppId, [NotNull] string appId,
+    Task<WeChatEventHandlingResult> NotifyAppAsync([CanBeNull] string componentAppId, [NotNull] string authorizerAppId,
         WeChatEventNotificationRequestModel request);
 }

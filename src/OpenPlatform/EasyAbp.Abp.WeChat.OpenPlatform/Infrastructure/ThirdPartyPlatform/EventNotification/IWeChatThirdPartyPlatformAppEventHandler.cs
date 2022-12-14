@@ -24,5 +24,5 @@ public interface IWeChatThirdPartyPlatformAppEventHandler
     /// 见 <see cref="HybridAccessTokenProvider"/>
     /// </summary>
     Task<WeChatEventHandlingResult> HandleAsync(
-        [CanBeNull] string componentAppId, [NotNull] string appId, WeChatAppNotificationModel model);
+        [CanBeNull] string componentAppId, [NotNull] string authorizerAppId, WeChatAppNotificationModel model);
 }
