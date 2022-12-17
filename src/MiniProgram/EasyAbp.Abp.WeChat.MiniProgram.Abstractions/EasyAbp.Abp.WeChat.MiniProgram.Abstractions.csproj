@@ -9,8 +9,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Common\EasyAbp.Abp.WeChat.Common\EasyAbp.Abp.WeChat.Common.csproj" />
-        <ProjectReference Include="..\EasyAbp.Abp.WeChat.MiniProgram.Abstractions\EasyAbp.Abp.WeChat.MiniProgram.Abstractions.csproj" />
+        <PackageReference Include="Volo.Abp.Core" Version="$(AbpVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Common\EasyAbp.Abp.WeChat.Common.Abstractions\EasyAbp.Abp.WeChat.Common.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>
