@@ -62,7 +62,7 @@ public class DefaultComponentAccessTokenProvider : IComponentAccessTokenProvider
                 ComponentAppId = componentAppId,
                 ComponentAppSecret = componentAppSecret,
                 ComponentVerifyTicket = componentVerifyTicket
-            });
+            }, null);
 
         if (response.ComponentAccessToken.IsNullOrWhiteSpace())
         {

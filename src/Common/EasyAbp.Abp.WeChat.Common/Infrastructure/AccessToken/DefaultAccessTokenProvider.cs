@@ -21,7 +21,7 @@ namespace EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken
 
         public virtual async Task<string> GetAsync(string appId, string appSecret)
         {
-            var cacheKey = $"CurrentAccessToken:{appId}";
+            var cacheKey = await GetCacheKeyAsync(appId);
 
             var token = await _accessTokenCache.GetOrNullAsync(cacheKey);
 
@@ -34,6 +34,8 @@ namespace EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken
 
             return token;
         }
+
+        protected virtual Task<string> GetCacheKeyAsync(string appId) => Task.FromResult($"CurrentAccessToken:{appId}");
 
         protected virtual async Task<string> RequestAccessTokenAsync(string appId, string appSecret)
         {

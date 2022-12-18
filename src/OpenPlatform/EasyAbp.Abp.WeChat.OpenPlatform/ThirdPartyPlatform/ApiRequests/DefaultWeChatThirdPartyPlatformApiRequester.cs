@@ -4,7 +4,9 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Common.Infrastructure.Options;
 using EasyAbp.Abp.WeChat.OpenPlatform.Shared.Models;
+using EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.ComponentAccessToken;
 using Newtonsoft.Json;
 using Volo.Abp.DependencyInjection;
 
@@ -14,20 +16,33 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.ApiRequests;
 public class DefaultWeChatThirdPartyPlatformApiRequester : IWeChatThirdPartyPlatformApiRequester, ITransientDependency
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IAbpLazyServiceProvider _lazyServiceProvider;
 
-    public DefaultWeChatThirdPartyPlatformApiRequester(IHttpClientFactory httpClientFactory)
+    private IComponentAccessTokenProvider ComponentAccessTokenProvider =>
+        _lazyServiceProvider.LazyGetRequiredService<IComponentAccessTokenProvider>();
+
+    public DefaultWeChatThirdPartyPlatformApiRequester(
+        IHttpClientFactory httpClientFactory,
+        IAbpLazyServiceProvider lazyServiceProvider)
     {
         _httpClientFactory = httpClientFactory;
+        _lazyServiceProvider = lazyServiceProvider;
     }
 
     #region > Public Methods <
 
     public virtual async Task<string> RequestAsync(string targetUrl, HttpMethod method,
-        IOpenPlatformRequest openPlatformRequest)
+        IOpenPlatformRequest openPlatformRequest, IAbpWeChatOptions abpWeChatOptions)
     {
         var client = _httpClientFactory.CreateClient();
 
         targetUrl = targetUrl.EnsureEndsWith('?');
+
+        if (abpWeChatOptions is not null)
+        {
+            targetUrl +=
+                $"component_access_token={await ComponentAccessTokenProvider.GetAsync(abpWeChatOptions.AppId, abpWeChatOptions.AppSecret)}";
+        }
 
         var requestMsg = method == HttpMethod.Get
             ? BuildHttpGetRequestMessage(targetUrl, openPlatformRequest)
@@ -37,18 +52,25 @@ public class DefaultWeChatThirdPartyPlatformApiRequester : IWeChatThirdPartyPlat
     }
 
     public virtual async Task<TResponse> RequestAsync<TResponse>(string targetUrl, HttpMethod method,
-        IOpenPlatformRequest openPlatformRequest)
+        IOpenPlatformRequest openPlatformRequest, IAbpWeChatOptions abpWeChatOptions)
     {
-        var resultStr = await RequestAsync(targetUrl, method, openPlatformRequest);
+        var resultStr = await RequestAsync(targetUrl, method, openPlatformRequest, abpWeChatOptions);
 
         return JsonConvert.DeserializeObject<TResponse>(resultStr);
     }
 
     public virtual async Task<TResponse> RequestFromDataAsync<TResponse>(string targetUrl,
-        MultipartFormDataContent formDataContent, IOpenPlatformRequest openPlatformRequest)
+        MultipartFormDataContent formDataContent, IOpenPlatformRequest openPlatformRequest,
+        IAbpWeChatOptions abpWeChatOptions)
     {
         var client = _httpClientFactory.CreateClient();
         targetUrl = targetUrl.EnsureEndsWith('?');
+
+        if (abpWeChatOptions is not null)
+        {
+            targetUrl +=
+                $"component_access_token={await ComponentAccessTokenProvider.GetAsync(abpWeChatOptions.AppId, abpWeChatOptions.AppSecret)}";
+        }
 
         var requestMsg = BuildHttpGetRequestMessage(targetUrl, openPlatformRequest);
         requestMsg.Method = HttpMethod.Post;

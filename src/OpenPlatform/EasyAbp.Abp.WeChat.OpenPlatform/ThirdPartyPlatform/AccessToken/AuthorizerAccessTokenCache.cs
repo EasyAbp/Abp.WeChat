@@ -13,7 +13,7 @@ public class AuthorizerAccessTokenCache : IAuthorizerAccessTokenCache, ITransien
         AccessTokenCache = accessTokenCache;
     }
 
-    public virtual async Task<string> GetAsync(string componentAppId, string authorizerAppId)
+    public virtual async Task<string> GetOrNullAsync(string componentAppId, string authorizerAppId)
     {
         return await AccessTokenCache.GetOrNullAsync(await GetCacheKeyAsync(componentAppId, authorizerAppId));
     }
