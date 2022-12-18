@@ -4,10 +4,7 @@ using System.Net.Http;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using EasyAbp.Abp.WeChat.Common;
-using EasyAbp.Abp.WeChat.Pay.Infrastructure;
-using EasyAbp.Abp.WeChat.Pay.Infrastructure.Handlers;
-using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
-using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve.Contributors;
+using EasyAbp.Abp.WeChat.Pay.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.Modularity;
@@ -15,34 +12,21 @@ using Volo.Abp.Threading;
 
 namespace EasyAbp.Abp.WeChat.Pay
 {
-    [DependsOn(typeof(AbpWeChatCommonModule),
-        typeof(AbpBlobStoringModule))]
+    [DependsOn(
+        typeof(AbpWeChatCommonModule),
+        typeof(AbpBlobStoringModule),
+        typeof(AbpWeChatPayAbstractionsModule)
+    )]
     public class AbpWeChatPayModule : AbpModule
     {
         public override void PostConfigureServices(ServiceConfigurationContext context)
         {
-            ConfigureResolveContributor();
             ConfigureWeChatPayHttpClient(context);
-        }
-
-        private void ConfigureResolveContributor()
-        {
-            Configure<AbpWeChatPayResolveOptions>(options =>
-            {
-                if (!options.Contributors.Exists(x => x.Name == ConfigurationOptionsResolveContributor.ContributorName))
-                {
-                    options.Contributors.Add(new ConfigurationOptionsResolveContributor());
-                }
-
-                if (!options.Contributors.Exists(x => x.Name == AsyncLocalOptionsResolveContributor.ContributorName))
-                {
-                    options.Contributors.Insert(0, new AsyncLocalOptionsResolveContributor());
-                }
-            });
         }
 
         private void ConfigureWeChatPayHttpClient(ServiceConfigurationContext context)
         {
+            // todo: 证书需支持多商户
             context.Services.AddHttpClient("WeChatPay").ConfigurePrimaryHttpMessageHandler(builder =>
             {
                 var handler = new HttpClientHandler
@@ -51,10 +35,10 @@ namespace EasyAbp.Abp.WeChat.Pay
                     SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls
                 };
 
-                var options = AsyncHelper.RunSync(() => builder.GetRequiredService<IWeChatPayOptionsResolver>().ResolveAsync());
+                var options = AsyncHelper.RunSync(() => builder.GetRequiredService<IAbpWeChatPayOptionsProvider>().GetAsync(null));
                 if (string.IsNullOrEmpty(options.CertificateBlobName)) return handler;
 
-                var blobContainer = options.CertificateBlobContainerName.IsNullOrEmpty()
+                var blobContainer = options.CertificateBlobContainerName.IsNullOrWhiteSpace()
                     ? builder.GetRequiredService<IBlobContainer>()
                     : builder.GetRequiredService<IBlobContainerFactory>().Create(options.CertificateBlobContainerName);
                 
@@ -69,11 +53,6 @@ namespace EasyAbp.Abp.WeChat.Pay
 
                 return handler;
             });
-        }
-
-        public override void ConfigureServices(ServiceConfigurationContext context)
-        {
-            context.Services.AddTransient<IWeChatPayHandler, SignVerifyHandler>();
         }
     }
 }

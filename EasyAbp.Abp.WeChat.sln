@@ -48,6 +48,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.Abp.WeChat.OpenPlat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.Abp.WeChat.Common.Abstractions", "src\Common\EasyAbp.Abp.WeChat.Common.Abstractions\EasyAbp.Abp.WeChat.Common.Abstractions.csproj", "{1F55A7CF-0F68-4F63-BB14-CC4111598393}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.Abp.WeChat.MiniProgram.Abstractions", "src\MiniProgram\EasyAbp.Abp.WeChat.MiniProgram.Abstractions\EasyAbp.Abp.WeChat.MiniProgram.Abstractions.csproj", "{7408A909-79B9-4066-A88C-4A0DC27E604E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.Abp.WeChat.Pay.Abstractions", "src\Pay\EasyAbp.Abp.WeChat.Pay.Abstractions\EasyAbp.Abp.WeChat.Pay.Abstractions.csproj", "{2B197355-6CB7-471F-B719-6D3CECC84FF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.Abp.WeChat.Official.Abstractions", "src\Official\EasyAbp.Abp.WeChat.Official.Abstractions\EasyAbp.Abp.WeChat.Official.Abstractions.csproj", "{894F8AE8-BD48-494A-AB8F-99D94FF92D4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -122,6 +128,18 @@ Global
 		{1F55A7CF-0F68-4F63-BB14-CC4111598393}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F55A7CF-0F68-4F63-BB14-CC4111598393}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F55A7CF-0F68-4F63-BB14-CC4111598393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7408A909-79B9-4066-A88C-4A0DC27E604E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7408A909-79B9-4066-A88C-4A0DC27E604E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7408A909-79B9-4066-A88C-4A0DC27E604E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7408A909-79B9-4066-A88C-4A0DC27E604E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B197355-6CB7-471F-B719-6D3CECC84FF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B197355-6CB7-471F-B719-6D3CECC84FF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B197355-6CB7-471F-B719-6D3CECC84FF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B197355-6CB7-471F-B719-6D3CECC84FF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{894F8AE8-BD48-494A-AB8F-99D94FF92D4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{894F8AE8-BD48-494A-AB8F-99D94FF92D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{894F8AE8-BD48-494A-AB8F-99D94FF92D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{894F8AE8-BD48-494A-AB8F-99D94FF92D4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{69F0A12F-2151-4F65-B2EB-476E91BEE43A} = {03A4A696-FC94-4F91-B7CE-9C508C1F9EBA}
@@ -146,5 +164,8 @@ Global
 		{C4113376-3B12-485D-9370-CD967D7C81FC} = {03A4A696-FC94-4F91-B7CE-9C508C1F9EBA}
 		{E9156C34-77A5-43B1-B97E-6A9DB9A828F9} = {E15B21A1-D3A1-4365-AF24-60E5A80046F8}
 		{1F55A7CF-0F68-4F63-BB14-CC4111598393} = {77BCE44A-CC08-40A1-B6DD-437B5AC431A6}
+		{7408A909-79B9-4066-A88C-4A0DC27E604E} = {082FED75-8EC1-4F06-83C2-91D264B83709}
+		{2B197355-6CB7-471F-B719-6D3CECC84FF8} = {7AA7BACD-F0B0-46BD-A0B9-2E0C5C1233A6}
+		{894F8AE8-BD48-494A-AB8F-99D94FF92D4F} = {A0F50CAC-775F-4598-A4D6-1DC3C9A4036B}
 	EndGlobalSection
 EndGlobal

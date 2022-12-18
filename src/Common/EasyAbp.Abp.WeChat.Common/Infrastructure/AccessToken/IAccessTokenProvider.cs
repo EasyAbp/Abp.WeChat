@@ -4,6 +4,6 @@ namespace EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken
 {
     public interface IAccessTokenProvider
     {
-        Task<string> GetAccessTokenAsync(string appId, string appSecret);
+        Task<string> GetAsync(string appId, string appSecret);
     }
 }

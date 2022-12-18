@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
+using EasyAbp.Abp.WeChat.Pay.Options;
 using Shouldly;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.Threading;
@@ -22,7 +22,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests.Services
         public async Task Should_Return_Certificate_Bytes()
         {
             // Arrange & Act
-            var options = await GetRequiredService<IWeChatPayOptionsResolver>().ResolveAsync();
+            var options = await GetRequiredService<IAbpWeChatPayOptionsProvider>().GetAsync(null);
             if (string.IsNullOrEmpty(options.CertificateBlobName)) throw new NullReferenceException();
 
             var blobContainer = options.CertificateBlobContainerName.IsNullOrEmpty()

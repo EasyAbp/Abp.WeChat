@@ -1,6 +1,5 @@
 using System;
 using Volo.Abp;
-using Volo.Abp.ExceptionHandling;
 
 namespace EasyAbp.Abp.WeChat.Common.Exceptions
 {

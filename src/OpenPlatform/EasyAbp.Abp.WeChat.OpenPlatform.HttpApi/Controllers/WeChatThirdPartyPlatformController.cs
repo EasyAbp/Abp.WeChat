@@ -3,9 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common;
-using EasyAbp.Abp.WeChat.OpenPlatform.EventHandling;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.Models.ThirdPartyPlatform;
-using EasyAbp.Abp.WeChat.OpenPlatform.Infrastructure.ThirdPartyPlatform.EventNotification;
+using EasyAbp.Abp.WeChat.Common.RequestHandling;
+using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc;
@@ -17,11 +16,11 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.Controllers;
 [Route("/wechat/third-party-platform")]
 public class WeChatThirdPartyPlatformController : AbpControllerBase
 {
-    private readonly IWeChatThirdPartyPlatformEventHandlingService _handlingService;
+    private readonly IWeChatThirdPartyPlatformEventRequestHandlingService _requestHandlingService;
 
-    public WeChatThirdPartyPlatformController(IWeChatThirdPartyPlatformEventHandlingService handlingService)
+    public WeChatThirdPartyPlatformController(IWeChatThirdPartyPlatformEventRequestHandlingService requestHandlingService)
     {
-        _handlingService = handlingService;
+        _requestHandlingService = requestHandlingService;
     }
 
     /// <summary>
@@ -39,7 +38,7 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
     {
         using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-        var result = await _handlingService.NotifyAuthAsync(componentAppId, await CreateRequestModelAsync());
+        var result = await _requestHandlingService.NotifyAuthAsync(componentAppId, await CreateRequestModelAsync());
 
         if (!result.Success)
         {
@@ -62,7 +61,7 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
     {
         using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-        var result = await _handlingService.NotifyAppAsync(componentAppId, appId, await CreateRequestModelAsync());
+        var result = await _requestHandlingService.NotifyAppAsync(componentAppId, appId, await CreateRequestModelAsync());
 
         if (!result.Success)
         {
@@ -72,7 +71,7 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
         return Ok("success");
     }
 
-    protected virtual async Task<WeChatEventNotificationRequestModel> CreateRequestModelAsync()
+    protected virtual async Task<WeChatEventRequestModel> CreateRequestModelAsync()
     {
         using var streamReader = new StreamReader(HttpContext.Request.Body);
 
@@ -80,7 +79,7 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
 
         Request.Body.Position = 0;
 
-        return new WeChatEventNotificationRequestModel
+        return new WeChatEventRequestModel
         {
             PostData = postData,
             MsgSignature = HttpContext.Request.Query["msg_signature"].FirstOrDefault(),

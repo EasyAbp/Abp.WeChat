@@ -3,8 +3,9 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.Tests;
 public class AbpWeChatOpenPlatformTestsConsts
 {
     public const string AppId = "wx5823bf96d3bd56c7";
+    public const string AppSecret = "123456";
     public const string Token = "QDG6eK";
-    public const string EncodingAESKey = "jWmYm7qr5nMoAUwZRjGtBxmz3KA1tkAj3ykkR6q2B2C";
+    public const string EncodingAesKey = "jWmYm7qr5nMoAUwZRjGtBxmz3KA1tkAj3ykkR6q2B2C";
     public const string ReqMsgSig = "477715d11cdb4164915debcba66cb864d751f3e6";
     public const string ReqTimeStamp = "1409659813";
     public const string ReqNonce = "1372623149";

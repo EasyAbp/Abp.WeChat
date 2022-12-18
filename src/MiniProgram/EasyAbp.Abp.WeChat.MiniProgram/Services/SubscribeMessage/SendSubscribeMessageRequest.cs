@@ -1,4 +1,4 @@
-using EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.Models;
+using EasyAbp.Abp.WeChat.MiniProgram.Models;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 

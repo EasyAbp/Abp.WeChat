@@ -4,12 +4,12 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>EasyAbp.Abp.WeChat.Pay.HttpApi</RootNamespace>
+        <RootNamespace>EasyAbp.Abp.WeChat.Pay</RootNamespace>
         <Description>ABP vNext微信模块，提供对微信支付业务的支持。</Description>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EasyAbp.Abp.WeChat.Pay\EasyAbp.Abp.WeChat.Pay.csproj" />
+        <ProjectReference Include="..\EasyAbp.Abp.WeChat.Pay.Abstractions\EasyAbp.Abp.WeChat.Pay.Abstractions.csproj" />
     </ItemGroup>
 
     <ItemGroup>

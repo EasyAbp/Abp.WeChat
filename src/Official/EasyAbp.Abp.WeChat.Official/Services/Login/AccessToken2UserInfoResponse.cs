@@ -1,6 +1,6 @@
-﻿using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using EasyAbp.Abp.WeChat.Official.Models;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.Login
 {

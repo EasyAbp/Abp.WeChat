@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
+using EasyAbp.Abp.WeChat.Official.Models;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.CustomMenu.Request

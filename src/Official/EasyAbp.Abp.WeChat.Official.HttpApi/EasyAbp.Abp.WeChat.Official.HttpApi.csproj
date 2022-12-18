@@ -4,7 +4,7 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>EasyAbp.Abp.WeChat.Official.HttpApi</RootNamespace>
+        <RootNamespace>EasyAbp.Abp.WeChat.Official</RootNamespace>
         <Description>ABP vNext微信公众号模块，提供对微信公众号业务的支持。</Description>
     </PropertyGroup>
 
@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EasyAbp.Abp.WeChat.Official\EasyAbp.Abp.WeChat.Official.csproj" />
+        <ProjectReference Include="..\EasyAbp.Abp.WeChat.Official.Abstractions\EasyAbp.Abp.WeChat.Official.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

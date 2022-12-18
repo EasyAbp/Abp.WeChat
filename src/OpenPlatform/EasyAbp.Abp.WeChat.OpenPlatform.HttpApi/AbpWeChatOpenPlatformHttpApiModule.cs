@@ -3,7 +3,7 @@ using Volo.Abp.Modularity;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform;
 
-[DependsOn(typeof(AbpWeChatOpenPlatformModule),
+[DependsOn(typeof(AbpWeChatOpenPlatformAbstractionsModule),
     typeof(AbpAspNetCoreMvcModule))]
 public class AbpWeChatOpenPlatformHttpApiModule : AbpModule
 {

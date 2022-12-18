@@ -24,4 +24,8 @@
         <PackageReference Remove="Fody" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Common\EasyAbp.Abp.WeChat.Common\EasyAbp.Abp.WeChat.Common.csproj" />
+    </ItemGroup>
+
 </Project>

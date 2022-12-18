@@ -7,17 +7,16 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Tests.Services
 {
     public class LoginServiceTests : AbpWeChatMiniProgramTestBase
     {
-        private readonly LoginService _loginService;
-
         public LoginServiceTests()
         {
-            _loginService = GetRequiredService<LoginService>();
         }
 
         [Fact]
         public async Task Should_Get_OpenId_And_SessionKey()
         {
-            var result = await _loginService.Code2SessionAsync(
+            var loginService = await WeChatServiceFactory.CreateAsync<LoginWeService>();
+
+            var result = await loginService.Code2SessionAsync(
                 AbpWeChatMiniProgramTestsConsts.AppId,
                 AbpWeChatMiniProgramTestsConsts.AppSecret,
                 AbpWeChatMiniProgramTestsConsts.JsCode);

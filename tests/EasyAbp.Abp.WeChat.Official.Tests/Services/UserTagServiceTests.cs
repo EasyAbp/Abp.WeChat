@@ -9,31 +9,28 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services;
 
 public class UserTagServiceTests : AbpWeChatOfficialTestBase
 {
-    private readonly UserTagService _userTagService;
-
-    public UserTagServiceTests()
-    {
-        _userTagService = GetRequiredService<UserTagService>();
-    }
-
     [Fact]
     public async Task Should_Created_UserTag()
     {
-        var userTag = await _userTagService.CreateAsync("TestTag");
+        var userTagService = await WeChatServiceFactory.CreateAsync<UserTagWeService>();
+
+        var userTag = await userTagService.CreateAsync("TestTag");
 
         userTag.ErrorCode.ShouldBe(0);
         userTag.Tag.ShouldNotBeNull();
         userTag.Tag.Name.ShouldBe("TestTag");
 
         // Clean up
-        await _userTagService.DeleteAsync(userTag.Tag.Id);
+        await userTagService.DeleteAsync(userTag.Tag.Id);
     }
 
     [Fact]
     public async Task Should_Return_OneTags()
     {
-        await _userTagService.CreateAsync("TestTag");
-        var allTags = await _userTagService.GetCreatedTagsAsync();
+        var userTagService = await WeChatServiceFactory.CreateAsync<UserTagWeService>();
+        
+        await userTagService.CreateAsync("TestTag");
+        var allTags = await userTagService.GetCreatedTagsAsync();
 
         allTags.ErrorCode.ShouldBe(0);
         allTags.Tags.Count.ShouldBeGreaterThan(0);
@@ -41,15 +38,17 @@ public class UserTagServiceTests : AbpWeChatOfficialTestBase
         // Clean up
         foreach (var tag in allTags.Tags)
         {
-            await _userTagService.DeleteAsync(tag.Id);
+            await userTagService.DeleteAsync(tag.Id);
         }
     }
 
     [Fact]
     public async Task Should_Delete_UserTag()
     {
-        var createdTag = await _userTagService.CreateAsync("TestTag");
-        var response = await _userTagService.DeleteAsync(createdTag.Tag.Id);
+        var userTagService = await WeChatServiceFactory.CreateAsync<UserTagWeService>();
+
+        var createdTag = await userTagService.CreateAsync("TestTag");
+        var response = await userTagService.DeleteAsync(createdTag.Tag.Id);
 
         response.ErrorCode.ShouldBe(0);
         response.ErrorMessage.ShouldBe("ok");
@@ -58,10 +57,12 @@ public class UserTagServiceTests : AbpWeChatOfficialTestBase
     [Fact]
     public async Task Should_Update_TestTag_To_TestTagModified()
     {
-        var newTag = await _userTagService.CreateAsync("TestTag");
-        var response = await _userTagService.UpdateAsync(newTag.Tag.Id, "TestTagModified");
+        var userTagService = await WeChatServiceFactory.CreateAsync<UserTagWeService>();
+        
+        var newTag = await userTagService.CreateAsync("TestTag");
+        var response = await userTagService.UpdateAsync(newTag.Tag.Id, "TestTagModified");
 
-        var modifyTag = (await _userTagService.GetCreatedTagsAsync()).Tags.FirstOrDefault(x => x.Id == newTag.Tag.Id);
+        var modifyTag = (await userTagService.GetCreatedTagsAsync()).Tags.FirstOrDefault(x => x.Id == newTag.Tag.Id);
 
         response.ErrorCode.ShouldBe(0);
         response.ErrorMessage.ShouldBe("ok");
@@ -70,14 +71,16 @@ public class UserTagServiceTests : AbpWeChatOfficialTestBase
         modifyTag.Name.ShouldBe("TestTagModified");
 
         // Clean up
-        await _userTagService.DeleteAsync(newTag.Tag.Id);
+        await userTagService.DeleteAsync(newTag.Tag.Id);
     }
 
     [Fact]
     public async Task Should_Tagging_One_User()
     {
-        var testTag = await _userTagService.CreateAsync("TestTag");
-        var response = await _userTagService.BatchTaggingAsync(testTag.Tag.Id, new List<string>
+        var userTagService = await WeChatServiceFactory.CreateAsync<UserTagWeService>();
+        
+        var testTag = await userTagService.CreateAsync("TestTag");
+        var response = await userTagService.BatchTaggingAsync(testTag.Tag.Id, new List<string>
         {
             "on7qq1HZmDVgYTmzz8r3tayh-wqw"
         });
@@ -85,20 +88,22 @@ public class UserTagServiceTests : AbpWeChatOfficialTestBase
         response.ErrorCode.ShouldBe(0);
 
         // Query the user's tag.
-        var users = await _userTagService.GetUsersByTagAsync(testTag.Tag.Id);
+        var users = await userTagService.GetUsersByTagAsync(testTag.Tag.Id);
 
         users.ErrorCode.ShouldBe(0);
         users.Data.OpenIds.Count.ShouldBeGreaterThan(0);
 
         // Clean up
-        await _userTagService.DeleteAsync(testTag.Tag.Id);
+        await userTagService.DeleteAsync(testTag.Tag.Id);
     }
 
     [Fact]
     public async Task Should_Tagging_One_User_And_UnTagging_User()
     {
-        var testTag = await _userTagService.CreateAsync("TestTag");
-        var response = await _userTagService.BatchTaggingAsync(testTag.Tag.Id, new List<string>
+        var userTagService = await WeChatServiceFactory.CreateAsync<UserTagWeService>();
+
+        var testTag = await userTagService.CreateAsync("TestTag");
+        var response = await userTagService.BatchTaggingAsync(testTag.Tag.Id, new List<string>
         {
             "on7qq1HZmDVgYTmzz8r3tayh-wqw"
         });
@@ -106,29 +111,29 @@ public class UserTagServiceTests : AbpWeChatOfficialTestBase
         response.ErrorCode.ShouldBe(0);
 
         // Query the user's tag.
-        var users = await _userTagService.GetUsersByTagAsync(testTag.Tag.Id);
+        var users = await userTagService.GetUsersByTagAsync(testTag.Tag.Id);
 
         users.ErrorCode.ShouldBe(0);
         users.Data.OpenIds.Count.ShouldBeGreaterThan(0);
-        
-        var userTags = await _userTagService.GetTagsByUserAsync("on7qq1HZmDVgYTmzz8r3tayh-wqw");
+
+        var userTags = await userTagService.GetTagsByUserAsync("on7qq1HZmDVgYTmzz8r3tayh-wqw");
         userTags.ErrorCode.ShouldBe(0);
         userTags.TagIds.Count.ShouldBeGreaterThan(0);
 
         // UnTagging the user.
-        var res1 = await _userTagService.BatchUnTaggingAsync(testTag.Tag.Id, new List<string>
+        var res1 = await userTagService.BatchUnTaggingAsync(testTag.Tag.Id, new List<string>
         {
             "on7qq1HZmDVgYTmzz8r3tayh-wqw"
         });
         res1.ErrorCode.ShouldBe(0);
-        
+
         // User should be untagged.
-        var res2 = await _userTagService.GetTagsByUserAsync("on7qq1HZmDVgYTmzz8r3tayh-wqw");
+        var res2 = await userTagService.GetTagsByUserAsync("on7qq1HZmDVgYTmzz8r3tayh-wqw");
         res2.ErrorCode.ShouldBe(0);
         res2.TagIds.Count.ShouldBe(0);
-        
+
         // Clean up
-        await _userTagService.DeleteAsync(testTag.Tag.Id);
+        await userTagService.DeleteAsync(testTag.Tag.Id);
     }
 
     [Fact]

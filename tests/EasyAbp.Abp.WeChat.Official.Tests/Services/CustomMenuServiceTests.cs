@@ -3,19 +3,11 @@ using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
 using EasyAbp.Abp.WeChat.Official.Services.CustomMenu;
-using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Tests.Services
 {
     public class CustomMenuServiceTests : AbpWeChatOfficialTestBase
     {
-        private readonly CustomMenuService _customMenuService;
-
-        public CustomMenuServiceTests()
-        {
-            _customMenuService = GetRequiredService<CustomMenuService>();
-        }
-
         [Fact]
         public async Task Should_Create_A_CustomMenu()
         {
@@ -30,7 +22,9 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services
                 }
             };
 
-            var result = await _customMenuService.CreateCustomMenuAsync(newCustomMenu);
+            var customMenuService = await WeChatServiceFactory.CreateAsync<CustomMenuWeService>();
+
+            var result = await customMenuService.CreateCustomMenuAsync(newCustomMenu);
 
             result.ShouldNotBeNull();
             result.ErrorCode.ShouldBe(0);
@@ -40,7 +34,9 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services
         [Fact]
         public async Task Should_Delete_All_CustomMenu()
         {
-            var result = await _customMenuService.DeleteCustomMenuAsync();
+            var customMenuService = await WeChatServiceFactory.CreateAsync<CustomMenuWeService>();
+
+            var result = await customMenuService.DeleteCustomMenuAsync();
 
             result.ShouldNotBeNull();
             result.ErrorCode.ShouldBe(0);
@@ -50,7 +46,9 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services
         [Fact]
         public async Task Should_Return_All_CustomMenu()
         {
-            var result = await _customMenuService.GetAllCustomMenuAsync();
+            var customMenuService = await WeChatServiceFactory.CreateAsync<CustomMenuWeService>();
+
+            var result = await customMenuService.GetAllCustomMenuAsync();
 
             result.Menu.Buttons.ShouldNotBeNull();
             result.Menu.Buttons.Count.ShouldNotBe(0);

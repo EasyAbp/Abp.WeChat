@@ -1,5 +1,6 @@
 ﻿using Volo.Abp.Modularity;
 using EasyAbp.Abp.WeChat.Common.Tests;
+using EasyAbp.Abp.WeChat.Official.Options;
 
 namespace EasyAbp.Abp.WeChat.Official.Tests
 {

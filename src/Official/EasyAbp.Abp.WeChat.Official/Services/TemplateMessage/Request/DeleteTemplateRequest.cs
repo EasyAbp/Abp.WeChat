@@ -1,4 +1,4 @@
-using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
+using EasyAbp.Abp.WeChat.Official.Models;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Request
 {
