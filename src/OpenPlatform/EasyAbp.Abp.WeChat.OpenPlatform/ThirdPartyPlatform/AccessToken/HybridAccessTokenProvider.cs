@@ -21,6 +21,7 @@ public class HybridAccessTokenProvider : IAccessTokenProvider, ITransientDepende
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IAuthorizerAccessTokenCache _cache;
+    private readonly ICurrentWeChatThirdPartyPlatform _currentWeChatThirdPartyPlatform;
     private readonly IAbpWeChatOptionsProvider<AbpWeChatThirdPartyPlatformOptions> _optionsProvider;
     private readonly IAuthorizerRefreshTokenStore _authorizerRefreshTokenStore;
     private readonly IComponentAccessTokenProvider _componentAccessTokenProvider;
@@ -29,6 +30,7 @@ public class HybridAccessTokenProvider : IAccessTokenProvider, ITransientDepende
     public HybridAccessTokenProvider(
         IServiceProvider serviceProvider,
         IAuthorizerAccessTokenCache cache,
+        ICurrentWeChatThirdPartyPlatform currentWeChatThirdPartyPlatform,
         IAbpWeChatOptionsProvider<AbpWeChatThirdPartyPlatformOptions> optionsProvider,
         IAuthorizerRefreshTokenStore authorizerRefreshTokenStore,
         IComponentAccessTokenProvider componentAccessTokenProvider,
@@ -36,6 +38,7 @@ public class HybridAccessTokenProvider : IAccessTokenProvider, ITransientDepende
     {
         _serviceProvider = serviceProvider;
         _cache = cache;
+        _currentWeChatThirdPartyPlatform = currentWeChatThirdPartyPlatform;
         _optionsProvider = optionsProvider;
         _authorizerRefreshTokenStore = authorizerRefreshTokenStore;
         _componentAccessTokenProvider = componentAccessTokenProvider;
@@ -46,9 +49,11 @@ public class HybridAccessTokenProvider : IAccessTokenProvider, ITransientDepende
     {
         if (appSecret.IsNullOrWhiteSpace())
         {
-            var options = await _optionsProvider.GetAsync(appId);
+            var componentAppId = _currentWeChatThirdPartyPlatform.ComponentAppId;
 
-            var accessToken = await _cache.GetAsync(options.AppId, appId);
+            var options = await _optionsProvider.GetAsync(componentAppId);
+
+            var accessToken = await _cache.GetOrNullAsync(options.AppId, appId);
 
             if (accessToken.IsNullOrWhiteSpace())
             {
@@ -81,7 +86,7 @@ public class HybridAccessTokenProvider : IAccessTokenProvider, ITransientDepende
                 AuthorizerAppId = appId,
                 AuthorizerRefreshToken =
                     await _authorizerRefreshTokenStore.GetOrNullAsync(options.AppId, appId)
-            });
+            }, options);
 
         if (response.AuthorizerAccessToken.IsNullOrWhiteSpace())
         {

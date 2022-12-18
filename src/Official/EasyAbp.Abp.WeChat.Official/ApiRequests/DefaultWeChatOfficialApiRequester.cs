@@ -28,10 +28,8 @@ namespace EasyAbp.Abp.WeChat.Official.ApiRequests
 
         #region > Public Methods <
 
-        public virtual async Task<string> RequestAsync(string targetUrl,
-            HttpMethod method,
-            IOfficialRequest officialRequest = null,
-            IAbpWeChatOptions abpWeChatOptions = null)
+        public virtual async Task<string> RequestAsync(string targetUrl, HttpMethod method,
+            IOfficialRequest officialRequest = null, IAbpWeChatOptions abpWeChatOptions = null)
         {
             var client = _httpClientFactory.CreateClient();
 

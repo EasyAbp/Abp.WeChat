@@ -32,7 +32,7 @@ public class ThirdPartyPlatformWeService : ThirdPartyPlatformAbpWeChatServiceBas
             url, HttpMethod.Post, new PreAuthCodeRequest
             {
                 ComponentAppId = Options.AppId
-            });
+            }, Options);
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public class ThirdPartyPlatformWeService : ThirdPartyPlatformAbpWeChatServiceBas
             {
                 ComponentAppId = Options.AppId,
                 AuthorizationCode = authorizationCode
-            });
+            }, Options);
     }
 
     protected virtual async Task<string> AppendComponentAccessTokenAsync(string url)
