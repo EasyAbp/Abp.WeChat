@@ -1,8 +1,8 @@
 ﻿using Volo.Abp.Modularity;
 
-namespace EasyAbp.Abp.WeChat.Pay.HttpApi
+namespace EasyAbp.Abp.WeChat.Pay
 {
-    [DependsOn(typeof(AbpWeChatPayModule))]
+    [DependsOn(typeof(AbpWeChatPayAbstractionsModule))]
     public class AbpWeChatPayHttpApiModule : AbpModule
     {
     }

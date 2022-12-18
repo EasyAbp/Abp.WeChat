@@ -1,22 +1,13 @@
 using System;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
-using System.Web;
 using EasyAbp.Abp.WeChat.Common;
+using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
-using EasyAbp.Abp.WeChat.Common.Extensions;
-using EasyAbp.Abp.WeChat.Common.Infrastructure;
-using EasyAbp.Abp.WeChat.Common.Infrastructure.Signature;
-using EasyAbp.Abp.WeChat.Official.HttpApi.Models;
-using EasyAbp.Abp.WeChat.Official.Infrastructure;
-using EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve;
-using EasyAbp.Abp.WeChat.Official.Infrastructure.OptionsResolve.Contributors;
-using EasyAbp.Abp.WeChat.Official.Services.Login;
-using JetBrains.Annotations;
 
-namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
+namespace EasyAbp.Abp.WeChat.Official.Controllers
 {
     [RemoteService(Name = AbpWeChatRemoteServiceConsts.RemoteServiceName)]
     [Area(AbpWeChatRemoteServiceConsts.ModuleName)]
@@ -24,26 +15,15 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
     [Route("/wechat")]
     public class WeChatController : AbpControllerBase
     {
-        private readonly SignatureChecker _signatureChecker;
-        private readonly IJsTicketAccessor _jsTicketAccessor;
-        private readonly ISignatureGenerator _signatureGenerator;
-        private readonly LoginService _loginService;
-        private readonly IWeChatOfficialAsyncLocal _weChatOfficialAsyncLocal;
-        private readonly IWeChatOfficialOptionsResolver _optionsResolver;
+        private readonly IWeChatOfficialEventRequestHandlingService _eventRequestHandlingService;
+        private readonly IWeChatOfficialClientRequestHandlingService _clientRequestHandlingService;
 
-        public WeChatController(SignatureChecker signatureChecker,
-            IJsTicketAccessor jsTicketAccessor,
-            ISignatureGenerator signatureGenerator,
-            LoginService loginService,
-            IWeChatOfficialAsyncLocal weChatOfficialAsyncLocal,
-            IWeChatOfficialOptionsResolver optionsResolver)
+        public WeChatController(
+            IWeChatOfficialEventRequestHandlingService eventRequestHandlingService,
+            IWeChatOfficialClientRequestHandlingService clientRequestHandlingService)
         {
-            _signatureChecker = signatureChecker;
-            _jsTicketAccessor = jsTicketAccessor;
-            _signatureGenerator = signatureGenerator;
-            _optionsResolver = optionsResolver;
-            _loginService = loginService;
-            _weChatOfficialAsyncLocal = weChatOfficialAsyncLocal;
+            _eventRequestHandlingService = eventRequestHandlingService;
+            _clientRequestHandlingService = clientRequestHandlingService;
         }
 
         [HttpGet]
@@ -51,20 +31,14 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
         [Route("verify/tenant-id/{tenantId}")]
         [Route("verify/app-id/{appId}")]
         [Route("verify/tenant-id/{tenantId}/app-id/{appId}")]
-        public virtual async Task<string> Verify(
+        public virtual async Task<string> VerifyAsync(
             VerifyRequestDto input, [CanBeNull] string tenantId, [CanBeNull] string appId)
         {
-            using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId));
+            using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-            // 如果指定了 appId，请务必实现 IHttpApiWeChatOfficialOptionsProvider
-            var options = await ResolveOptionsAsync(appId);
+            var result = await _eventRequestHandlingService.VerifyAsync(input, appId);
 
-            if (_signatureChecker.Validate(options.Token, input.Timestamp, input.Nonce, input.Signature))
-            {
-                return input.EchoStr;
-            }
-
-            return "非法参数。";
+            return result.Success ? result.Value : result.FailureReason;
         }
 
         [HttpGet]
@@ -72,81 +46,64 @@ namespace EasyAbp.Abp.WeChat.Official.HttpApi.Controllers
         [Route("redirect-url/tenant-id/{tenantId}")]
         [Route("redirect-url/app-id/{appId}")]
         [Route("redirect-url/tenant-id/{tenantId}/app-id/{appId}")]
-        public virtual async Task<ActionResult> RedirectUrl(RedirectUrlRequest input, [CanBeNull] string tenantId,
-            [CanBeNull] string appId)
+        public virtual async Task<ActionResult> RedirectUrlAsync(
+            RedirectUrlRequest input, [CanBeNull] string tenantId, [CanBeNull] string appId)
         {
-            if (input == null) return BadRequest();
-            if (string.IsNullOrEmpty(input.Code)) return BadRequest();
+            if (input == null || input.Code.IsNullOrWhiteSpace())
+            {
+                return BadRequest();
+            }
 
-            using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId));
+            using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-            // 如果指定了 appId，请务必实现 IHttpApiWeChatOfficialOptionsProvider
-            var options = await ResolveOptionsAsync(appId);
+            var result = await _eventRequestHandlingService.GetOAuthRedirectUrlAsync(input, appId);
 
-            return Redirect($"{options.OAuthRedirectUrl.TrimEnd('/')}?code={input.Code}");
+            if (!result.Success)
+            {
+                return BadRequest();
+            }
+
+            return Redirect(result.Value);
         }
 
         [HttpGet]
         [Route("access-token-by-code")]
-        [Route("access-token-by-code/tenant-id/{tenantId}")]
         [Route("access-token-by-code/app-id/{appId}")]
-        [Route("access-token-by-code/tenant-id/{tenantId}/app-id/{appId}")]
-        public virtual async Task<Code2AccessTokenResponse> GetAccessTokenByCode([FromQuery] string code,
-            [CanBeNull] string tenantId, [CanBeNull] string appId)
+        public virtual async Task<ActionResult> GetAccessTokenByCodeAsync(
+            [FromQuery] string code, [CanBeNull] string appId)
         {
-            using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId));
+            var result = await _clientRequestHandlingService.GetAccessTokenByCodeAsync(code, appId);
 
-            // 如果指定了 appId，请务必实现 IHttpApiWeChatOfficialOptionsProvider
-            var options = await ResolveOptionsAsync(appId);
-
-            using var changeOptions = _weChatOfficialAsyncLocal.Change(options);
-
-            return await _loginService.Code2AccessTokenAsync(code);
+            return new JsonResult(new
+            {
+                errmsg = result.ErrorMessage,
+                errcode = result.ErrorCode,
+                access_token = result.AccessToken,
+                scope = result.Scope,
+                expires_in = result.ExpiresIn,
+                openid = result.OpenId,
+                refresh_token = result.RefreshToken
+            });
         }
 
         [HttpGet]
         [Route("js-sdk-config-parameters")]
-        [Route("js-sdk-config-parameters/tenant-id/{tenantId}")]
         [Route("js-sdk-config-parameters/app-id/{appId}")]
-        [Route("js-sdk-config-parameters/tenant-id/{tenantId}/app-id/{appId}")]
-        public virtual async Task<ActionResult> GetJsSdkConfigParameters([FromQuery] string jsUrl,
-            [CanBeNull] string tenantId, [CanBeNull] string appId)
+        public virtual async Task<ActionResult> GetJsSdkConfigParametersAsync(
+            [FromQuery] string jsUrl, [CanBeNull] string appId)
         {
             if (string.IsNullOrEmpty(jsUrl)) throw new UserFriendlyException("需要计算的 JS URL 参数不能够为空。");
 
-            using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId));
-
-            // 如果指定了 appId，请务必实现 IHttpApiWeChatOfficialOptionsProvider
-            var options = await ResolveOptionsAsync(appId);
-
-            using var changeOptions = _weChatOfficialAsyncLocal.Change(options);
-
-            var nonceStr = RandomStringHelper.GetRandomString();
-            var timeStamp = DateTimeHelper.GetNowTimeStamp();
-            var ticket = await _jsTicketAccessor.GetTicketAsync();
-
-            var @params = new WeChatParameters();
-            @params.AddParameter("noncestr", nonceStr);
-            @params.AddParameter("jsapi_ticket", await _jsTicketAccessor.GetTicketAsync());
-            @params.AddParameter("url", HttpUtility.UrlDecode(jsUrl));
-            @params.AddParameter("timestamp", timeStamp);
-
-            var signStr = _signatureGenerator.Generate(@params, SHA1.Create()).ToLower();
+            var result = await _clientRequestHandlingService.GetJsSdkConfigParametersAsync(jsUrl, appId);
 
             return new JsonResult(new
             {
-                appid = options.AppId,
-                noncestr = nonceStr,
-                timestamp = timeStamp,
-                signature = signStr,
-                jsapi_ticket = ticket
+                appid = result.AppId,
+                noncestr = result.NonceStr,
+                timestamp = result.TimeStamp,
+                signature = result.SignStr,
+                jsapi_ticket = result.Ticket
             });
-        }
-
-        protected virtual async Task<IWeChatOfficialOptions> ResolveOptionsAsync(string appId)
-        {
-            var provider = LazyServiceProvider.LazyGetRequiredService<IHttpApiWeChatOfficialOptionsProvider>();
-            return appId.IsNullOrWhiteSpace() ? await _optionsResolver.ResolveAsync() : await provider.GetAsync(appId);
         }
     }
 }

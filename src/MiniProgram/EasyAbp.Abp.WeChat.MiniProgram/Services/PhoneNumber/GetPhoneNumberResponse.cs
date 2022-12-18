@@ -1,4 +1,4 @@
-﻿using EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.Models;
+﻿using EasyAbp.Abp.WeChat.MiniProgram.Models;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.MiniProgram.Services.PhoneNumber

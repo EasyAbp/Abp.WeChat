@@ -1,4 +1,4 @@
-using EasyAbp.Abp.WeChat.Official.Infrastructure.Models;
+using EasyAbp.Abp.WeChat.Official.Models;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Response

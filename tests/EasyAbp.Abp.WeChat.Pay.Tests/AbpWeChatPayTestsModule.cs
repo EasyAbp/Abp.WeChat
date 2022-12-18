@@ -1,9 +1,12 @@
-﻿using Volo.Abp.Modularity;
+﻿using System.IO;
+using Volo.Abp.Modularity;
 using EasyAbp.Abp.WeChat.Common.Tests;
+using EasyAbp.Abp.WeChat.Pay.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.BlobStoring.FileSystem;
+using Volo.Abp.Threading;
 
 namespace EasyAbp.Abp.WeChat.Pay.Tests
 {
@@ -17,7 +20,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests
             Configure<AbpWeChatPayOptions>(op =>
             {
                 // TODO: 测试的时候，请在此处填写相关的配置参数。
-                op.MchId = "";
+                op.MchId = "10000100";
                 op.ApiKey = "abcdefg";
                 // op.CertificateBlobContainerName = "";
                 op.CertificateBlobName = "CertificateName";
@@ -28,14 +31,25 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests
 
             Configure<AbpBlobStoringOptions>(options =>
             {
-                options.Containers.ConfigureDefault(container => { container.UseFileSystem(fileSystem => { fileSystem.BasePath = "/Users/zony/Work/TempFiles"; }); });
+                options.Containers.ConfigureDefault(container =>
+                {
+                    container.UseFileSystem(fileSystem =>
+                    {
+                        fileSystem.BasePath = Path.Combine(Directory.GetCurrentDirectory(),
+                            "test-temp-files");
+                    });
+                });
             });
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
         {
             var container = context.ServiceProvider.GetRequiredService<IBlobContainer>();
-            container.SaveAsync("CertificateName", new byte[] {0x01, 0x02}, true).GetAwaiter().GetResult();
+
+            if (!container.ExistsAsync("CertificateName").GetAwaiter().GetResult())
+            {
+                AsyncHelper.RunSync(() => container.SaveAsync("CertificateName", new byte[] { 0x01, 0x02 }, true));
+            }
         }
     }
 }

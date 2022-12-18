@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EasyAbp.Abp.WeChat.OpenPlatform\EasyAbp.Abp.WeChat.OpenPlatform.csproj" />
+        <ProjectReference Include="..\EasyAbp.Abp.WeChat.OpenPlatform.Abstractions\EasyAbp.Abp.WeChat.OpenPlatform.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

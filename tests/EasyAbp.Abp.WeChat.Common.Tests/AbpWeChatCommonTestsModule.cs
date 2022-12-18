@@ -4,8 +4,11 @@ using Volo.Abp.Modularity;
 
 namespace EasyAbp.Abp.WeChat.Common.Tests
 {
-    [DependsOn(typeof(AbpTestBaseModule),
-        typeof(AbpAutofacModule))]
+    [DependsOn(
+        typeof(AbpTestBaseModule),
+        typeof(AbpAutofacModule),
+        typeof(AbpWeChatCommonModule)
+    )]
     public class AbpWeChatCommonTestsModule : AbpModule
     {
         

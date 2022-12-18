@@ -1,5 +1,4 @@
-using EasyAbp.Abp.WeChat.MiniProgram.Infrastructure.Models;
-using Newtonsoft.Json;
+using EasyAbp.Abp.WeChat.MiniProgram.Models;
 
 namespace EasyAbp.Abp.WeChat.MiniProgram.Services.ACode
 {

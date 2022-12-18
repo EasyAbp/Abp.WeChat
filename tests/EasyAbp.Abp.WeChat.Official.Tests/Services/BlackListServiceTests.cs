@@ -8,17 +8,12 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services;
 
 public class BlackListServiceTests : AbpWeChatOfficialTestBase
 {
-    private readonly BlackListService _blackListService;
-
-    public BlackListServiceTests()
-    {
-        _blackListService = GetRequiredService<BlackListService>();
-    }
-
     [Fact]
     public async Task Should_Pull_Black_User_And_UnBlack_User()
     {
-        var response = await _blackListService.BatchBlackListAsync(new List<string>
+        var blackListService = await WeChatServiceFactory.CreateAsync<BlackListWeService>();
+
+        var response = await blackListService.BatchBlackListAsync(new List<string>
         {
             "on7qq1H94tJeuwdC61iRsb6IQiAU"
         });
@@ -27,14 +22,14 @@ public class BlackListServiceTests : AbpWeChatOfficialTestBase
         response.ErrorMessage.ShouldBe("ok");
 
         // Get the black user list.
-        var blackList = await _blackListService.GetBlackListAsync();
+        var blackList = await blackListService.GetBlackListAsync();
         blackList.ErrorCode.ShouldBe(0);
         blackList.Count.ShouldBe(1);
         blackList.Total.ShouldBe(1);
         blackList.Data.OpenIds.ShouldContain("on7qq1H94tJeuwdC61iRsb6IQiAU");
 
         // UnBlack the user.
-        var unBlackResponse = await _blackListService.BatchUnBlackListAsync(new List<string>
+        var unBlackResponse = await blackListService.BatchUnBlackListAsync(new List<string>
         {
             "on7qq1H94tJeuwdC61iRsb6IQiAU"
         });
