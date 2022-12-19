@@ -1,5 +1,8 @@
-﻿namespace EasyAbp.Abp.WeChat.Common.RequestHandling;
+﻿using System;
 
+namespace EasyAbp.Abp.WeChat.Common.RequestHandling.Dtos;
+
+[Serializable]
 public class WeChatEventRequestModel
 {
     public string PostData { get; set; }
