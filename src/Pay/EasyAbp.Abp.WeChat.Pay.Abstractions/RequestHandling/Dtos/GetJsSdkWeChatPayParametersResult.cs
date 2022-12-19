@@ -1,7 +1,9 @@
+using System;
 using EasyAbp.Abp.WeChat.Common.RequestHandling;
 
 namespace EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 
+[Serializable]
 public class GetJsSdkWeChatPayParametersResult : WeChatRequestHandlingResult
 {
     public string NonceStr { get; set; }

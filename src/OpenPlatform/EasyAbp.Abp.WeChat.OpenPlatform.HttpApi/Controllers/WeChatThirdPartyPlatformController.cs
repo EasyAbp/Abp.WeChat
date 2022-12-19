@@ -3,8 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common;
-using EasyAbp.Abp.WeChat.Common.RequestHandling;
+using EasyAbp.Abp.WeChat.Common.RequestHandling.Dtos;
 using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling;
+using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling.Dtos;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc;
@@ -18,7 +19,8 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
 {
     private readonly IWeChatThirdPartyPlatformEventRequestHandlingService _requestHandlingService;
 
-    public WeChatThirdPartyPlatformController(IWeChatThirdPartyPlatformEventRequestHandlingService requestHandlingService)
+    public WeChatThirdPartyPlatformController(
+        IWeChatThirdPartyPlatformEventRequestHandlingService requestHandlingService)
     {
         _requestHandlingService = requestHandlingService;
     }
@@ -38,7 +40,11 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
     {
         using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-        var result = await _requestHandlingService.NotifyAuthAsync(componentAppId, await CreateRequestModelAsync());
+        var result = await _requestHandlingService.NotifyAuthAsync(new NotifyAuthInput
+        {
+            ComponentAppId = componentAppId,
+            EventRequest = await CreateRequestModelAsync()
+        });
 
         if (!result.Success)
         {
@@ -61,7 +67,13 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
     {
         using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-        var result = await _requestHandlingService.NotifyAppAsync(componentAppId, appId, await CreateRequestModelAsync());
+        var result =
+            await _requestHandlingService.NotifyAppAsync(new NotifyAppInput
+            {
+                ComponentAppId = componentAppId,
+                AuthorizerAppId = appId,
+                EventRequest = await CreateRequestModelAsync()
+            });
 
         if (!result.Success)
         {
