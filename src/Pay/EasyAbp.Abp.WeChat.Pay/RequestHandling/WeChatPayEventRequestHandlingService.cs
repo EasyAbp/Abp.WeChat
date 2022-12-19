@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ using EasyAbp.Abp.WeChat.Common.Infrastructure;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Signature;
 using EasyAbp.Abp.WeChat.Common.RequestHandling;
 using EasyAbp.Abp.WeChat.Pay.Options;
+using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Pay.RequestHandling;
@@ -30,12 +33,14 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
         _signatureGenerator = signatureGenerator;
     }
 
-    public virtual async Task<WeChatRequestHandlingResult> NotifyAsync(string mchId, XmlDocument xmlDocument)
+    public virtual async Task<WeChatRequestHandlingResult> PaidNotifyAsync(PaidNotifyInput input)
     {
-        var options = await _optionsProvider.GetAsync(mchId);
+        var options = await _optionsProvider.GetAsync(input.MchId);
 
         var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayEventHandler>>()
             .Where(h => h.Type == WeChatHandlerType.Paid);
+
+        var xmlDocument = await CreateXmlDocumentAsync(input.Xml);
 
         if (!await IsSignValidAsync(xmlDocument, options))
         {
@@ -61,12 +66,14 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
         return new WeChatRequestHandlingResult(true);
     }
 
-    public virtual async Task<WeChatRequestHandlingResult> RefundNotifyAsync(string mchId, XmlDocument xmlDocument)
+    public virtual async Task<WeChatRequestHandlingResult> RefundNotifyAsync(RefundNotifyInput input)
     {
-        var options = await _optionsProvider.GetAsync(mchId);
+        var options = await _optionsProvider.GetAsync(input.MchId);
 
         var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayEventHandler>>()
             .Where(x => x.Type == WeChatHandlerType.Refund);
+
+        var xmlDocument = await CreateXmlDocumentAsync(input.Xml);
 
         var (decryptingResult, decryptedXmlDocument) = await _xmlDecrypter.TryDecryptAsync(xmlDocument, options);
 
@@ -118,5 +125,13 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
         var responseSign = _signatureGenerator.Generate(parameters, MD5.Create(), options.ApiKey);
 
         return Task.FromResult(responseSign == weChatRequestXmlData.SelectSingleNode("/xml/sign")?.InnerText);
+    }
+
+    protected virtual Task<XmlDocument> CreateXmlDocumentAsync(string xml)
+    {
+        var xmlDocument = new XmlDocument();
+        xmlDocument.LoadXml(xml);
+
+        return Task.FromResult(xmlDocument);
     }
 }
