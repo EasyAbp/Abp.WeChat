@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
-using System.Xml;
 using EasyAbp.Abp.WeChat.Common.RequestHandling;
-using JetBrains.Annotations;
+using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 
 namespace EasyAbp.Abp.WeChat.Pay.RequestHandling;
 
 public interface IWeChatPayEventRequestHandlingService
 {
-    Task<WeChatRequestHandlingResult> NotifyAsync([CanBeNull] string mchId, XmlDocument xmlDocument);
+    Task<WeChatRequestHandlingResult> PaidNotifyAsync(PaidNotifyInput input);
 
-    Task<WeChatRequestHandlingResult> RefundNotifyAsync([CanBeNull] string mchId, XmlDocument xmlDocument);
+    Task<WeChatRequestHandlingResult> RefundNotifyAsync(RefundNotifyInput input);
 }

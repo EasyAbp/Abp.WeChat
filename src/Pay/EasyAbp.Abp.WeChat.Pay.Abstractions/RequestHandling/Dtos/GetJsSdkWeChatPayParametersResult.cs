@@ -1,6 +1,6 @@
 using EasyAbp.Abp.WeChat.Common.RequestHandling;
 
-namespace EasyAbp.Abp.WeChat.Pay.RequestHandling;
+namespace EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 
 public class GetJsSdkWeChatPayParametersResult : WeChatRequestHandlingResult
 {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling;
+using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp;
@@ -40,7 +41,11 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-            var result = await _eventRequestHandlingService.NotifyAsync(mchId, await CreateXmlDocumentAsync());
+            var result = await _eventRequestHandlingService.PaidNotifyAsync(new PaidNotifyInput
+            {
+                MchId = mchId,
+                Xml = await GetPostDataAsync()
+            });
 
             if (!result.Success)
             {
@@ -62,7 +67,11 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-            var result = await _eventRequestHandlingService.RefundNotifyAsync(mchId, await CreateXmlDocumentAsync());
+            var result = await _eventRequestHandlingService.RefundNotifyAsync(new RefundNotifyInput
+            {
+                MchId = mchId,
+                Xml = await GetPostDataAsync()
+            });
 
             if (!result.Success)
             {
@@ -85,7 +94,13 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         public virtual async Task<ActionResult> GetJsSdkWeChatPayParametersAsync(
             string mchId, [FromQuery] string appId, string prepayId)
         {
-            var result = await _clientRequestHandlingService.GetJsSdkWeChatPayParametersAsync(mchId, appId, prepayId);
+            var result = await _clientRequestHandlingService.GetJsSdkWeChatPayParametersAsync(
+                new GetJsSdkWeChatPayParametersInput
+                {
+                    MchId = mchId,
+                    AppId = appId,
+                    PrepayId = prepayId
+                });
 
             return new JsonResult(new
             {
@@ -113,7 +128,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
                     </xml>";
         }
 
-        protected virtual async Task<XmlDocument> CreateXmlDocumentAsync()
+        protected virtual async Task<string> GetPostDataAsync()
         {
             using var streamReader = new StreamReader(HttpContext.Request.Body);
 
@@ -121,10 +136,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
 
             Request.Body.Position = 0;
 
-            var xmlDocument = new XmlDocument();
-            xmlDocument.LoadXml(postData);
-
-            return xmlDocument;
+            return postData;
         }
     }
 }
