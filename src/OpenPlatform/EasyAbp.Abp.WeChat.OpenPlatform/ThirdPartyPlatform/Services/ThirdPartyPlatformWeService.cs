@@ -1,4 +1,3 @@
-using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.Options;
@@ -26,10 +25,8 @@ public class ThirdPartyPlatformWeService : ThirdPartyPlatformAbpWeChatServiceBas
     /// </summary>
     public virtual async Task<PreAuthCodeResponse> GetPreAuthCodeAsync()
     {
-        var url = await AppendComponentAccessTokenAsync(PreAuthCodeApiUrl);
-
         return await ApiRequester.RequestAsync<PreAuthCodeResponse>(
-            url, HttpMethod.Post, new PreAuthCodeRequest
+            PreAuthCodeApiUrl, HttpMethod.Post, new PreAuthCodeRequest
             {
                 ComponentAppId = Options.AppId
             }, Options);
@@ -41,20 +38,11 @@ public class ThirdPartyPlatformWeService : ThirdPartyPlatformAbpWeChatServiceBas
     /// </summary>
     public virtual async Task<QueryAuthResponse> QueryAuthAsync(string authorizationCode)
     {
-        var url = await AppendComponentAccessTokenAsync(QueryAuthApiUrl);
-
         return await ApiRequester.RequestAsync<QueryAuthResponse>(
-            url, HttpMethod.Post, new QueryAuthRequest
+            QueryAuthApiUrl, HttpMethod.Post, new QueryAuthRequest
             {
                 ComponentAppId = Options.AppId,
                 AuthorizationCode = authorizationCode
             }, Options);
-    }
-
-    protected virtual async Task<string> AppendComponentAccessTokenAsync(string url)
-    {
-        var token = await ComponentAccessTokenProvider.GetAsync(Options.AppId, Options.AppSecret);
-
-        return url.EnsureEndsWith('?') + $"component_access_token={token}";
     }
 }
