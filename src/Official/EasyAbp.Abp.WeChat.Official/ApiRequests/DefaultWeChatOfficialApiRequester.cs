@@ -107,7 +107,7 @@ namespace EasyAbp.Abp.WeChat.Official.ApiRequests
         {
             return new HttpRequestMessage(HttpMethod.Post, targetUrl)
             {
-                Content = new StringContent(officialRequest.ToString())
+                Content = officialRequest.ToStringContent()
             };
         }
 

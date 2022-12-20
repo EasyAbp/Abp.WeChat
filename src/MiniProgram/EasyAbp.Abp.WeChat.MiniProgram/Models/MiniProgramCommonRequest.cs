@@ -1,12 +1,14 @@
+using System.Net.Http;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.MiniProgram.Models
 {
     public abstract class MiniProgramCommonRequest : IMiniProgramRequest
     {
-        public override string ToString()
+        public virtual StringContent ToStringContent()
         {
-            return JsonConvert.SerializeObject(this, new JsonSerializerSettings {NullValueHandling = NullValueHandling.Ignore});
+            return new StringContent(JsonConvert.SerializeObject(this,
+                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
         }
     }
 }

@@ -92,7 +92,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.ApiRequests
         {
             return new HttpRequestMessage(HttpMethod.Post, targetUrl)
             {
-                Content = new StringContent(miniProgramRequest.ToString())
+                Content = miniProgramRequest.ToStringContent()
             };
         }
 

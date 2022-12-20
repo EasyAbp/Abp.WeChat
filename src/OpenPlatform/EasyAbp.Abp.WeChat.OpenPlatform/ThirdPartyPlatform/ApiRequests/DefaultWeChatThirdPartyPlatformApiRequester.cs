@@ -104,7 +104,7 @@ public class DefaultWeChatThirdPartyPlatformApiRequester : IWeChatThirdPartyPlat
     {
         return new HttpRequestMessage(HttpMethod.Post, targetUrl)
         {
-            Content = new StringContent(openPlatformRequest.ToString())
+            Content = openPlatformRequest.ToStringContent()
         };
     }
 
