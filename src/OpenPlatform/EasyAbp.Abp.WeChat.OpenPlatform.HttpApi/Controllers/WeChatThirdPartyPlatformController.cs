@@ -7,6 +7,7 @@ using EasyAbp.Abp.WeChat.Common.RequestHandling.Dtos;
 using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling;
 using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling.Dtos;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc;
 
@@ -85,7 +86,9 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
 
     protected virtual async Task<WeChatEventRequestModel> CreateRequestModelAsync()
     {
-        using var streamReader = new StreamReader(HttpContext.Request.Body);
+        Request.EnableBuffering();
+
+        using var streamReader = new StreamReader(Request.Body);
 
         var postData = await streamReader.ReadToEndAsync();
 
@@ -94,9 +97,9 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
         return new WeChatEventRequestModel
         {
             PostData = postData,
-            MsgSignature = HttpContext.Request.Query["msg_signature"].FirstOrDefault(),
-            Timestamp = HttpContext.Request.Query["timestamp"].FirstOrDefault(),
-            Notice = HttpContext.Request.Query["nonce"].FirstOrDefault()
+            MsgSignature = Request.Query["msg_signature"].FirstOrDefault(),
+            Timestamp = Request.Query["timestamp"].FirstOrDefault(),
+            Notice = Request.Query["nonce"].FirstOrDefault()
         };
     }
 }

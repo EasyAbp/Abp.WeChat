@@ -6,6 +6,7 @@ using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
@@ -130,7 +131,9 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
 
         protected virtual async Task<string> GetPostDataAsync()
         {
-            using var streamReader = new StreamReader(HttpContext.Request.Body);
+            Request.EnableBuffering();
+
+            using var streamReader = new StreamReader(Request.Body);
 
             var postData = await streamReader.ReadToEndAsync();
 
