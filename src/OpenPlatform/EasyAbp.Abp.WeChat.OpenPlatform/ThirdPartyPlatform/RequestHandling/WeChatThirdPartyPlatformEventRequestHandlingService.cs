@@ -21,15 +21,18 @@ public class WeChatThirdPartyPlatformEventRequestHandlingService :
     IWeChatThirdPartyPlatformEventRequestHandlingService, ITransientDependency
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly ICurrentWeChatThirdPartyPlatform _currentWeChatThirdPartyPlatform;
     private readonly IAbpWeChatOptionsProvider<AbpWeChatThirdPartyPlatformOptions> _optionsProvider;
     private readonly IWeChatNotificationEncryptor _weChatNotificationEncryptor;
 
     public WeChatThirdPartyPlatformEventRequestHandlingService(
         IServiceProvider serviceProvider,
+        ICurrentWeChatThirdPartyPlatform currentWeChatThirdPartyPlatform,
         IAbpWeChatOptionsProvider<AbpWeChatThirdPartyPlatformOptions> optionsProvider,
         IWeChatNotificationEncryptor weChatNotificationEncryptor)
     {
         _serviceProvider = serviceProvider;
+        _currentWeChatThirdPartyPlatform = currentWeChatThirdPartyPlatform;
         _optionsProvider = optionsProvider;
         _weChatNotificationEncryptor = weChatNotificationEncryptor;
     }
@@ -67,6 +70,8 @@ public class WeChatThirdPartyPlatformEventRequestHandlingService :
     public virtual async Task<WeChatRequestHandlingResult> NotifyAppAsync(NotifyAppInput input)
     {
         var options = await _optionsProvider.GetAsync(input.ComponentAppId);
+
+        using var currentPlatform = _currentWeChatThirdPartyPlatform.Change(input.ComponentAppId);
 
         var model = await DecryptMsgAsync<WeChatAppEventModel>(options, input.EventRequest);
 
