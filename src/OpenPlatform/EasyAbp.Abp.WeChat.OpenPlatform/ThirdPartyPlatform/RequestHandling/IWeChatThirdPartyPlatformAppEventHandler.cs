@@ -17,11 +17,9 @@ public interface IWeChatThirdPartyPlatformAppEventHandler
     public string Event { get; }
 
     /// <summary>
-    /// 事件处理实现
-    /// 请注意，此方法中如有需要调用微信 API，请在第一行使用：
-    /// using var changeOptions = WeChatXxxxAsyncLocal.Change(new AbpWeChatXxxxOptions { AppId = context.AuthorizerAppId; })
-    /// 不要设置 AppSecret，此时会自动使用微信第三方平台的 authorizer_access_token
-    /// 见 <see cref="HybridAccessTokenProvider"/>
+    /// 事件处理实现。
+    /// 请注意，此方法已在外层切换了 <see cref="ICurrentWeChatThirdPartyPlatform"/>，
+    /// 因此可以直接使用任意微信的接口服务，第三方平台会提供接口鉴权凭证。
     /// </summary>
     Task<WeChatRequestHandlingResult> HandleAsync(
         [CanBeNull] string componentAppId, [NotNull] string authorizerAppId, WeChatAppEventModel model);
