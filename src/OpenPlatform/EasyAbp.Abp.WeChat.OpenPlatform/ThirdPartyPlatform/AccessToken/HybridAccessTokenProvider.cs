@@ -53,7 +53,9 @@ public class HybridAccessTokenProvider : IAccessTokenProvider, ITransientDepende
 
             if (accessToken.IsNullOrWhiteSpace())
             {
-                await _cache.SetAsync(options.AppId, appId, await RequestAuthorizerAccessTokenAsync(options, appId));
+                accessToken = await RequestAuthorizerAccessTokenAsync(options, appId);
+
+                await _cache.SetAsync(options.AppId, appId, accessToken);
             }
 
             return accessToken;
