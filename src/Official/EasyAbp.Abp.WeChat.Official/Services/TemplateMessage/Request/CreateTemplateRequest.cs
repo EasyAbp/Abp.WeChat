@@ -24,6 +24,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Request
         /// <param name="templateShortId">模板库中模板的编号，有 "TM**" 和 "OPENTMTM**" 等形式。</param>
         public CreateTemplateRequest(string templateShortId)
         {
+            TemplateShortId = templateShortId;
         }
     }
 }
