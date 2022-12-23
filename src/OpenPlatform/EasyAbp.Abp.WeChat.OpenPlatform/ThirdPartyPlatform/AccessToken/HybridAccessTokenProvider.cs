@@ -63,7 +63,7 @@ public class HybridAccessTokenProvider : IAccessTokenProvider, ITransientDepende
 
         var defaultAccessTokenProvider = _serviceProvider.GetRequiredService<DefaultAccessTokenProvider>();
 
-        return await defaultAccessTokenProvider.GetAsync(appSecret, appSecret);
+        return await defaultAccessTokenProvider.GetAsync(appId, appSecret);
     }
 
     /// <summary>
