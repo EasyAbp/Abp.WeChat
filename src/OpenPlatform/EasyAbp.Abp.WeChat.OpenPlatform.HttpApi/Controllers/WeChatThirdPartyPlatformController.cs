@@ -81,7 +81,20 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
             return BadRequest();
         }
 
-        return Ok(result.SpecifiedResponseContent ?? "success");
+        var contentType = result.ResponseToWeChatModel switch
+        {
+            JsonResponseToWeChatModel => "application/json",
+            XmlResponseToWeChatModel => "text/xml",
+            null => "text/plain",
+            _ => "text/plain"
+        };
+
+        return new ContentResult
+        {
+            ContentType = contentType,
+            Content = result.ResponseToWeChatModel?.Content ?? "success",
+            StatusCode = 200
+        };
     }
 
     protected virtual async Task<WeChatEventRequestModel> CreateRequestModelAsync()

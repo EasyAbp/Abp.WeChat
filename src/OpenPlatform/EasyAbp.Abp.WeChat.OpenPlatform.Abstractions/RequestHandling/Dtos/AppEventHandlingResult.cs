@@ -1,4 +1,5 @@
 ﻿using EasyAbp.Abp.WeChat.Common.RequestHandling;
+using JetBrains.Annotations;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling.Dtos;
 
@@ -10,15 +11,19 @@ public class AppEventHandlingResult : WeChatRequestHandlingResult
     /// 注意1：如果有多个 handler 设置了本值，则 Priority 更小的 handler 生效，即后执行的结果覆盖先执行的结果。
     /// 注意2：如果需要返回特定格式（如 XML），目前需要自行转成文本内容后设置到本值。
     /// </summary>
-    public string SpecifiedResponseContent { get; set; }
+    [CanBeNull]
+    public IResponseToWeChatModel ResponseToWeChatModel { get; set; }
 
     protected AppEventHandlingResult()
     {
     }
 
-    public AppEventHandlingResult(bool success, string failureReason = null, string specifiedResponseContent = null) :
-        base(success, failureReason)
+    public AppEventHandlingResult(bool success, string failureReason = null) : base(success, failureReason)
     {
-        SpecifiedResponseContent = specifiedResponseContent;
+    }
+
+    public AppEventHandlingResult([NotNull] IResponseToWeChatModel responseToWeChatModel) : base(true)
+    {
+        ResponseToWeChatModel = responseToWeChatModel;
     }
 }

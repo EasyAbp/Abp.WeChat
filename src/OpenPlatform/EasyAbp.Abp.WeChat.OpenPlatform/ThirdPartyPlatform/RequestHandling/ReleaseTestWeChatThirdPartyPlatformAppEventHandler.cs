@@ -74,7 +74,10 @@ public class ReleaseTestWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPa
             var encryptedXml =
                 await encryptor.EncryptAsync(options.Token, options.EncodingAesKey, authorizerAppId, xml);
 
-            return new AppEventHandlingResult(true, null, encryptedXml);
+            return new AppEventHandlingResult(new XmlResponseToWeChatModel
+            {
+                Content = encryptedXml
+            });
         }
 
         if (!content.StartsWith("QUERY_AUTH_CODE:"))
