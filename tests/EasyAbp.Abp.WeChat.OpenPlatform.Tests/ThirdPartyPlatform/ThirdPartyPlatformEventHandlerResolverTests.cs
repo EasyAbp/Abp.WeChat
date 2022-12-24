@@ -29,10 +29,10 @@ public class ThirdPartyPlatformEventHandlerResolverTests : AbpWeChatOpenPlatform
         textHandlers.ShouldContain(x =>
             x.GetType() == typeof(FakeTextWeChatThirdPartyPlatformAppEventHandler));
 
-        var subscribeHandlers = await resolver.GetAppEventHandlersAsync("subscribe");
+        var eventHandlers = await resolver.GetAppEventHandlersAsync("event");
 
-        subscribeHandlers.Count.ShouldBe(1);
-        subscribeHandlers.ShouldContain(x =>
-            x.GetType() == typeof(FakeSubscribeWeChatThirdPartyPlatformAppEventHandler));
+        eventHandlers.Count.ShouldBe(1);
+        eventHandlers.ShouldContain(x =>
+            x.GetType() == typeof(FakeEventWeChatThirdPartyPlatformAppEventHandler));
     }
 }

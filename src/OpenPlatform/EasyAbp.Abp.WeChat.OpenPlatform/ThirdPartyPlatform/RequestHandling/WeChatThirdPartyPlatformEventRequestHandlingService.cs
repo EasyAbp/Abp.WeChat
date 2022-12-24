@@ -72,7 +72,7 @@ public class WeChatThirdPartyPlatformEventRequestHandlingService :
 
         string specifiedResponseContent = null;
 
-        foreach (var handler in (await _thirdPartyPlatformEventHandlerResolver.GetAppEventHandlersAsync(model.Event))
+        foreach (var handler in (await _thirdPartyPlatformEventHandlerResolver.GetAppEventHandlersAsync(model.MsgType))
                  .OrderByDescending(x => x.Priority))
         {
             var result = await handler.HandleAsync(options.AppId, input.AuthorizerAppId, model);
