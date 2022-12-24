@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.Models;
+using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling.Dtos;
 using EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.RequestHandling;
 using Shouldly;
 using Volo.Abp.Data;
@@ -29,7 +30,9 @@ public class ReleaseTestEventHandlingTests : AbpWeChatOpenPlatformTestBase
             await handler.HandleAsync(AbpWeChatOpenPlatformTestsConsts.AppId, OfficialAuthorizerAppId, eventModel);
 
         result.Success.ShouldBeTrue();
-        result.SpecifiedResponseContent.ShouldStartWith("<xml><Encrypt><![CDATA[");
+        result.ResponseToWeChatModel.ShouldNotBeNull();
+        result.ResponseToWeChatModel.GetType().ShouldBe(typeof(XmlResponseToWeChatModel));
+        result.ResponseToWeChatModel.Content.ShouldStartWith("<xml><Encrypt><![CDATA[");
     }
 
     [Fact]

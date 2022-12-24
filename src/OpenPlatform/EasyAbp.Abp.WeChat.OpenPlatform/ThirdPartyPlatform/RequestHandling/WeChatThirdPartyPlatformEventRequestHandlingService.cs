@@ -70,16 +70,16 @@ public class WeChatThirdPartyPlatformEventRequestHandlingService :
 
         var model = await DecryptMsgAsync<WeChatAppEventModel>(options, input.EventRequest);
 
-        string specifiedResponseContent = null;
+        IResponseToWeChatModel responseToWeChatModel = null;
 
         foreach (var handler in (await _thirdPartyPlatformEventHandlerResolver.GetAppEventHandlersAsync(model.MsgType))
                  .OrderByDescending(x => x.Priority))
         {
             var result = await handler.HandleAsync(options.AppId, input.AuthorizerAppId, model);
 
-            if (result.SpecifiedResponseContent != null)
+            if (result.ResponseToWeChatModel != null)
             {
-                specifiedResponseContent = result.SpecifiedResponseContent;
+                responseToWeChatModel = result.ResponseToWeChatModel;
             }
 
             if (!result.Success)
@@ -88,7 +88,9 @@ public class WeChatThirdPartyPlatformEventRequestHandlingService :
             }
         }
 
-        return new AppEventHandlingResult(true, null, specifiedResponseContent);
+        return responseToWeChatModel is null
+            ? new AppEventHandlingResult(true)
+            : new AppEventHandlingResult(responseToWeChatModel);
     }
 
     protected virtual async Task<T> DecryptMsgAsync<T>(AbpWeChatThirdPartyPlatformOptions options,
