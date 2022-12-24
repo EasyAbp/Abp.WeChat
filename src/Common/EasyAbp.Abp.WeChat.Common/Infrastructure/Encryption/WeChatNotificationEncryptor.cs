@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,15 +16,36 @@ public class WeChatNotificationEncryptor : IWeChatNotificationEncryptor, ITransi
 {
     private readonly IJsonSerializer _jsonSerializer;
 
+    protected static readonly Random Random = new();
+
     public WeChatNotificationEncryptor(IJsonSerializer jsonSerializer)
     {
         _jsonSerializer = jsonSerializer;
     }
 
-    public virtual async Task<TModel> DecryptPostDataAsync<TModel>(string token, string encodingAesKey, string appId,
-        string msgSignature, string timestamp, string notice, string postData) where TModel : ExtensibleObject, new()
+    public virtual Task<string> EncryptAsync(string token, string encodingAesKey, string appId, string xml)
     {
-        if (postData == null)
+        var crypt = new WXBizMsgCrypt(token, encodingAesKey, appId);
+
+        string encryptedXml = null;
+
+        var errCode = crypt.EncryptMsg(xml,
+            ((int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds).ToString(),
+            GenerateNonce(), ref encryptedXml);
+
+        if (errCode != 0)
+        {
+            throw new UserFriendlyException($"加密失败，错误码: {errCode}");
+        }
+
+        return Task.FromResult(encryptedXml);
+    }
+
+    public virtual Task<TModel> DecryptAsync<TModel>(string token, string encodingAesKey, string appId,
+        string msgSignature, string timestamp, string nonce, string encryptedXml)
+        where TModel : ExtensibleObject, new()
+    {
+        if (encryptedXml == null)
         {
             throw new UserFriendlyException("没有找到加密内容");
         }
@@ -35,21 +57,20 @@ public class WeChatNotificationEncryptor : IWeChatNotificationEncryptor, ITransi
         var errCode = crypt.DecryptMsg(
             msgSignature,
             timestamp,
-            notice,
-            postData,
+            nonce,
+            encryptedXml,
             ref decryptXml);
 
         if (errCode != 0)
         {
-            throw new BusinessException($"解密失败，错误码: {errCode}");
+            throw new UserFriendlyException($"解密失败，错误码: {errCode}");
         }
 
         var doc = XDocument.Parse(decryptXml);
-        var node_cdata = doc.DescendantNodes().OfType<XCData>().ToList();
 
-        foreach (var node in node_cdata)
+        foreach (var node in doc.DescendantNodes().OfType<XCData>().ToList())
         {
-            node.Parent.Add(node.Value);
+            node.Parent!.Add(node.Value);
             node.Remove();
         }
 
@@ -63,6 +84,13 @@ public class WeChatNotificationEncryptor : IWeChatNotificationEncryptor, ITransi
             model.SetProperty(pair.Key, pair.Value);
         }
 
-        return model;
+        return Task.FromResult(model);
+    }
+
+    protected virtual string GenerateNonce()
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        return new string(Enumerable.Repeat(chars, 32).Select(s => s[Random.Next(s.Length)]).ToArray());
     }
 }
