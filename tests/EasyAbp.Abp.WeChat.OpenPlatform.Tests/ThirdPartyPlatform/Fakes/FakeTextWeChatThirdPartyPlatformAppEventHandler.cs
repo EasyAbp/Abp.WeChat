@@ -9,7 +9,7 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.Tests.ThirdPartyPlatform.Fakes;
 public class FakeTextWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPartyPlatformAppEventHandler,
     ITransientDependency
 {
-    public string Event => "text";
+    public string MsgType => "text";
     public int Priority => 0;
 
     public Task<AppEventHandlingResult> HandleAsync(

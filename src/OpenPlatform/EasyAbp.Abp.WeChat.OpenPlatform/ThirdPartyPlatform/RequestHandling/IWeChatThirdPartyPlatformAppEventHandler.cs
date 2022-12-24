@@ -11,9 +11,9 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.RequestHandling;
 public interface IWeChatThirdPartyPlatformAppEventHandler
 {
     /// <summary>
-    /// 仅处理回调请求中，相应的 Event 值的事件
+    /// 仅处理回调请求中，相应的 MsgType 值的事件
     /// </summary>
-    public string Event { get; }
+    public string MsgType { get; }
 
     /// <summary>
     /// Handler 执行的优先级，值更大的先执行

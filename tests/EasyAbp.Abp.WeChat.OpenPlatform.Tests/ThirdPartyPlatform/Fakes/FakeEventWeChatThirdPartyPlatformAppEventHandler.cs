@@ -6,10 +6,10 @@ using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.Tests.ThirdPartyPlatform.Fakes;
 
-public class FakeSubscribeWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPartyPlatformAppEventHandler,
+public class FakeEventWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPartyPlatformAppEventHandler,
     ITransientDependency
 {
-    public string Event => "subscribe";
+    public string MsgType => "event";
     public int Priority => 0;
 
     public Task<AppEventHandlingResult> HandleAsync(

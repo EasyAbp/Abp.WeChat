@@ -8,5 +8,5 @@ public interface IThirdPartyPlatformEventHandlerResolver
 {
     Task<List<IWeChatThirdPartyPlatformAuthEventHandler>> GetAuthEventHandlersAsync([CanBeNull] string infoType);
 
-    Task<List<IWeChatThirdPartyPlatformAppEventHandler>> GetAppEventHandlersAsync([CanBeNull] string @event);
+    Task<List<IWeChatThirdPartyPlatformAppEventHandler>> GetAppEventHandlersAsync([CanBeNull] string msgType);
 }

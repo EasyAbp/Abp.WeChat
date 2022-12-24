@@ -18,7 +18,7 @@ public class ReleaseTestWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPa
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<ReleaseTestWeChatThirdPartyPlatformAppEventHandler> _logger;
-    public virtual string Event => "text";
+    public virtual string MsgType => "text";
     public int Priority => -10000;
 
     public ReleaseTestWeChatThirdPartyPlatformAppEventHandler(

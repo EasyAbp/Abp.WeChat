@@ -28,9 +28,9 @@ public class ThirdPartyPlatformEventHandlerResolver : IThirdPartyPlatformEventHa
         return ResolveAuthEventHandlersAsync(infoType);
     }
 
-    public virtual Task<List<IWeChatThirdPartyPlatformAppEventHandler>> GetAppEventHandlersAsync(string @event)
+    public virtual Task<List<IWeChatThirdPartyPlatformAppEventHandler>> GetAppEventHandlersAsync(string msgType)
     {
-        return ResolveAppEventHandlersAsync(@event);
+        return ResolveAppEventHandlersAsync(msgType);
     }
 
     protected virtual async Task<List<IWeChatThirdPartyPlatformAuthEventHandler>> ResolveAuthEventHandlersAsync(
@@ -61,7 +61,7 @@ public class ThirdPartyPlatformEventHandlerResolver : IThirdPartyPlatformEventHa
     }
 
     protected virtual async Task<List<IWeChatThirdPartyPlatformAppEventHandler>> ResolveAppEventHandlersAsync(
-        string @event)
+        string msgType)
     {
         if (AppEventHandlerCachedTypes is null)
         {
@@ -72,18 +72,18 @@ public class ThirdPartyPlatformEventHandlerResolver : IThirdPartyPlatformEventHa
                     var objs = ServiceProvider
                         .GetRequiredService<IEnumerable<IWeChatThirdPartyPlatformAppEventHandler>>().ToArray();
 
-                    var cacheTypes = objs.GroupBy(obj => obj.Event)
+                    var cacheTypes = objs.GroupBy(obj => obj.MsgType)
                         .ToDictionary(x => x.Key, x => x.Select(y => y.GetType()).ToList());
 
                     AppEventHandlerCachedTypes = cacheTypes;
 
-                    return objs.Where(x => x.Event == @event).ToList();
+                    return objs.Where(x => x.MsgType == msgType).ToList();
                 }
             }
         }
 
-        return AppEventHandlerCachedTypes.ContainsKey(@event)
-            ? await CreateObjectsAsync<IWeChatThirdPartyPlatformAppEventHandler>(AppEventHandlerCachedTypes[@event])
+        return AppEventHandlerCachedTypes.ContainsKey(msgType)
+            ? await CreateObjectsAsync<IWeChatThirdPartyPlatformAppEventHandler>(AppEventHandlerCachedTypes[msgType])
             : new List<IWeChatThirdPartyPlatformAppEventHandler>();
     }
 
