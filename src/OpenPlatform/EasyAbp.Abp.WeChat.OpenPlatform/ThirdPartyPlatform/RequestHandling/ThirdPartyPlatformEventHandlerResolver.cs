@@ -42,8 +42,7 @@ public class ThirdPartyPlatformEventHandlerResolver : IThirdPartyPlatformEventHa
             {
                 if (AuthEventHandlerCachedTypes is null)
                 {
-                    var objs = ServiceProvider
-                        .GetRequiredService<IEnumerable<IWeChatThirdPartyPlatformAuthEventHandler>>().ToArray();
+                    var objs = ServiceProvider.GetServices<IWeChatThirdPartyPlatformAuthEventHandler>().ToArray();
 
                     var cacheTypes = objs.GroupBy(obj => obj.InfoType)
                         .ToDictionary(x => x.Key, x => x.Select(y => y.GetType()).ToList());
@@ -69,8 +68,7 @@ public class ThirdPartyPlatformEventHandlerResolver : IThirdPartyPlatformEventHa
             {
                 if (AppEventHandlerCachedTypes is null)
                 {
-                    var objs = ServiceProvider
-                        .GetRequiredService<IEnumerable<IWeChatThirdPartyPlatformAppEventHandler>>().ToArray();
+                    var objs = ServiceProvider.GetServices<IWeChatThirdPartyPlatformAppEventHandler>().ToArray();
 
                     var cacheTypes = objs.GroupBy(obj => obj.MsgType)
                         .ToDictionary(x => x.Key, x => x.Select(y => y.GetType()).ToList());
@@ -89,6 +87,7 @@ public class ThirdPartyPlatformEventHandlerResolver : IThirdPartyPlatformEventHa
 
     protected virtual Task<List<TObj>> CreateObjectsAsync<TObj>(IEnumerable<Type> types)
     {
-        return Task.FromResult(types.Select(type => (TObj)ServiceProvider.GetRequiredService(type)).ToList());
+        return Task.FromResult(types.Select(type => ServiceProvider.GetService(type)).Where(x => x != null)
+            .Select(x => (TObj)x).ToList());
     }
 }

@@ -34,18 +34,19 @@ public class ReleaseTestWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPa
     {
         if (ReleaseTestConsts.OfficialAppIds.Contains(authorizerAppId))
         {
-            return await HandleOfficialReleaseTestAsync(model);
+            return await HandleOfficialReleaseTestAsync(componentAppId, model);
         }
 
         if (ReleaseTestConsts.MiniProgramsAppIds.Contains(authorizerAppId))
         {
-            return await HandleMiniProgramReleaseTestAsync(model);
+            return await HandleMiniProgramReleaseTestAsync(componentAppId, model);
         }
 
         return new AppEventHandlingResult(true);
     }
 
-    protected virtual async Task<AppEventHandlingResult> HandleOfficialReleaseTestAsync(WeChatAppEventModel model)
+    protected virtual async Task<AppEventHandlingResult> HandleOfficialReleaseTestAsync(string componentAppId,
+        WeChatAppEventModel model)
     {
         var content = model.GetProperty<string>("Content");
 
@@ -74,7 +75,7 @@ public class ReleaseTestWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPa
             var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
             var jsonSerializer = _serviceProvider.GetRequiredService<IJsonSerializer>();
 
-            var service = await abpWeChatServiceFactory.CreateAsync<ThirdPartyPlatformWeService>();
+            var service = await abpWeChatServiceFactory.CreateAsync<ThirdPartyPlatformWeService>(componentAppId);
 
             var response = await service.QueryAuthAsync(queryAuthCode);
 
@@ -106,7 +107,8 @@ public class ReleaseTestWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPa
         return new AppEventHandlingResult(true);
     }
 
-    protected virtual async Task<AppEventHandlingResult> HandleMiniProgramReleaseTestAsync(WeChatAppEventModel model)
+    protected virtual async Task<AppEventHandlingResult> HandleMiniProgramReleaseTestAsync(string componentAppId,
+        WeChatAppEventModel model)
     {
         var content = model.GetProperty<string>("Content");
 
@@ -123,7 +125,7 @@ public class ReleaseTestWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPa
             var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
             var jsonSerializer = _serviceProvider.GetRequiredService<IJsonSerializer>();
 
-            var service = await abpWeChatServiceFactory.CreateAsync<ThirdPartyPlatformWeService>();
+            var service = await abpWeChatServiceFactory.CreateAsync<ThirdPartyPlatformWeService>(componentAppId);
 
             var response = await service.QueryAuthAsync(queryAuthCode);
 
