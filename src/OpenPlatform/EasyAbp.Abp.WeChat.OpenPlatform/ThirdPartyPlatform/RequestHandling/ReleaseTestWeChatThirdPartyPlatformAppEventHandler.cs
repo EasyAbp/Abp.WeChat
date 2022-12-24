@@ -51,7 +51,14 @@ public class ReleaseTestWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPa
 
         if (content == "TESTCOMPONENT_MSG_TYPE_TEXT")
         {
-            return new AppEventHandlingResult(true, null, "TESTCOMPONENT_MSG_TYPE_TEXT_callback");
+            return new AppEventHandlingResult(true, null,
+                $"<xml>"
+                + $"<ToUserName><![CDATA[{model.FromUserName}]]></ToUserName>"
+                + $"<FromUserName><![CDATA[{model.ToUserName}]]></FromUserName>"
+                + $"<CreateTime>{(int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds}</CreateTime>"
+                + $"<MsgType><![CDATA[text]]></MsgType>"
+                + $"<Content><![CDATA[TESTCOMPONENT_MSG_TYPE_TEXT_callback]]></Content>"
+                + $"</xml>");
         }
 
         if (!content.StartsWith("QUERY_AUTH_CODE:"))
