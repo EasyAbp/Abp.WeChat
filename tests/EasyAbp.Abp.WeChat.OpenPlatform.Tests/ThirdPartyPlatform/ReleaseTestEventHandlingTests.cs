@@ -29,8 +29,7 @@ public class ReleaseTestEventHandlingTests : AbpWeChatOpenPlatformTestBase
             await handler.HandleAsync(AbpWeChatOpenPlatformTestsConsts.AppId, OfficialAuthorizerAppId, eventModel);
 
         result.Success.ShouldBeTrue();
-        result.SpecifiedResponseContent.ShouldContain(
-            "<Content><![CDATA[TESTCOMPONENT_MSG_TYPE_TEXT_callback]]></Content>");
+        result.SpecifiedResponseContent.ShouldStartWith("<xml><Encrypt><![CDATA[");
     }
 
     [Fact]

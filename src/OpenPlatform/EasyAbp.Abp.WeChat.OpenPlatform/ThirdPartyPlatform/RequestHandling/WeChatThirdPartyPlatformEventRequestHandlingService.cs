@@ -94,7 +94,7 @@ public class WeChatThirdPartyPlatformEventRequestHandlingService :
     protected virtual async Task<T> DecryptMsgAsync<T>(AbpWeChatThirdPartyPlatformOptions options,
         WeChatEventRequestModel request) where T : ExtensibleObject, new()
     {
-        return await _weChatNotificationEncryptor.DecryptPostDataAsync<T>(
+        return await _weChatNotificationEncryptor.DecryptAsync<T>(
             options.Token,
             options.EncodingAesKey,
             options.AppId,
