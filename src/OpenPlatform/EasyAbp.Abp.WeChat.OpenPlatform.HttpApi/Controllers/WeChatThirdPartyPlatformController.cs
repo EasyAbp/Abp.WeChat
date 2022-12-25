@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Common.RequestHandling.Dtos;
@@ -9,6 +10,7 @@ using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling.Dtos;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using Volo.Abp.AspNetCore.Mvc;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.Controllers;
@@ -81,17 +83,20 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
             return BadRequest();
         }
 
-        var contentType = result.ResponseToWeChatModel switch
+        var contentType = new MediaTypeHeaderValue(result.ResponseToWeChatModel switch
         {
             JsonResponseToWeChatModel => "application/json",
             XmlResponseToWeChatModel => "text/xml",
             null => "text/plain",
             _ => "text/plain"
+        })
+        {
+            Charset = Encoding.UTF8.WebName
         };
 
         return new ContentResult
         {
-            ContentType = contentType,
+            ContentType = contentType.ToString(),
             Content = result.ResponseToWeChatModel?.Content ?? "success",
             StatusCode = 200
         };
