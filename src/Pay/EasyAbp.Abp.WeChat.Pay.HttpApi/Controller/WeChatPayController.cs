@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Xml;
 using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
@@ -35,9 +34,6 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         /// </summary>
         [HttpPost]
         [Route("notify")]
-        [Route("notify/tenant-id/{tenantId}")]
-        [Route("notify/mch-id/{mchId}")]
-        [Route("notify/tenant-id/{tenantId}/mch-id/{mchId}")]
         public virtual async Task<ActionResult> NotifyAsync([CanBeNull] string tenantId, [CanBeNull] string mchId)
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
@@ -57,13 +53,43 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         }
 
         /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="NotifyAsync"/>
+        /// </summary>
+        [HttpPost]
+        [Route("notify/tenant-id/{tenantId}")]
+        public virtual Task<ActionResult> Notify2Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
+        {
+            return NotifyAsync(tenantId, mchId);
+        }
+
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="NotifyAsync"/>
+        /// </summary>
+        [HttpPost]
+        [Route("notify/mch-id/{mchId}")]
+        public virtual Task<ActionResult> Notify3Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
+        {
+            return NotifyAsync(tenantId, mchId);
+        }
+
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="NotifyAsync"/>
+        /// </summary>
+        [HttpPost]
+        [Route("notify/tenant-id/{tenantId}/mch-id/{mchId}")]
+        public virtual Task<ActionResult> Notify4Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
+        {
+            return NotifyAsync(tenantId, mchId);
+        }
+
+        /// <summary>
         /// 微信支付模块提供的退款回调接口，开发人员需要实现 <see cref="IWeChatPayEventHandler"/> 处理器来处理回调请求。
         /// </summary>
         [HttpPost]
         [Route("refund-notify")]
-        [Route("refund-notify/tenant-id/{tenantId}")]
-        [Route("refund-notify/mch-id/{mchId}")]
-        [Route("refund-notify/tenant-id/{tenantId}/app-id/{appId}")]
         public virtual async Task<ActionResult> RefundNotifyAsync([CanBeNull] string tenantId, [CanBeNull] string mchId)
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
@@ -81,17 +107,49 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
 
             return Ok(BuildSuccessXml());
         }
+        
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="RefundNotifyAsync"/>
+        /// </summary>
+        [HttpPost]
+        [Route("refund-notify/tenant-id/{tenantId}")]
+        public virtual Task<ActionResult> RefundNotify2Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
+        {
+            return RefundNotifyAsync(tenantId, mchId);
+        }
+        
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="RefundNotifyAsync"/>
+        /// </summary>
+        [HttpPost]
+        [Route("refund-notify/mch-id/{mchId}")]
+        [Route("refund-notify/tenant-id/{tenantId}/app-id/{appId}")]
+        public virtual Task<ActionResult> RefundNotify3Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
+        {
+            return RefundNotifyAsync(tenantId, mchId);
+        }
+        
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="RefundNotifyAsync"/>
+        /// </summary>
+        [HttpPost]
+        [Route("refund-notify/tenant-id/{tenantId}/app-id/{appId}")]
+        public virtual Task<ActionResult> RefundNotify4Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
+        {
+            return RefundNotifyAsync(tenantId, mchId);
+        }
 
         /// <summary>
         /// 根据统一下单接口返回的预支付 Id 生成支付签名。
         /// </summary>
         /// <param name="appId">AppId</param>
         /// <param name="prepayId">预支付 Id。</param>
-        /// <param name="tenantId">租户 Id</param>
         /// <param name="mchId">商户 Id</param>
         [HttpGet]
         [Route("js-sdk-config-parameters")]
-        [Route("js-sdk-config-parameters/mch-id/{mchId}")]
         public virtual async Task<ActionResult> GetJsSdkWeChatPayParametersAsync(
             string mchId, [FromQuery] string appId, string prepayId)
         {
