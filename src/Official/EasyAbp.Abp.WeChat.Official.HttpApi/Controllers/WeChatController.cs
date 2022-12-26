@@ -28,9 +28,6 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
 
         [HttpGet]
         [Route("verify")]
-        [Route("verify/tenant-id/{tenantId}")]
-        [Route("verify/app-id/{appId}")]
-        [Route("verify/tenant-id/{tenantId}/app-id/{appId}")]
         public virtual async Task<string> VerifyAsync(
             VerifyRequestDto input, [CanBeNull] string tenantId, [CanBeNull] string appId)
         {
@@ -41,11 +38,44 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
             return result.Success ? result.Value : result.FailureReason;
         }
 
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="VerifyAsync"/>
+        /// </summary>
+        [HttpGet]
+        [Route("verify/tenant-id/{tenantId}")]
+        public virtual Task<string> Verify2Async(
+            VerifyRequestDto input, [CanBeNull] string tenantId, [CanBeNull] string appId)
+        {
+            return VerifyAsync(input, tenantId, appId);
+        }
+
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="VerifyAsync"/>
+        /// </summary>
+        [HttpGet]
+        [Route("verify/app-id/{appId}")]
+        public virtual Task<string> Verify3Async(
+            VerifyRequestDto input, [CanBeNull] string tenantId, [CanBeNull] string appId)
+        {
+            return VerifyAsync(input, tenantId, appId);
+        }
+
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="VerifyAsync"/>
+        /// </summary>
+        [HttpGet]
+        [Route("verify/tenant-id/{tenantId}/app-id/{appId}")]
+        public virtual Task<string> Verify4Async(
+            VerifyRequestDto input, [CanBeNull] string tenantId, [CanBeNull] string appId)
+        {
+            return VerifyAsync(input, tenantId, appId);
+        }
+
         [HttpGet]
         [Route("redirect-url")]
-        [Route("redirect-url/tenant-id/{tenantId}")]
-        [Route("redirect-url/app-id/{appId}")]
-        [Route("redirect-url/tenant-id/{tenantId}/app-id/{appId}")]
         public virtual async Task<ActionResult> RedirectUrlAsync(
             RedirectUrlRequest input, [CanBeNull] string tenantId, [CanBeNull] string appId)
         {
@@ -66,9 +96,44 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
             return Redirect(result.Value);
         }
 
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="RedirectUrlAsync"/>
+        /// </summary>
+        [HttpGet]
+        [Route("redirect-url/tenant-id/{tenantId}")]
+        public virtual Task<ActionResult> RedirectUrl2Async(
+            RedirectUrlRequest input, [CanBeNull] string tenantId, [CanBeNull] string appId)
+        {
+            return RedirectUrlAsync(input, tenantId, appId);
+        }
+
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="RedirectUrlAsync"/>
+        /// </summary>
+        [HttpGet]
+        [Route("redirect-url/app-id/{appId}")]
+        public virtual Task<ActionResult> RedirectUrl3Async(
+            RedirectUrlRequest input, [CanBeNull] string tenantId, [CanBeNull] string appId)
+        {
+            return RedirectUrlAsync(input, tenantId, appId);
+        }
+
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="RedirectUrlAsync"/>
+        /// </summary>
+        [HttpGet]
+        [Route("redirect-url/tenant-id/{tenantId}/app-id/{appId}")]
+        public virtual Task<ActionResult> RedirectUrl4Async(
+            RedirectUrlRequest input, [CanBeNull] string tenantId, [CanBeNull] string appId)
+        {
+            return RedirectUrlAsync(input, tenantId, appId);
+        }
+
         [HttpGet]
         [Route("access-token-by-code")]
-        [Route("access-token-by-code/app-id/{appId}")]
         public virtual async Task<ActionResult> GetAccessTokenByCodeAsync(
             [FromQuery] string code, [CanBeNull] string appId)
         {
@@ -88,7 +153,6 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
 
         [HttpGet]
         [Route("js-sdk-config-parameters")]
-        [Route("js-sdk-config-parameters/app-id/{appId}")]
         public virtual async Task<ActionResult> GetJsSdkConfigParametersAsync(
             [FromQuery] string jsUrl, [CanBeNull] string appId)
         {
