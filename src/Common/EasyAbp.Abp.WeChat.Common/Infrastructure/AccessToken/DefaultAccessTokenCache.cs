@@ -6,11 +6,11 @@ using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken;
 
-public class AccessTokenCache : IAccessTokenCache, ITransientDependency
+public class DefaultAccessTokenCache : IAccessTokenCache, ITransientDependency
 {
     protected IDistributedCache<string> DistributedCache { get; }
 
-    public AccessTokenCache(IDistributedCache<string> distributedCache)
+    public DefaultAccessTokenCache(IDistributedCache<string> distributedCache)
     {
         DistributedCache = distributedCache;
     }
