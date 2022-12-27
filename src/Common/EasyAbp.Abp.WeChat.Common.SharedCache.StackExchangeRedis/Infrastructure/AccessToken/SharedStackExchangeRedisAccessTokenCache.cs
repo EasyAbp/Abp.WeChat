@@ -5,11 +5,12 @@ using EasyAbp.Abp.WeChat.Common.SharedCache.StackExchangeRedis.Settings;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Volo.Abp.Caching.StackExchangeRedis;
+using Volo.Abp.DependencyInjection;
 using Volo.Abp.Settings;
 
 namespace EasyAbp.Abp.WeChat.Common.SharedCache.StackExchangeRedis.Infrastructure.AccessToken;
 
-public class SharedStackExchangeRedisAccessTokenCache : IAccessTokenCache
+public class SharedStackExchangeRedisAccessTokenCache : IAccessTokenCache, ITransientDependency
 {
     public static string CachePrefix { get; set; } = "WeChatTokens:";
     public static string SettingName { get; set; } = SharedCacheStackExchangeRedisSettings.RedisConfiguration;
