@@ -7,7 +7,6 @@
     <RootNamespace>EasyAbp.Abp.WeChat.Common.SharedCache.StackExchangeRedis</RootNamespace>
     <Description>ABP vNext微信模块，基于StackExchangeRedis提供多服务间共享access_token等缓存数据的功能扩展。</Description>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
