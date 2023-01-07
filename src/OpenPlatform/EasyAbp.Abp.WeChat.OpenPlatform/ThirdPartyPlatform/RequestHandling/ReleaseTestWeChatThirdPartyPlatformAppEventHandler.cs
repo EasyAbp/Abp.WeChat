@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Encryption;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Options;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Services;
@@ -101,7 +102,7 @@ public class ReleaseTestWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPa
 
             var targetUrl = $"https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={accessToken}";
 
-            var httpClient = httpClientFactory.CreateClient();
+            var httpClient = httpClientFactory.CreateClient(AbpWeChatConsts.HttpClientName);
 
             await httpClient.PostAsync(targetUrl,
                 new StringContent(jsonSerializer.Serialize(new
@@ -152,7 +153,7 @@ public class ReleaseTestWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPa
             var targetUrl =
                 $"https://api.weixin.qq.com/cgi-bin/message/custom/business/send?access_token={accessToken}";
 
-            var httpClient = httpClientFactory.CreateClient();
+            var httpClient = httpClientFactory.CreateClient(AbpWeChatConsts.HttpClientName);
 
             await httpClient.PostAsync(targetUrl,
                 new StringContent(jsonSerializer.Serialize(new
