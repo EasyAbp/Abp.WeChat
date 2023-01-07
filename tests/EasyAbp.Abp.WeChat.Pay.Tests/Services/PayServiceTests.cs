@@ -12,8 +12,10 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests.Services
         public async Task UnifiedOrder_Test()
         {
             var ordinaryMerchantPayService = await WeChatPayServiceFactory.CreateAsync<OrdinaryMerchantPayWeService>();
-            var result = await ordinaryMerchantPayService.UnifiedOrderAsync("wxe32e0204e9db0b1c", "1540561391",
-                "测试支付", null, DateTime.Now.ToString("yyyyMMddHHmmss"), 101, TradeType.JsApi, null);
+
+            var result = await ordinaryMerchantPayService.UnifiedOrderAsync(
+                AbpWeChatPayTestConsts.AppId, AbpWeChatPayTestConsts.MchId, "测试支付", null,
+                DateTime.Now.ToString("yyyyMMddHHmmss"), 101, TradeType.JsApi, AbpWeChatPayTestConsts.OpenId);
 
             result.ShouldNotBeNull();
         }
@@ -23,8 +25,9 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests.Services
         {
             var ordinaryMerchantPayService = await WeChatPayServiceFactory.CreateAsync<OrdinaryMerchantPayWeService>();
 
-            var response = await ordinaryMerchantPayService.RefundAsync("wxe32e0204e9db0b1c",
-                "1540561391",
+            var response = await ordinaryMerchantPayService.RefundAsync(
+                AbpWeChatPayTestConsts.AppId,
+                AbpWeChatPayTestConsts.MchId,
                 "151515151515",
                 "161616161616",
                 101,

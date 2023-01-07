@@ -100,7 +100,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), Options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(UnifiedOrderUrl, request);
+            return await RequestAndGetReturnValueAsync(UnifiedOrderUrl, request, mchId);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), Options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(RefundUrl, request);
+            return await RequestAndGetReturnValueAsync(RefundUrl, request, mchId);
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), Options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(OrderQueryUrl, request);
+            return await RequestAndGetReturnValueAsync(OrderQueryUrl, request, mchId);
         }
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), Options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(CloseOrderUrl, request);
+            return await RequestAndGetReturnValueAsync(CloseOrderUrl, request, mchId);
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), Options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(RefundQueryUrl, request);
+            return await RequestAndGetReturnValueAsync(RefundQueryUrl, request, mchId);
         }
     }
 }

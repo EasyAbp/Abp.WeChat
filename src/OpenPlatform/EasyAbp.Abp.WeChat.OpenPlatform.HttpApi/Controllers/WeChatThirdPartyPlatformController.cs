@@ -114,7 +114,7 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
         var contentType = new MediaTypeHeaderValue(result.ResponseToWeChatModel switch
         {
             JsonResponseToWeChatModel => "application/json",
-            XmlResponseToWeChatModel => "text/xml",
+            XmlResponseToWeChatModel => "application/xml",
             null => "text/plain",
             _ => "text/plain"
         })

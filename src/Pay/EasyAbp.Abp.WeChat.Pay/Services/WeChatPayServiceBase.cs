@@ -1,3 +1,4 @@
+using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
@@ -8,6 +9,7 @@ using EasyAbp.Abp.WeChat.Pay.ApiRequests;
 using EasyAbp.Abp.WeChat.Pay.Exceptions;
 using EasyAbp.Abp.WeChat.Pay.Models;
 using EasyAbp.Abp.WeChat.Pay.Options;
+using JetBrains.Annotations;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services
@@ -35,12 +37,13 @@ namespace EasyAbp.Abp.WeChat.Pay.Services
 
         public ILoggerFactory LoggerFactory => LazyServiceProvider.LazyGetRequiredService<ILoggerFactory>();
 
-        protected ILogger Logger => LazyServiceProvider.LazyGetService<ILogger>(provider => LoggerFactory?.CreateLogger(GetType().FullName) ?? NullLogger.Instance);
+        protected ILogger Logger => LazyServiceProvider.LazyGetService<ILogger>(provider =>
+            LoggerFactory?.CreateLogger(GetType().FullName) ?? NullLogger.Instance);
 
-        protected virtual async Task<XmlDocument> RequestAndGetReturnValueAsync(
-            string targetUrl, WeChatPayParameters requestParameters)
+        protected virtual async Task<XmlDocument> RequestAndGetReturnValueAsync(string targetUrl,
+            WeChatPayParameters requestParameters, [CanBeNull] string mchId)
         {
-            var result = await ApiRequester.RequestAsync(targetUrl, requestParameters.ToXmlStr());
+            var result = await ApiRequester.RequestAsync(targetUrl, requestParameters.ToXmlStr(), mchId);
             if (result.SelectSingleNode("/xml/return_code")?.InnerText != "SUCCESS" ||
                 result.SelectSingleNode("/xml/return_msg")?.InnerText != "OK")
             {
@@ -62,8 +65,10 @@ namespace EasyAbp.Abp.WeChat.Pay.Services
         {
             if (Options.IsSandBox)
             {
-                // Todo: 原仿真测试系统已不再维护，下线时间2022年5月31日，如有问题请通过新版文档中心技术咨询进行反馈。请需要进行支付测试的商户按照下面新的仿真测试系统说明文档进行接入测试 https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=23_1&index=1
-                return Regex.Replace(standardUrl, "/pay/", "/sandboxnew/pay/");
+                throw new NotImplementedException(
+                    "原仿真测试系统已不再维护，下线时间2022年5月31日，如有问题请通过新版文档中心技术咨询进行反馈。请需要进行支付测试的商户按照下面新的仿真测试系统说明文档进行接入测试 https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=23_1&index=1");
+                return Regex.Replace(standardUrl, "https://api.mch.weixin.qq.com/",
+                    "https://api.mch.weixin.qq.com/xdc/apiv2sandbox/");
             }
 
             return standardUrl;
