@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Options;
 using EasyAbp.Abp.WeChat.Official.Models;
@@ -31,7 +32,7 @@ namespace EasyAbp.Abp.WeChat.Official.ApiRequests
         public virtual async Task<string> RequestAsync(string targetUrl, HttpMethod method,
             IOfficialRequest officialRequest = null, IAbpWeChatOptions abpWeChatOptions = null)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient(AbpWeChatConsts.HttpClientName);
 
             targetUrl = targetUrl.EnsureEndsWith('?');
 
@@ -66,7 +67,7 @@ namespace EasyAbp.Abp.WeChat.Official.ApiRequests
             IOfficialRequest officialRequest = null,
             IAbpWeChatOptions abpWeChatOptions = null)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient(AbpWeChatConsts.HttpClientName);
             targetUrl = targetUrl.EnsureEndsWith('?');
 
             if (abpWeChatOptions is not null)

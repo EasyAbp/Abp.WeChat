@@ -12,7 +12,7 @@ namespace EasyAbp.Abp.WeChat.Common
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddHttpClient();
+            context.Services.AddHttpClient(AbpWeChatConsts.HttpClientName);
         }
     }
 }

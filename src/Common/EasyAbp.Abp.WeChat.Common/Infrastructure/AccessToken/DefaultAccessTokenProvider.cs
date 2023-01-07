@@ -39,7 +39,7 @@ namespace EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken
 
         protected virtual async Task<string> RequestAccessTokenAsync(string appId, string appSecret)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient(AbpWeChatConsts.HttpClientName);
 
             var requestUrl = $"https://api.weixin.qq.com/cgi-bin/token" +
                              $"?grant_type={GrantTypes.ClientCredential}" +

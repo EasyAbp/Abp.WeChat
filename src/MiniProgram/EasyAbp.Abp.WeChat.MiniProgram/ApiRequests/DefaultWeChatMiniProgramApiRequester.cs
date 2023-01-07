@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Options;
 using EasyAbp.Abp.WeChat.MiniProgram.Models;
@@ -63,7 +64,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.ApiRequests
         private async Task<HttpResponseMessage> RequestGetHttpResponseMessageAsync(string targetUrl, HttpMethod method,
             IMiniProgramRequest miniProgramRequest, IAbpWeChatOptions abpWeChatOptions)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient(AbpWeChatConsts.HttpClientName);
 
             targetUrl = targetUrl.EnsureEndsWith('?');
 

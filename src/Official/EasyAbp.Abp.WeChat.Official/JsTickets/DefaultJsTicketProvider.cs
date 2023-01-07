@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Options;
 using EasyAbp.Abp.WeChat.Official.Options;
@@ -39,7 +40,7 @@ namespace EasyAbp.Abp.WeChat.Official.JsTickets
             return await _distributedCache.GetOrAddAsync(await GetJsTicketAsync(options),
                 async () =>
                 {
-                    var client = _httpClientFactory.CreateClient();
+                    var client = _httpClientFactory.CreateClient(AbpWeChatConsts.HttpClientName);
                     var requestUrl =
                         $"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={accessToken}&type=jsapi";
 
