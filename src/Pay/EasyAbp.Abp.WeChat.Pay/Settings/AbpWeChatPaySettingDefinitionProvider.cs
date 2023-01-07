@@ -58,7 +58,7 @@ public class AbpWeChatPaySettingDefinitionProvider : SettingDefinitionProvider
 
         context.Add(new SettingDefinition(
             AbpWeChatPaySettings.CertificateSecret,
-            _options.CertificateSecret,
+            _stringEncryptionService.Encrypt(_options.CertificateSecret),
             isEncrypted: true
         ));
     }

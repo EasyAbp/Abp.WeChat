@@ -19,14 +19,16 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests
         {
             Configure<AbpWeChatPayOptions>(op =>
             {
-                // TODO: 测试的时候，请在此处填写相关的配置参数。
-                op.MchId = "10000100";
-                op.ApiKey = "abcdefg";
+                const string mchId = AbpWeChatPayTestConsts.MchId;
+
+                op.MchId = mchId;
+                op.ApiKey = AbpWeChatPayTestConsts.ApiKey;
                 // op.CertificateBlobContainerName = "";
                 op.CertificateBlobName = "CertificateName";
-                op.CertificateSecret = "";
-                op.NotifyUrl = "";
-                op.RefundNotifyUrl = "RefundNotifyUrl";
+                op.CertificateSecret = mchId;
+                op.NotifyUrl = $"https://my-abp-app.io/wechat-pay/notify/mch-id/{mchId}";
+                op.RefundNotifyUrl = $"https://my-abp-app.io/wechat-pay/refund-notify/mch-id/{mchId}";
+                op.IsSandBox = AbpWeChatPayTestConsts.IsSandBox;
             });
 
             Configure<AbpBlobStoringOptions>(options =>

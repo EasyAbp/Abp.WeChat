@@ -74,7 +74,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(ProfitSharingUrl, request);
+            return await RequestAndGetReturnValueAsync(ProfitSharingUrl, request, mchId);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(MultiProfitSharingUrl, request);
+            return await RequestAndGetReturnValueAsync(MultiProfitSharingUrl, request, mchId);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(ProfitSharingQueryUrl, request);
+            return await RequestAndGetReturnValueAsync(ProfitSharingQueryUrl, request, mchId);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(ProfitSharingAddReceiverUrl, request);
+            return await RequestAndGetReturnValueAsync(ProfitSharingAddReceiverUrl, request, mchId);
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(ProfitSharingRemoveReceiverUrl, request);
+            return await RequestAndGetReturnValueAsync(ProfitSharingRemoveReceiverUrl, request, mchId);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(ProfitSharingFinishUrl, request);
+            return await RequestAndGetReturnValueAsync(ProfitSharingFinishUrl, request, mchId);
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(ProfitSharingReturnUrl, request);
+            return await RequestAndGetReturnValueAsync(ProfitSharingReturnUrl, request, mchId);
         }
 
         /// 商户需要核实回退结果，可调用此接口查询回退结果。<br/>
@@ -315,7 +315,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
 
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(ProfitSharingReturnQueryUrl, request);
+            return await RequestAndGetReturnValueAsync(ProfitSharingReturnQueryUrl, request, mchId);
         }
     }
 }

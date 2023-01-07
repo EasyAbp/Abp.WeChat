@@ -96,7 +96,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), Options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(await GetRequestUrl(UnifiedOrderUrl), request);
+            return await RequestAndGetReturnValueAsync(await GetRequestUrl(UnifiedOrderUrl), request, mchId);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), Options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(await GetRequestUrl(RefundUrl), request);
+            return await RequestAndGetReturnValueAsync(await GetRequestUrl(RefundUrl), request, mchId);
         }
 
         #endregion
@@ -200,7 +200,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), Options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(await GetRequestUrl(OrderQueryUrl), request);
+            return await RequestAndGetReturnValueAsync(await GetRequestUrl(OrderQueryUrl), request, mchId);
         }
 
         #endregion
@@ -230,7 +230,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.Pay
             var signStr = SignatureGenerator.Generate(request, MD5.Create(), Options.ApiKey);
             request.AddParameter("sign", signStr);
 
-            return await RequestAndGetReturnValueAsync(await GetRequestUrl(CloseOrderUrl), request);
+            return await RequestAndGetReturnValueAsync(await GetRequestUrl(CloseOrderUrl), request, mchId);
         }
 
         #endregion
