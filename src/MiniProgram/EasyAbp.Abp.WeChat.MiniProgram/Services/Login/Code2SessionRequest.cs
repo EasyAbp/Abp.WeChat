@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using EasyAbp.Abp.WeChat.MiniProgram.Models;
 using Newtonsoft.Json;
 
@@ -11,24 +12,28 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Services.Login
         /// <summary>
         /// 小程序 appId
         /// </summary>
+        [JsonPropertyName("appid")]
         [JsonProperty("appid")]
         public string AppId { get; protected set; }
 
         /// <summary>
         /// 小程序 appSecret
         /// </summary>
+        [JsonPropertyName("secret")]
         [JsonProperty("secret")]
         public string AppSecret { get; protected set; }
 
         /// <summary>
         /// 登录时获取的 code
         /// </summary>
+        [JsonPropertyName("js_code")]
         [JsonProperty("js_code")]
         public string JsCode { get; protected set; }
         
         /// <summary>
         /// 授权类型，此处只需填写 authorization_code
         /// </summary>
+        [JsonPropertyName("grant_type")]
         [JsonProperty("grant_type")]
         public string GrantType { get; set; }
         

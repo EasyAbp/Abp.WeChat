@@ -1,13 +1,18 @@
-﻿using EasyAbp.Abp.WeChat.Official.Models;
+﻿using System.Text.Json.Serialization;
+using EasyAbp.Abp.WeChat.Official.Models;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.User.Request
 {
     public class GetUsersByTagRequest : OfficialCommonRequest
     {
-        [JsonProperty("tagid")] public long TagId { get; protected set; }
+        [JsonPropertyName("tagid")]
+        [JsonProperty("tagid")]
+        public long TagId { get; protected set; }
 
-        [JsonProperty("next_openid")] public string FirstOpenId { get; protected set; }
+        [JsonPropertyName("next_openid")]
+        [JsonProperty("next_openid")]
+        public string FirstOpenId { get; protected set; }
 
         public GetUsersByTagRequest(long tagId, string firstOpenId)
         {

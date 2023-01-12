@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using EasyAbp.Abp.WeChat.Official.Models;
 using Newtonsoft.Json;
 
@@ -21,6 +22,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Response
         /// <summary>
         /// 发送消息成功之后的消息 Id。
         /// </summary>
+        [JsonPropertyName("msgid")]
         [JsonProperty("msgid")]
         public long MessageId { get; set; }
     }

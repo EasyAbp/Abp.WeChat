@@ -1,4 +1,5 @@
-﻿using EasyAbp.Abp.WeChat.Official.Models;
+﻿using System.Text.Json.Serialization;
+using EasyAbp.Abp.WeChat.Official.Models;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.MediaManagement.Request
@@ -8,6 +9,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.MediaManagement.Request
         /// <summary>
         /// 需要上传的临时素材文件类型，具体类型请参考 <see cref="MediaType"/> 的定义。
         /// </summary>
+        [JsonPropertyName("type")]
         [JsonProperty("type")]
         public string Type { get; set; }
 

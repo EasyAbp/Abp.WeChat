@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
@@ -12,30 +13,35 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
         /// <summary>
         /// 分账接收方的类型，请参考 (<see cref="ProfitSharingReceiverType"/>)。
         /// </summary>
+        [JsonPropertyName("type")]
         [JsonProperty("type")]
         public string Type { get; private set; }
 
         /// <summary>
         /// 分账接收方的帐号，根据 <see cref="Type"/> 的不同，帐号的含义也不一样。
         /// </summary>
+        [JsonPropertyName("account")]
         [JsonProperty("account")]
         public string Account { get; private set; }
 
         /// <summary>
         /// 分账接收方与特约商户的关系，请参考 (<see cref="ProfitSharingReceiverRelationType"/>)。
         /// </summary>
+        [JsonPropertyName("relation_type")]
         [JsonProperty("relation_type")]
         public string RelationType { get; private set; }
 
         /// <summary>
         /// 分账接收方全称，当接收方类型为 <see cref="ProfitSharingReceiverType.MerchantId"/> 和 <see cref="ProfitSharingReceiverType.PersonalWeChatId"/> 的时候，本参数是必填的。
         /// </summary>
+        [JsonPropertyName("name")]
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// 自定义的分账关系，当 <see cref="RelationType"/> 的值为 <see cref="ProfitSharingReceiverRelationType.Custom"/> 时，本参数是必填的。
         /// </summary>
+        [JsonPropertyName("custom_relation")]
         [JsonProperty("custom_relation")]
         public string CustomRelation { get; set; }
 

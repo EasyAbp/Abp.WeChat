@@ -1,4 +1,5 @@
-﻿using EasyAbp.Abp.WeChat.Official.Models;
+﻿using System.Text.Json.Serialization;
+using EasyAbp.Abp.WeChat.Official.Models;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.Login
@@ -11,18 +12,21 @@ namespace EasyAbp.Abp.WeChat.Official.Services.Login
         /// <summary>
         /// 网页授权接口调用凭证,注意：此access_token与基础支持的access_token不同
         /// </summary>
+        [JsonPropertyName("access_token")]
         [JsonProperty("access_token")]
         public string AccessToken { get; protected set; }
 
         /// <summary>
         /// 用户的唯一标识
         /// </summary>
+        [JsonPropertyName("openid")]
         [JsonProperty("openid")]
         public string OpenId { get; set; }
 
         /// <summary>
         /// 返回国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语
         /// </summary>
+        [JsonPropertyName("lang")]
         [JsonProperty("lang")]
         public string Language { get; protected set; }
 

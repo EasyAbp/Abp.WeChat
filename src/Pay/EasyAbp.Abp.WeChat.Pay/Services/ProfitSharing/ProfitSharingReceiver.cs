@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
@@ -12,22 +13,30 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ProfitSharing
         /// <summary>
         /// 分账接收方的类型，请参考 (<see cref="ProfitSharingReceiverType"/>)。
         /// </summary>
-        [JsonProperty("type")] public string Type { get; private set; }
+        [JsonPropertyName("type")]
+        [JsonProperty("type")]
+        public string Type { get; private set; }
 
         /// <summary>
         /// 分账接收方的帐号，根据 <see cref="Type"/> 的不同，帐号的含义也不一样。
         /// </summary>
-        [JsonProperty("account")] public string Account { get; private set; }
+        [JsonPropertyName("account")]
+        [JsonProperty("account")]
+        public string Account { get; private set; }
 
         /// <summary>
         /// 分账接收方的分账金额，单位是分。
         /// </summary>
-        [JsonProperty("amount")] public int Amount { get; private set; }
+        [JsonPropertyName("amount")]
+        [JsonProperty("amount")]
+        public int Amount { get; private set; }
 
         /// <summary>
         /// 分账的原因描述，分账账单中需要体现。
         /// </summary>
-        [JsonProperty("description")] public string Description { get; private set; }
+        [JsonPropertyName("description")]
+        [JsonProperty("description")]
+        public string Description { get; private set; }
 
         protected ProfitSharingReceiver()
         {

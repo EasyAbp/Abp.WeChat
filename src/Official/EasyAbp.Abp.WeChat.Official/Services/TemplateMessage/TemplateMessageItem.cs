@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Json;
 
@@ -11,9 +12,8 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
     {
         public TemplateMessageItem()
         {
-            
         }
-        
+
         /// <summary>
         /// 构建一个新的 <see cref="TemplateMessageItem"/> 实例。
         /// </summary>
@@ -41,18 +41,21 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
             Value = value;
             Color = Color.FromArgb(int.Parse(color.Replace("#", "")));
         }
-        
+
         /// <summary>
         /// 模板关键字的填充内容。
         /// </summary>
+        [JsonPropertyName("value")]
         [JsonProperty("value")]
         public string Value { get; private set; }
 
         /// <summary>
         /// 模板关键字的展示颜色。
         /// </summary>
+        [JsonPropertyName("color")]
         [JsonProperty("color")]
-        [JsonConverter(typeof(ColorJsonConverter))]
+        [Newtonsoft.Json.JsonConverter(typeof(NewtonsoftJsonColorJsonConverter))]
+        [System.Text.Json.Serialization.JsonConverter(typeof(TextJsonColorJsonConverter))]
         public Color Color { get; private set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using EasyAbp.Abp.WeChat.Official.Models;
+﻿using System.Text.Json.Serialization;
+using EasyAbp.Abp.WeChat.Official.Models;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.User.Request
@@ -8,12 +9,14 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User.Request
         /// <summary>
         /// 普通用户的标识，对当前公众号唯一。
         /// </summary>
+        [JsonPropertyName("openid")]
         [JsonProperty("openid")]
         public string OpenId { get; protected set; }
 
         /// <summary>
         /// 返回国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语。
         /// </summary>
+        [JsonPropertyName("lang")]
         [JsonProperty("lang")]
         public string Language { get; protected set; }
 

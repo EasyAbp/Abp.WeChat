@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using EasyAbp.Abp.WeChat.Official.Models;
 using Newtonsoft.Json;
 
@@ -11,30 +12,35 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Request
         /// <summary>
         /// 模板消息的目标用户，一般为微信用户的 OpenId 值。
         /// </summary>
+        [JsonPropertyName("touser")]
         [JsonProperty("touser")]
         public string ToUser { get; protected set; }
 
         /// <summary>
         /// 需要发送的模板消息 Id。
         /// </summary>
+        [JsonPropertyName("template_id")]
         [JsonProperty("template_id")]
         public string TemplateId { get; protected set; }
 
         /// <summary>
         /// 模板关联的小程序参数。
         /// </summary>
+        [JsonPropertyName("miniprogram")]
         [JsonProperty("miniprogram")]
         public MiniProgramRequest MiniProgramRequest { get; protected set; }
         
         /// <summary>
         /// 微信用户收到模板消息时，点击之后需要跳转的 Url。
         /// </summary>
+        [JsonPropertyName("url")]
         [JsonProperty("url")]
         public string Url { get; set; }
         
         /// <summary>
         /// 需要发送的模板消息内容。
         /// </summary>
+        [JsonPropertyName("data")]
         [JsonProperty("data")]
         public TemplateMessage TemplateMessage { get; protected set; }
 

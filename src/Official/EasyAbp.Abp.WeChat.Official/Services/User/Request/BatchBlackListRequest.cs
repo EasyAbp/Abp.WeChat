@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using EasyAbp.Abp.WeChat.Official.Models;
 using Newtonsoft.Json;
 
@@ -9,6 +10,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User.Request
         /// <summary>
         /// 要拉黑的用户的 openid 列表。
         /// </summary>
+        [JsonPropertyName("openid_list")]
         [JsonProperty("openid_list")]
         public List<string> OpenIds { get; protected set; }
 

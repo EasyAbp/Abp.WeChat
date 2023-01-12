@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using EasyAbp.Abp.WeChat.Official.Models;
 using Newtonsoft.Json;
 
@@ -9,6 +10,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.User.Request
         /// <summary>
         /// 需要查询的用户 OPENID 列表，最多支持 100 个。
         /// </summary>
+        [JsonPropertyName("user_list")]
         [JsonProperty("user_list")]
         public List<GetUserUnionInfoRequest> UserList { get; protected set; }
 

@@ -1,4 +1,5 @@
-﻿using EasyAbp.Abp.WeChat.MiniProgram.Models;
+﻿using System.Text.Json.Serialization;
+using EasyAbp.Abp.WeChat.MiniProgram.Models;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.MiniProgram.Services.PhoneNumber
@@ -11,6 +12,7 @@ namespace EasyAbp.Abp.WeChat.MiniProgram.Services.PhoneNumber
         /// <summary>
         /// 小程序获取的 code
         /// </summary>
+        [JsonPropertyName("code")]
         [JsonProperty("code")]
         public string Code { get; protected set; }
 

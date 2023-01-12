@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using EasyAbp.Abp.WeChat.Official.Models;
 using Newtonsoft.Json;
 
@@ -11,6 +12,7 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage.Request
         /// <summary>
         /// 模板库中模板的编号，有 "TM**" 和 "OPENTMTM**" 等形式。
         /// </summary>
+        [JsonPropertyName("template_id_short")]
         [JsonProperty("template_id_short")]
         public string TemplateShortId { get; protected set; }
 

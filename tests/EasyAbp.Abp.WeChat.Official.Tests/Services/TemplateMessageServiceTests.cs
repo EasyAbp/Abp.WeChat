@@ -84,5 +84,17 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services
 
             deletedTemplateResponse.ErrorCode.ShouldNotBe(0);
         }
+
+        [Fact]
+        public async Task Should_Parse_Colors()
+        {
+            const string serializedContent = """
+{"value":"test","color":"#00ffff"}
+""";
+            var item = new TemplateMessageItem("test", Color.Aqua);
+
+            Newtonsoft.Json.JsonConvert.SerializeObject(item).ShouldBe(serializedContent);
+            System.Text.Json.JsonSerializer.Serialize(item).ShouldBe(serializedContent);
+        }
     }
 }

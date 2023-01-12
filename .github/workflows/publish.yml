@@ -9,10 +9,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: NuGet/setup-nuget@v1.0.5
-      - uses: actions/setup-dotnet@v1
+      - uses: NuGet/setup-nuget@v1
+      - uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '7.0.x'
 
       - name: read common.props
         id: commonProps
