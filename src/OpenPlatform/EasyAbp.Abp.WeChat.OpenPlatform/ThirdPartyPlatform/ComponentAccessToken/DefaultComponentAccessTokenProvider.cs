@@ -1,28 +1,28 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken;
 using EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.ApiRequests;
 using EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.Models;
 using EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.VerifyTicket;
 using Microsoft.Extensions.Caching.Distributed;
 using Volo.Abp;
-using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.ComponentAccessToken;
 
 public class DefaultComponentAccessTokenProvider : IComponentAccessTokenProvider, ITransientDependency
 {
-    private readonly IDistributedCache<string> _distributedCache;
+    private readonly IAbpWeChatSharableCache _cache;
     private readonly IComponentVerifyTicketStore _componentVerifyTicketStore;
     private readonly IWeChatThirdPartyPlatformApiRequester _apiRequester;
 
     public DefaultComponentAccessTokenProvider(
-        IDistributedCache<string> distributedCache,
+        IAbpWeChatSharableCache cache,
         IComponentVerifyTicketStore componentVerifyTicketStore,
         IWeChatThirdPartyPlatformApiRequester apiRequester)
     {
-        _distributedCache = distributedCache;
+        _cache = cache;
         _componentVerifyTicketStore = componentVerifyTicketStore;
         _apiRequester = apiRequester;
     }
@@ -32,12 +32,24 @@ public class DefaultComponentAccessTokenProvider : IComponentAccessTokenProvider
         Check.NotNullOrWhiteSpace(componentAppId, nameof(componentAppId));
         Check.NotNullOrWhiteSpace(componentAppSecret, nameof(componentAppSecret));
 
-        return await _distributedCache.GetOrAddAsync($"ComponentAccessToken:{componentAppId}",
-            async () => await RequestComponentAccessTokenAsync(componentAppId, componentAppSecret),
-            () => new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(115)
-            });
+        var key = $"ComponentAccessToken:{componentAppId}";
+
+        var cachedValue = await _cache.GetOrNullAsync(key);
+
+        if (cachedValue.IsNullOrEmpty())
+        {
+            cachedValue = await RequestComponentAccessTokenAsync(componentAppId, componentAppSecret);
+
+            await _cache.SetAsync(
+                key,
+                cachedValue,
+                new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(115)
+                });
+        }
+
+        return cachedValue;
     }
 
     protected virtual async Task<string> RequestComponentAccessTokenAsync(

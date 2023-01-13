@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken;
 using EasyAbp.Abp.WeChat.Common.SharedCache.StackExchangeRedis.Settings;
 using Microsoft.Extensions.Caching.Distributed;
@@ -10,14 +9,14 @@ using Volo.Abp.Settings;
 
 namespace EasyAbp.Abp.WeChat.Common.SharedCache.StackExchangeRedis.Infrastructure.AccessToken;
 
-public class SharedStackExchangeRedisAccessTokenCache : IAccessTokenCache, ITransientDependency
+public class SharedStackExchangeRedisAbpWeChatSharableCache : IAbpWeChatSharableCache, ITransientDependency
 {
     public static string CachePrefix { get; set; } = "WeChatTokens:";
     public static string SettingName { get; set; } = SharedCacheStackExchangeRedisSettings.RedisConfiguration;
 
     private readonly ISettingProvider _settingProvider;
 
-    public SharedStackExchangeRedisAccessTokenCache(ISettingProvider settingProvider)
+    public SharedStackExchangeRedisAbpWeChatSharableCache(ISettingProvider settingProvider)
     {
         _settingProvider = settingProvider;
     }
@@ -29,14 +28,18 @@ public class SharedStackExchangeRedisAccessTokenCache : IAccessTokenCache, ITran
         return await redisCache.GetStringAsync(await GetKeyAsync(key));
     }
 
-    public virtual async Task SetAsync(string key, string value)
+    public virtual async Task SetAsync(string key, string value, DistributedCacheEntryOptions options)
     {
         var redisCache = await CreateAbpRedisCacheAsync();
 
-        await redisCache.SetStringAsync(await GetKeyAsync(key), value, new DistributedCacheEntryOptions
+        if (value is null)
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(115)
-        });
+            await redisCache.RemoveAsync(await GetKeyAsync(key));
+        }
+        else
+        {
+            await redisCache.SetStringAsync(await GetKeyAsync(key), value, options);
+        }
     }
 
     protected virtual Task<string> GetKeyAsync(string key)

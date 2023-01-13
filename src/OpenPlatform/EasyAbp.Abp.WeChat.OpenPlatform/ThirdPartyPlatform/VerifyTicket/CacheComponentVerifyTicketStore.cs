@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken;
 using Microsoft.Extensions.Caching.Distributed;
-using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.VerifyTicket;
@@ -14,16 +14,16 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.VerifyTicket;
 [Dependency(TryRegister = true)]
 public class CacheComponentVerifyTicketStore : IComponentVerifyTicketStore, ITransientDependency
 {
-    private readonly IDistributedCache<string> _cache;
+    private readonly IAbpWeChatSharableCache _cache;
 
-    public CacheComponentVerifyTicketStore(IDistributedCache<string> cache)
+    public CacheComponentVerifyTicketStore(IAbpWeChatSharableCache cache)
     {
         _cache = cache;
     }
 
     public virtual async Task<string> GetOrNullAsync(string componentAppId)
     {
-        return await _cache.GetAsync(await GetCacheKeyAsync(componentAppId));
+        return await _cache.GetOrNullAsync(await GetCacheKeyAsync(componentAppId));
     }
 
     public virtual async Task SetAsync(string componentAppId, string componentVerifyTicket)

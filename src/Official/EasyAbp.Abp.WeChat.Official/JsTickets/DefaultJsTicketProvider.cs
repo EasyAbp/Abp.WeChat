@@ -7,7 +7,6 @@ using EasyAbp.Abp.WeChat.Common.Infrastructure.Options;
 using EasyAbp.Abp.WeChat.Official.Options;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json.Linq;
-using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Official.JsTickets
@@ -17,45 +16,42 @@ namespace EasyAbp.Abp.WeChat.Official.JsTickets
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IAccessTokenProvider _accessTokenProvider;
         private readonly IAbpWeChatOptionsProvider<AbpWeChatOfficialOptions> _optionsProvider;
-        private readonly IDistributedCache<string> _distributedCache;
+        private readonly IAbpWeChatSharableCache _cache;
 
         public DefaultJsTicketProvider(
             IHttpClientFactory httpClientFactory,
             IAccessTokenProvider accessTokenProvider,
             IAbpWeChatOptionsProvider<AbpWeChatOfficialOptions> optionsProvider,
-            IDistributedCache<string> distributedCache)
+            IAbpWeChatSharableCache cache)
         {
             _httpClientFactory = httpClientFactory;
             _accessTokenProvider = accessTokenProvider;
             _optionsProvider = optionsProvider;
-            _distributedCache = distributedCache;
+            _cache = cache;
         }
 
         public virtual async Task<string> GetTicketJsonAsync(string appId, string appSecret)
         {
-            var options = await _optionsProvider.GetAsync(appId);
+            var cacheKey = await GetCacheKeyAsync(appId);
 
-            var accessToken = await _accessTokenProvider.GetAsync(appId, appSecret);
+            var cachedValue = await _cache.GetOrNullAsync(cacheKey);
 
-            return await _distributedCache.GetOrAddAsync(await GetJsTicketAsync(options),
-                async () =>
-                {
-                    var client = _httpClientFactory.CreateClient(AbpWeChatConsts.HttpClientName);
-                    var requestUrl =
-                        $"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={accessToken}&type=jsapi";
+            if (cachedValue.IsNullOrEmpty())
+            {
+                cachedValue = await RequestTicketAsync(appId, appSecret);
 
-                    return await (await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUrl)))
-                        .Content.ReadAsStringAsync();
-                },
-                () => new DistributedCacheEntryOptions
+                await _cache.SetAsync(cacheKey, cachedValue, new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(115)
                 });
+            }
+
+            return cacheKey;
         }
 
-        protected virtual async Task<string> GetJsTicketAsync(IAbpWeChatOptions options)
+        protected virtual Task<string> GetCacheKeyAsync(string appId)
         {
-            return $"WeChatJsTicket:{options.AppId}";
+            return Task.FromResult($"WeChatJsTicket:{appId}");
         }
 
         public virtual async Task<string> GetTicketAsync(string appId, string appSecret)
@@ -64,6 +60,18 @@ namespace EasyAbp.Abp.WeChat.Official.JsTickets
             var jObj = JObject.Parse(json);
 
             return jObj.SelectToken("$.ticket")!.Value<string>();
+        }
+
+        protected virtual async Task<string> RequestTicketAsync(string appId, string appSecret)
+        {
+            var accessToken = await _accessTokenProvider.GetAsync(appId, appSecret);
+
+            var client = _httpClientFactory.CreateClient(AbpWeChatConsts.HttpClientName);
+            var requestUrl =
+                $"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={accessToken}&type=jsapi";
+
+            return await (await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUrl)))
+                .Content.ReadAsStringAsync();
         }
     }
 }
