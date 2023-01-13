@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json.Linq;
 using Volo.Abp.DependencyInjection;
 
@@ -8,14 +9,14 @@ namespace EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken
 {
     public class DefaultAccessTokenProvider : IAccessTokenProvider, ITransientDependency
     {
-        private readonly IAccessTokenCache _accessTokenCache;
+        private readonly IAbpWeChatSharableCache _abpWeChatSharableCache;
         private readonly IHttpClientFactory _httpClientFactory;
 
         public DefaultAccessTokenProvider(
-            IAccessTokenCache accessTokenCache,
+            IAbpWeChatSharableCache abpWeChatSharableCache,
             IHttpClientFactory httpClientFactory)
         {
-            _accessTokenCache = accessTokenCache;
+            _abpWeChatSharableCache = abpWeChatSharableCache;
             _httpClientFactory = httpClientFactory;
         }
 
@@ -23,13 +24,16 @@ namespace EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken
         {
             var cacheKey = await GetCacheKeyAsync(appId);
 
-            var token = await _accessTokenCache.GetOrNullAsync(cacheKey);
+            var token = await _abpWeChatSharableCache.GetOrNullAsync(cacheKey);
 
             if (token.IsNullOrWhiteSpace())
             {
                 token = await RequestAccessTokenAsync(appId, appSecret);
 
-                await _accessTokenCache.SetAsync(cacheKey, token);
+                await _abpWeChatSharableCache.SetAsync(cacheKey, token, new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(115)
+                });
             }
 
             return token;

@@ -20,7 +20,7 @@ public class HybridAccessTokenProviderTests : AbpWeChatOpenPlatformTestBase
     protected const string AuthorizerAppId = "my-authorizer-appid";
 
     private IAuthorizerAccessTokenCache _authorizerAccessTokenCache;
-    private IAccessTokenCache _accessTokenCache;
+    private IAbpWeChatSharableCache _abpWeChatSharableCache;
     private readonly HybridAccessTokenProvider _hybridAccessTokenProvider;
     private readonly ICurrentWeChatThirdPartyPlatform _currentWeChatThirdPartyPlatform;
 
@@ -37,12 +37,12 @@ public class HybridAccessTokenProviderTests : AbpWeChatOpenPlatformTestBase
         _authorizerAccessTokenCache = Substitute.For<IAuthorizerAccessTokenCache>();
         services.Replace(ServiceDescriptor.Transient(s => _authorizerAccessTokenCache));
 
-        _accessTokenCache = Substitute.For<IAccessTokenCache>();
-        services.Replace(ServiceDescriptor.Transient(s => _accessTokenCache));
+        _abpWeChatSharableCache = Substitute.For<IAbpWeChatSharableCache>();
+        services.Replace(ServiceDescriptor.Transient(s => _abpWeChatSharableCache));
 
         _authorizerAccessTokenCache.GetOrNullAsync(OptionsComponentAppId, AuthorizerAppId)
             .Returns(ComponentAccessToken);
-        _accessTokenCache.GetOrNullAsync(Arg.Any<string>()).Returns(AppAccessToken);
+        _abpWeChatSharableCache.GetOrNullAsync(Arg.Any<string>()).Returns(AppAccessToken);
     }
 
     [Fact]

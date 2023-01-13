@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Volo.Abp.Caching;
@@ -7,11 +6,11 @@ using Volo.Abp.DependencyInjection;
 namespace EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken;
 
 [Dependency(TryRegister = true)]
-public class DefaultAccessTokenCache : IAccessTokenCache, ITransientDependency
+public class DefaultAbpWeChatSharableCache : IAbpWeChatSharableCache, ITransientDependency
 {
     protected IDistributedCache<string> DistributedCache { get; }
 
-    public DefaultAccessTokenCache(IDistributedCache<string> distributedCache)
+    public DefaultAbpWeChatSharableCache(IDistributedCache<string> distributedCache)
     {
         DistributedCache = distributedCache;
     }
@@ -21,11 +20,8 @@ public class DefaultAccessTokenCache : IAccessTokenCache, ITransientDependency
         return DistributedCache.GetAsync(key);
     }
 
-    public virtual Task SetAsync(string key, string value)
+    public virtual Task SetAsync(string key, string value, DistributedCacheEntryOptions options)
     {
-        return DistributedCache.SetAsync(key, value, new DistributedCacheEntryOptions
-        {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(115)
-        });
+        return DistributedCache.SetAsync(key, value, options);
     }
 }

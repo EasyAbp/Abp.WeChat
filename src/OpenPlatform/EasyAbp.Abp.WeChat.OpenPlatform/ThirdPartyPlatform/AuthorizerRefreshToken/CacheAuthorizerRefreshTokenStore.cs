@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
-using Volo.Abp.Caching;
+using EasyAbp.Abp.WeChat.Common.Infrastructure.AccessToken;
+using Microsoft.Extensions.Caching.Distributed;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.AuthorizerRefreshToken;
@@ -12,21 +13,22 @@ namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.AuthorizerRefreshTo
 [Dependency(TryRegister = true)]
 public class CacheAuthorizerRefreshTokenStore : IAuthorizerRefreshTokenStore, ITransientDependency
 {
-    private readonly IDistributedCache<string> _cache;
+    private readonly IAbpWeChatSharableCache _cache;
 
-    public CacheAuthorizerRefreshTokenStore(IDistributedCache<string> cache)
+    public CacheAuthorizerRefreshTokenStore(IAbpWeChatSharableCache cache)
     {
         _cache = cache;
     }
 
     public virtual async Task<string> GetOrNullAsync(string componentAppId, string authorizerAppId)
     {
-        return await _cache.GetAsync(await GetCacheKeyAsync(componentAppId, authorizerAppId));
+        return await _cache.GetOrNullAsync(await GetCacheKeyAsync(componentAppId, authorizerAppId));
     }
 
     public virtual async Task SetAsync(string componentAppId, string authorizerAppId, string authorizerRefreshToken)
     {
-        await _cache.SetAsync(await GetCacheKeyAsync(componentAppId, authorizerAppId), authorizerRefreshToken);
+        await _cache.SetAsync(await GetCacheKeyAsync(componentAppId, authorizerAppId), authorizerRefreshToken,
+            new DistributedCacheEntryOptions());
     }
 
     protected virtual async Task<string> GetCacheKeyAsync(string componentAppId, string authorizerAppId) =>
