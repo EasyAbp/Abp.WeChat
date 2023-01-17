@@ -128,7 +128,8 @@ public class AbpWeChatPayHttpClientFactory : IAbpWeChatPayHttpClientFactory, ITr
         return Task.FromResult(new HttpMessageHandlerCacheModel
         {
             Handler = handler,
-            CertificateBytes = certificateBytes
+            CertificateBytes = certificateBytes,
+            SkipCertificateBytesCheckUntil = Clock.Now.Add(SkipCertificateBytesCheckUntilDuration)
         });
     }
 }
