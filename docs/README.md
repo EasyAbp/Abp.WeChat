@@ -25,3 +25,5 @@
 | 微信小商店模块   | ![Support](https://img.shields.io/badge/-不支持-red.svg)     |                                        |
 | 微信只能对话模块 | ![Support](https://img.shields.io/badge/-不支持-red.svg)     |                                        |
 | 微信开放平台模块 | ![Support](https://img.shields.io/badge/-不支持-red.svg)     |                                        |
+
+> 关于多实例争抢 AccessToken 或类似票券的问题，请参考：https://github.com/EasyAbp/Abp.WeChat/issues/74
