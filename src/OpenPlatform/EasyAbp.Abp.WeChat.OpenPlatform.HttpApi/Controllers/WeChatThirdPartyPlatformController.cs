@@ -92,7 +92,7 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
     /// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/operation/thirdparty/prepare.html
     /// </summary>
     [HttpPost]
-    [Route("notify/app/component-app-id/{componentAppId}/app-id/{appId}")]
+    [Route("notify/app/app-id/{appId}")]
     public virtual async Task<ActionResult> NotifyAppAsync(
         [CanBeNull] string tenantId, [CanBeNull] string componentAppId, [NotNull] string appId)
     {
@@ -149,6 +149,18 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
     [HttpPost]
     [Route("notify/app/tenant-id/{tenantId}/component-app-id/{componentAppId}/app-id/{appId}")]
     public virtual Task<ActionResult> NotifyApp3Async(
+        [CanBeNull] string tenantId, [CanBeNull] string componentAppId, [NotNull] string appId)
+    {
+        return NotifyAppAsync(tenantId, componentAppId, appId);
+    }
+
+    /// <summary>
+    /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+    /// 见 <see cref="NotifyAppAsync"/>
+    /// </summary>
+    [HttpPost]
+    [Route("notify/app/component-app-id/{componentAppId}/app-id/{appId}")]
+    public virtual Task<ActionResult> NotifyApp4Async(
         [CanBeNull] string tenantId, [CanBeNull] string componentAppId, [NotNull] string appId)
     {
         return NotifyAppAsync(tenantId, componentAppId, appId);
