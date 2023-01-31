@@ -25,27 +25,23 @@ public class XXXHttpApiModule : AbpModule
 本模块的默认配置参数使用 ABP Setting 设施管理，在 Setting 的值未提供时，由 `AbpWeChatPayOptions` 进行补充。如果您的应用只使用单个微信支付商户，只需在启动模块的 `ConfigureService()` 方法中进行配置即可：
 
 ```csharp
-[DependsOn (typeof (AbpWeChatPayHttpApiModule))]
-public class XXXHttpApiModule : AbpModule 
+public override void ConfigureServices (ServiceConfigurationContext context) 
 {
-    public override void ConfigureServices (ServiceConfigurationContext context) 
+    Configure<AbpWeChatPayOptions> (op => 
     {
-        Configure<AbpWeChatPayOptions> (op => 
-        {
-            // 默认商户 Id
-            op.MchId = "000000000000000";
-            // 微信支付的 API 密钥信息，会在后续进行签名时被使用。
-            // 注意，本值是密文，如您在 appsettings.json 或 Configure<AbpWeChatPayOptions> 中设置本值，须自行根据加密后填入，参考：https://docs.abp.io/en/abp/latest/String-Encryption
-            // 同样是密文的配置项还有：CertificateSecret
-            op.ApiKey = "****************************";
-            // 支付结果回调地址，用于接收支付结果通知。
-            // 如果安装了本模块提供的 HttpApi 模块，则默认是 域名 + /wechat-pay/notify 路由。
-            op.NotifyUrl = "https://xxx.xxxx.com/wechat-pay/notify";
-            // 退款结果回调地址，用于接收退款结果通知。
-            // 如果安装了本模块提供的 HttpApi 模块，则默认是 域名 + /wechat-pay/refund-notify 路由。
-            op.RefundNotifyUrl = "https://xxx.xxxx.com/wechat-pay/refund-notify";
-        });
-    }
+        // 默认商户 Id
+        op.MchId = "000000000000000";
+        // 微信支付的 API 密钥信息，会在后续进行签名时被使用。
+        // 注意，本值是密文，如您在 appsettings.json 或 Configure<AbpWeChatPayOptions> 中设置本值，须自行根据加密后填入，参考：https://docs.abp.io/en/abp/latest/String-Encryption
+        // 同样是密文的配置项还有：CertificateSecret
+        op.ApiKey = "****************************";
+        // 支付结果回调地址，用于接收支付结果通知。
+        // 如果安装了本模块提供的 HttpApi 模块，则默认是 域名 + /wechat-pay/notify 路由。
+        op.NotifyUrl = "https://xxx.xxxx.com/wechat-pay/notify";
+        // 退款结果回调地址，用于接收退款结果通知。
+        // 如果安装了本模块提供的 HttpApi 模块，则默认是 域名 + /wechat-pay/refund-notify 路由。
+        op.RefundNotifyUrl = "https://xxx.xxxx.com/wechat-pay/refund-notify";
+    });
 }
 ```
 
@@ -62,7 +58,7 @@ public class XXXHttpApiModule : AbpModule
 ```csharp
 public class WeChatPaymentHandler : IWeChatPayEventHandler
 {
-  	// 定义当前的处理的事件类型为：支付成功事件
+    // 定义当前的处理的事件类型为：支付成功事件
     public WeChatHandlerType Type => WeChatHandlerType.Paid;
   
     public async Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel model)
@@ -100,7 +96,7 @@ WeChatPay 模块默认提供了参数校验处理器，各个处理器的调用�
 ```csharp
 public class XXXAAAHandler : IWeChatPayEventHandler
 {
-  	// 定义当前处理器的类型为退款。
+    // 定义当前处理器的类型为退款。
     public WeChatHandlerType Type => WeChatHandlerType.Refund;
   
     public Task HandleAsync(XmlDocument xmlDocument)
