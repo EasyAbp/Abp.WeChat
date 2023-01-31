@@ -10,7 +10,6 @@
 [DependsOn(typeof(AbpWeChatOfficialModule))]
 public class XXXDomainModule : AbpModule
 {
-
 }
 ```
 
@@ -20,72 +19,65 @@ public class XXXDomainModule : AbpModule
 [DependsOn(typeof(AbpWeChatOfficialHttpApiModule))]
 public class XXXHttpApiModule : AbpModule
 {
-    
 }
 ```
 
 ### 1.2 模块的配置
 
-微信模块的配置参数都存放在 `AbpWeChatOfficialOptions` 内部，开发人员只需要在启动模块的 `ConfigureService()` 方法中进行配置即可，下面是最小启动配置。
+本模块的默认配置参数使用 ABP Setting 设施管理，在 Setting 的值未提供时，由 `AbpWeChatOfficialOptions` 进行补充。如果您的应用只使用单个微信公众号，只需在启动模块的 `ConfigureService()` 方法中进行配置即可：
 
 ```csharp
-[DependsOn(typeof(AbpWeChatOfficialHttpApiModule))]
-public class XXXHttpApiModule : AbpModule 
+public override void ConfigureServices(ServiceConfigurationContext context) 
 {
-    public override void ConfigureServices(ServiceConfigurationContext context) 
+    Configure<AbpWeChatOfficialOptions>(op =>
     {
-        Configure<AbpWeChatOfficialOptions>(op =>
-        {
-            // 微信公众号所配置的 Token 值。
-            op.Token = "0000000000";
-            // 微信公众号分配的 AppId。
-            op.AppId = "0000000000";
-            // 微信公众号的唯一密钥。
-            op.AppSecret = "0000000000";
-            // OAuth 授权回调，用于微信公众号网页使用授权码换取 AccessToken。
-            op.OAuthRedirectUrl = "http://test.hospital.wx.zhongfeiiot.com";
-        });
-    }
+        // 微信公众号分配的 AppId。
+        op.AppId = "0000000000";
+        // 微信公众号的唯一密钥。
+        // 注意，本值是密文，如您在 appsettings.json 或 Configure<AbpWeChatOfficialOptions> 中设置本值，须自行根据加密后填入，参考：https://docs.abp.io/en/abp/latest/String-Encryption
+        // 同样是密文的配置项还有：Token, EncodingAesKey
+        op.AppSecret = "********";
+        // 微信公众号所配置的 Token 和 EncodingAesKey 值。
+        op.Token = "********";
+        op.EncodingAesKey = "********";
+        // OAuth 授权回调，用于微信公众号网页使用授权码换取 AccessToken。
+        op.OAuthRedirectUrl = "https://myapp.com";
+    });
 }
 ```
 
-进行上述配置以后，你的项目就集成了微信公众号功能。现在，你可以在任意地方注入服务类，通过服务类快捷地调用微信公众平台所提供的 API 接口服务。
+完整的 Setting 项清单：https://github.com/EasyAbp/Abp.WeChat/blob/master/src/Official/EasyAbp.Abp.WeChat.Official/Settings/AbpWeChatOfficialSettingDefinitionProvider.cs
 
-## 二、默认启用的接口
+## 二、服务的使用
 
-// TODO。
+您可以查看已实现的服务：https://github.com/EasyAbp/Abp.WeChat/tree/master/src/Official/EasyAbp.Abp.WeChat.Official/Services
 
-## 三、服务的使用
+参考以下写法使用服务：
 
-### 3.1 自定义菜单服务
+```CSharp
+var appId = null; // 目标微信应用的 appid，如果为空则取 Setting 中的默认值
+var customMenuService = await WeChatServiceFactory.CreateAsync<CustomMenuWeService>(appId);
+var result = await customMenuService.DeleteCustomMenuAsync();
+```
 
-开发人员如果需要使用自定义菜单服务，只需要注入对应的服务即可。以下为具体的服务类型表，开发人员可自行参考文档进行注入使用。
+注意，若 `appId` 与 Setting 中的默认值不同，则您需要手动实现 `IAbpWeChatOptionsProvider<TOptions>`，若使用 EasyAbp 封装的[微信管理模块](https://github.com/EasyAbp/WeChatManagement)，则您无需再手动实现。
 
-| 类型名称                  | 说明                                           | 微信官方文档                                                 | 支持度                                                       |
-| ------------------------- | ---------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `CustomMenuService`       | 自定义菜单服务，提供自定义菜单的基本编辑接口。 | [点击访问](https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Creating_Custom-Defined_Menu.html) | ![Support](https://img.shields.io/badge/-100%25-brightgreen.svg) |
-| `PersonalizedMenuService` | 个性化菜单服务，提供个性化菜单的相关接口。     | [点击访问](https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html) | ![Support](https://img.shields.io/badge/-0%25-red.svg)       |
+## 三、多微信应用
 
-### 3.2 基础消息能力
+在您调用服务，或处理微信请求的事件通知回调时，若提供的 `appId` 与 Setting 中的默认值可能不同，则您需要手动实现 `IAbpWeChatOptionsProvider<TOptions>`，若使用 EasyAbp 封装的[微信管理模块](https://github.com/EasyAbp/WeChatManagement)，则您无需再手动实现。
 
-开发人员如果需要集成基础消息相关能力，只需要注入对应的服务即可。以下为具体的服务类型表，开发人员可自行参考文档进行注入使用。
-
-| 类型名称                 | 说明                                 | 微信官方文档                                                 | 支持度                                                     |
-| ------------------------ | ------------------------------------ | ------------------------------------------------------------ | ---------------------------------------------------------- |
-| `TemplateMessageService` | 模板消息服务，提供模板消息相关接口。 | [点击访问](https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html) | ![Support](https://img.shields.io/badge/-85%25-orange.svg) |
-
-### 3.3 用户管理服务
-
-开发人员如果需要使用用户管理服务，只需要注入对应的服务即可。以下为具体的服务类型表，开发人员可自行参考文档进行注入使用。
-
-| 类型名称                | 说明                                                         | 微信官方文档                                                 | 支持度                                                       |
-| ----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `UserTagService`        | 用户标签管理服务，提供粉丝标签管理相关接口。                 | [点击访问](https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html) | ![Support](https://img.shields.io/badge/-100%25-brightgreen.svg) |
-| `BlackListService`      | 黑名单管理服务，管理公众号的黑名单。                         | [点击访问](https://developers.weixin.qq.com/doc/offiaccount/User_Management/Manage_blacklist.html) | ![Support](https://img.shields.io/badge/-100%25-brightgreen.svg) |
-| `UserManagementService` | 用户管理服务，提供以下服务:<br />- 设置用户备注名。<br />- 获取用户基本信息(UnionID 机制)。<br />- 获取用户列表。 | [点击访问](https://developers.weixin.qq.com/doc/offiaccount/User_Management/Configuring_user_notes.html) | ![Support](https://img.shields.io/badge/-100%25-brightgreen.svg) |
+本模块提供的用于微信服务器通讯的 HTTP API 接口，也支持多应用和多租户，您需要使用合适的替代路由：
+  * `/wechat/verify`
+  * `/wechat/verify/tenant-id/{tenantId}`
+  * `/wechat/verify/app-id/{appId}`
+  * `/wechat/verify/tenant-id/{tenantId}/app-id/{appId}`
+  * `/wechat/redirect-url`
+  * `/wechat/redirect-url/tenant-id/{tenantId}`
+  * `/wechat/redirect-url/app-id/{appId}`
+  * `/wechat/redirect-url/tenant-id/{tenantId}/app-id/{appId}`
 
 ## 四、如何实现其他未支持接口
 
-目前本仓库主要由 [real-zony](https://github.com/real-zony) 进行维护，部分不支持的接口可能一时半会儿无法实现。你可以参考源码，继承 `CommonService` 调用基类的 `WeChatOfficialApiRequester` 对象发起 API 请求。
+目前本仓库主要由 [real-zony](https://github.com/real-zony) 进行维护，部分不支持的接口可能一时半会儿无法实现。你可以参考源码，继承 `OfficialAbpWeChatServiceBase` 调用基类的 `WeChatOfficialApiRequester` 对象发起 API 请求。
 
 所有请求都需要实现 `OfficialCommonRequest` 基类，所有响应都需要实现 `OfficialCommonResponse` 基类。

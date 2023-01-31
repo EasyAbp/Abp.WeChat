@@ -2,29 +2,9 @@
 
 > 推荐你使用 EasyAbp 封装的[微信管理模块](https://github.com/EasyAbp/WeChatManagement)，它依赖本模块做了二次封装，提供应用级的各项功能。
 
-## 一、API 支持情况
+## 一、基本模块配置
 
-### 1.1 微信登录
-
-| 功能         | 是否支持                                                     |
-| ------------ | ------------------------------------------------------------ |
-| 登录凭证校验 | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
-
-### 1.2 小程序码
-
-| 功能                   | 是否支持                                                     |
-| ---------------------- | ------------------------------------------------------------ |
-| 获取小程序码 Unlimited | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
-
-### 1.3 订阅消息
-
-| 功能         | 是否支持                                                     |
-| ------------ | ------------------------------------------------------------ |
-| 发送订阅消息 | ![Support](https://img.shields.io/badge/-支持-brightgreen.svg) |
-
-## 二、基本模块配置
-
-### 2.1 模块的引用
+### 1.1 模块的引用
 
 添加 **EasyAbp.Abp.WeChat.MiniProgram** 模块的 NuGet 包或者项目引用到 **Domain** 层，并在对应的模块上面添加 `[DependsOn]` 特性标签。
 
@@ -32,7 +12,6 @@
 [DependsOn(typeof(AbpWeChatMiniProgramModule))]
 public class XXXDomainModule : AbpModule
 {
-
 }
 ```
 
@@ -42,46 +21,55 @@ public class XXXDomainModule : AbpModule
 [DependsOn(typeof(AbpWeChatMiniProgramHttpApiModule))]
 public class XXXHttpApiModule : AbpModule
 {
-    
 }
 ```
 
-### 2.2 模块的配置
+### 1.2 模块的配置
 
-微信模块的配置参数都存放在 `AbpWeChatMiniProgramOptions` 内部，开发人员只需要在启动模块的 `ConfigureService()` 方法中进行配置即可，下面是最小启动配置。
+本模块的默认配置参数使用 ABP Setting 设施管理，在 Setting 的值未提供时，由 `AbpWeChatMiniProgramOptions` 进行补充。如果您的应用只使用单个微信小程序，只需在启动模块的 `ConfigureService()` 方法中进行配置即可：
 
 ```csharp
-[DependsOn(typeof(AbpWeChatMiniProgramHttpApiModule))]
-public class XXXHttpApiModule : AbpModule 
+public override void ConfigureServices(ServiceConfigurationContext context) 
 {
-    public override void ConfigureServices(ServiceConfigurationContext context) 
+    Configure<AbpWeChatMiniProgramOptions>(op =>
     {
-        Configure<AbpWeChatMiniProgramOptions>(op =>
-        {
-            // 微信小程序所配置的 Token 值。
-            op.Token = "0000000000";
-            // 微信小程序分配的 AppId。
-            op.AppId = "0000000000";
-            // 微信小程序的唯一密钥。
-            op.AppSecret = "0000000000";
-        });
-    }
+        // 微信小程序分配的 AppId。
+        op.AppId = "0000000000";
+        // 微信小程序的唯一密钥。
+        // 注意，本值是密文，如您在 appsettings.json 或 Configure<AbpWeChatMiniProgramOptions> 中设置本值，须自行根据加密后填入，参考：https://docs.abp.io/en/abp/latest/String-Encryption
+        // 同样是密文的配置项还有：Token, EncodingAesKey
+        op.AppSecret = "********";
+        // 微信小程序所配置的 Token 和 EncodingAesKey 值。
+        op.Token = "********";
+        op.EncodingAesKey = "********";
+    });
 }
 ```
 
-进行上述配置以后，你的项目就集成了微信小程序功能。现在，你可以在任意地方注入服务类，通过服务类快捷地调用微信公众平台所提供的 API 接口服务。
+完整的 Setting 项清单：https://github.com/EasyAbp/Abp.WeChat/blob/master/src/MiniProgram/EasyAbp.Abp.WeChat.MiniProgram/Settings/AbpWeChatMiniProgramSettingDefinitionProvider.cs
 
-## 三、默认启用的接口
+## 二、服务的使用
 
-// TODO。
+您可以查看已实现的服务：https://github.com/EasyAbp/Abp.WeChat/tree/master/src/MiniProgram/EasyAbp.Abp.WeChat.MiniProgram/Services
 
-## 四、服务的使用
+参考以下写法使用服务：
 
-### 4.1 微信登录服务
+```CSharp
+var appId = null; // 目标微信应用的 appid，如果为空则取 Setting 中的默认值
+var aCodeService = await WeChatServiceFactory.CreateAsync<ACodeWeService>(appId);
+var result = await aCodeService.GetUnlimitedACodeAsync("test");
+```
 
-开发人员如果需要使用微信登录服务，只需要注入 `LoginService` 类型即可，该类型的生命周期为 **瞬时对象** 。
+注意，若 `appId` 与 Setting 中的默认值不同，则您需要手动实现 `IAbpWeChatOptionsProvider<TOptions>`，若使用 EasyAbp 封装的[微信管理模块](https://github.com/EasyAbp/WeChatManagement)，则您无需再手动实现。
 
-### 4.2 小程序码服务
+## 三、多微信应用
 
-开发人员如果需要使用小程序码服务，只需要注入 `ACodeService` 类型即可，该类型的生命周期为 **瞬时对象** 。
+在您调用服务，或处理微信请求的事件通知回调时，若提供的 `appId` 与 Setting 中的默认值可能不同，则您需要手动实现 `IAbpWeChatOptionsProvider<TOptions>`，若使用 EasyAbp 封装的[微信管理模块](https://github.com/EasyAbp/WeChatManagement)，则您无需再手动实现。
 
+本模块提供的用于微信服务器通讯的 HTTP API 接口，也支持多应用和多租户，您需要使用合适的替代路由：（TODO）
+
+## 四、如何实现其他未支持接口
+
+目前本仓库主要由 [real-zony](https://github.com/real-zony) 进行维护，部分不支持的接口可能一时半会儿无法实现。你可以参考源码，继承 `MiniProgramAbpWeChatServiceBase` 调用基类的 `WeChatMiniProgramApiRequester` 对象发起 API 请求。
+
+所有请求都需要实现 `MiniProgramCommonRequest` 基类，所有响应都需要实现 `MiniProgramCommonResponse` 基类。
