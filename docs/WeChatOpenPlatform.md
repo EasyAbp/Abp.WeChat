@@ -60,9 +60,9 @@ public override void ConfigureServices(ServiceConfigurationContext context)
 
 如果是多平台场景，请注入 `ICurrentWeChatThirdPartyPlatform` 改变当前 ComponentAppId：
 ```CSharp
-var aCodeService = await WeChatServiceFactory.CreateAsync<ACodeWeService>();
+var aCodeService = await WeChatServiceFactory.CreateAsync<ACodeWeService>(authorizerAppId);
 
-using (currentWeChatThirdPartyPlatform.Change(targetComponentAppId))
+using (currentWeChatThirdPartyPlatform.Change(componentAppId))
 {
     // 代客户生成小程序码
     await aCodeService.GetUnlimitedACodeAsync("test");
