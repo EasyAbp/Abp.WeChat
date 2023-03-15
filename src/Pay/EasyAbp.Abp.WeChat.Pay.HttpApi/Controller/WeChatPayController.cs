@@ -125,7 +125,6 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         /// </summary>
         [HttpPost]
         [Route("refund-notify/mch-id/{mchId}")]
-        [Route("refund-notify/tenant-id/{tenantId}/app-id/{appId}")]
         public virtual Task<ActionResult> RefundNotify3Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
         {
             return RefundNotifyAsync(tenantId, mchId);
@@ -136,7 +135,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         /// 见 <see cref="RefundNotifyAsync"/>
         /// </summary>
         [HttpPost]
-        [Route("refund-notify/tenant-id/{tenantId}/app-id/{appId}")]
+        [Route("refund-notify/tenant-id/{tenantId}/mch-id/{mchId}")]
         public virtual Task<ActionResult> RefundNotify4Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
         {
             return RefundNotifyAsync(tenantId, mchId);
