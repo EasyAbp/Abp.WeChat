@@ -63,7 +63,8 @@ public class AbpWeChatPayHttpClientFactory : IAbpWeChatPayHttpClientFactory, ITr
 
         var certificateBytes = await GetCertificateBytesOrNullAsync(options);
 
-        if (handlerCacheModel.CertificateBytes == certificateBytes)
+        if (handlerCacheModel.CertificateBytes == certificateBytes &&
+            handlerCacheModel.CertificateSecret == options.CertificateSecret)
         {
             return handlerCacheModel.Handler;
         }
@@ -129,6 +130,7 @@ public class AbpWeChatPayHttpClientFactory : IAbpWeChatPayHttpClientFactory, ITr
         {
             Handler = handler,
             CertificateBytes = certificateBytes,
+            CertificateSecret = options.CertificateSecret,
             SkipCertificateBytesCheckUntil = Clock.Now.Add(SkipCertificateBytesCheckUntilDuration)
         });
     }
