@@ -6,7 +6,7 @@ public class WeChatRequestHandlingResult
 
     public string FailureReason { get; set; }
 
-    protected WeChatRequestHandlingResult()
+    public WeChatRequestHandlingResult()
     {
     }
 

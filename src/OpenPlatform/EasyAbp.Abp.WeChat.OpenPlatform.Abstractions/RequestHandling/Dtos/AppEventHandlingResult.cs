@@ -14,7 +14,7 @@ public class AppEventHandlingResult : WeChatRequestHandlingResult
     [CanBeNull]
     public IResponseToWeChatModel ResponseToWeChatModel { get; set; }
 
-    protected AppEventHandlingResult()
+    public AppEventHandlingResult()
     {
     }
 
