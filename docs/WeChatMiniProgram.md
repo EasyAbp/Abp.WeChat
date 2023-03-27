@@ -15,14 +15,14 @@ public class XXXDomainModule : AbpModule
 }
 ```
 
-添加 **EasyAbp.Abp.WeChat.MiniProgram.HttpApi** 模块的 NuGet 包或者项目引用到 **Http.Api** 层，并在对应的模块上面添加 `[DependsOn]` 特性标签。
+<!-- 添加 **EasyAbp.Abp.WeChat.MiniProgram.HttpApi** 模块的 NuGet 包或者项目引用到 **Http.Api** 层，并在对应的模块上面添加 `[DependsOn]` 特性标签。
 
 ```csharp
 [DependsOn(typeof(AbpWeChatMiniProgramHttpApiModule))]
 public class XXXHttpApiModule : AbpModule
 {
 }
-```
+``` -->
 
 ### 1.2 模块的配置
 
