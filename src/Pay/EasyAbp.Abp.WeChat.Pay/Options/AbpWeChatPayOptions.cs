@@ -12,7 +12,6 @@
 
         /// <summary>
         /// 微信支付的 API 密钥信息，会在后续进行签名时被使用。
-        /// 注意，本值是密文！
         /// </summary>
         public string ApiKey { get; set; }
 
@@ -45,7 +44,6 @@
 
         /// <summary>
         /// PKCS 12 证书的密码，默认为商户号(<see cref="MchId"/>)。
-        /// 注意，本值是密文！
         /// </summary>
         public string CertificateSecret { get; set; }
 

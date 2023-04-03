@@ -34,8 +34,6 @@ public override void ConfigureServices(ServiceConfigurationContext context)
         // 微信公众号分配的 AppId。
         op.AppId = "0000000000";
         // 微信公众号的唯一密钥。
-        // 注意，本值是密文，如您在 appsettings.json 或 Configure<AbpWeChatOfficialOptions> 中设置本值，须自行根据加密后填入，参考：https://docs.abp.io/en/abp/latest/String-Encryption
-        // 同样是密文的配置项还有：Token, EncodingAesKey
         op.AppSecret = "********";
         // 微信公众号所配置的 Token 和 EncodingAesKey 值。
         op.Token = "********";
@@ -47,6 +45,8 @@ public override void ConfigureServices(ServiceConfigurationContext context)
 ```
 
 完整的 Setting 项清单：https://github.com/EasyAbp/Abp.WeChat/blob/master/src/Official/EasyAbp.Abp.WeChat.Official/Settings/AbpWeChatOfficialSettingDefinitionProvider.cs
+
+> 注意，如您在 appsettings.json 中通过 Setting 设置 `AppSecret`, `Token` 或 `EncodingAesKey`，须自行根据加密后填入，参考：https://docs.abp.io/en/abp/latest/String-Encryption
 
 ## 二、服务的使用
 
