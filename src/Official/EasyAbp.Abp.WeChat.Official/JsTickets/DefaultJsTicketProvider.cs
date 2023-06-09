@@ -46,7 +46,7 @@ namespace EasyAbp.Abp.WeChat.Official.JsTickets
                 });
             }
 
-            return cacheKey;
+            return cachedValue;
         }
 
         protected virtual Task<string> GetCacheKeyAsync(string appId)
