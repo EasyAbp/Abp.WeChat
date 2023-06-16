@@ -44,8 +44,11 @@ namespace EasyAbp.Abp.WeChat.Pay.Services
             WeChatPayParameters requestParameters, [CanBeNull] string mchId)
         {
             var result = await ApiRequester.RequestAsync(targetUrl, requestParameters.ToXmlStr(), mchId);
-            if (result.SelectSingleNode("/xml/return_code")?.InnerText != "SUCCESS" ||
-                result.SelectSingleNode("/xml/return_msg")?.InnerText != "OK")
+
+            var returnCode = result.SelectSingleNode("/xml/return_code")?.InnerText;
+            var returnMsg = result.SelectSingleNode("/xml/return_msg")?.InnerText;
+
+            if (returnCode != "SUCCESS" || (returnMsg != "OK" && !returnMsg.IsNullOrWhiteSpace()))
             {
                 var errMsg =
                     $"微信支付接口调用失败，具体失败原因：{result.SelectSingleNode("/xml/err_code_des")?.InnerText ?? result.SelectSingleNode("/xml/return_msg")?.InnerText}";
