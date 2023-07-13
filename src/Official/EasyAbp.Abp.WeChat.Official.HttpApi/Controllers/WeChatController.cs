@@ -184,8 +184,8 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
         /// 微信应用事件通知接口，开发人员需要实现 <see cref="IWeChatOfficialAppEventHandler"/> 处理器来处理回调请求。
         /// </summary>
         [HttpPost]
-        [Route("notify/app-id/{appId}")]
-        public virtual async Task<ActionResult> NotifyAsync([CanBeNull] string tenantId, [NotNull] string appId)
+        [Route("notify")]
+        public virtual async Task<ActionResult> NotifyAsync([CanBeNull] string tenantId, [CanBeNull] string appId)
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
@@ -220,8 +220,30 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
         /// 见 <see cref="NotifyAsync"/>
         /// </summary>
         [HttpPost]
-        [Route("notify/tenant-id/{tenantId}/app-id/{appId}")]
+        [Route("notify/tenant-id/{tenantId}")]
         public virtual Task<ActionResult> Notify2Async([CanBeNull] string tenantId, [NotNull] string appId)
+        {
+            return NotifyAsync(tenantId, appId);
+        }
+
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="NotifyAsync"/>
+        /// </summary>
+        [HttpPost]
+        [Route("notify/app-id/{appId}")]
+        public virtual Task<ActionResult> Notify3Async([CanBeNull] string tenantId, [NotNull] string appId)
+        {
+            return NotifyAsync(tenantId, appId);
+        }
+
+        /// <summary>
+        /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
+        /// 见 <see cref="NotifyAsync"/>
+        /// </summary>
+        [HttpPost]
+        [Route("notify/tenant-id/{tenantId}/app-id/{appId}")]
+        public virtual Task<ActionResult> Notify4Async([CanBeNull] string tenantId, [NotNull] string appId)
         {
             return NotifyAsync(tenantId, appId);
         }

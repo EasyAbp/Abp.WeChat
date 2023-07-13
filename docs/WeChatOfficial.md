@@ -67,10 +67,10 @@ var result = await customMenuService.DeleteCustomMenuAsync();
 在您调用服务，或处理微信请求的事件通知回调时，若提供的 `appId` 与 Setting 中的默认值可能不同，则您需要手动实现 `IAbpWeChatOptionsProvider<TOptions>`，若使用 EasyAbp 封装的[微信管理模块](https://github.com/EasyAbp/WeChatManagement)，则您无需再手动实现。
 
 本模块提供的用于微信服务器通讯的 HTTP API 接口，也支持多应用和多租户，您需要使用合适的替代路由：
-  * `/wechat/verify`
-  * `/wechat/verify/tenant-id/{tenantId}`
-  * `/wechat/verify/app-id/{appId}`
-  * `/wechat/verify/tenant-id/{tenantId}/app-id/{appId}`
+  * `/wechat/notify`
+  * `/wechat/notify/tenant-id/{tenantId}`
+  * `/wechat/notify/app-id/{appId}`
+  * `/wechat/notify/tenant-id/{tenantId}/app-id/{appId}`
   * `/wechat/redirect-url`
   * `/wechat/redirect-url/tenant-id/{tenantId}`
   * `/wechat/redirect-url/app-id/{appId}`
