@@ -5,4 +5,5 @@ namespace EasyAbp.Abp.WeChat.Common.Infrastructure.Services;
 /// </summary>
 public interface IAbpWeChatService
 {
+    string AppId { get; }
 }

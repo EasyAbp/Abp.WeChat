@@ -19,6 +19,8 @@ namespace EasyAbp.Abp.WeChat.Pay.Services
     /// </summary>
     public abstract class WeChatPayServiceBase : IAbpWeChatPayService
     {
+        public string MchId => Options.MchId;
+
         protected IAbpLazyServiceProvider LazyServiceProvider { get; set; }
 
         protected AbpWeChatPayOptions Options { get; }

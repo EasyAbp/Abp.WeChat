@@ -5,4 +5,5 @@ namespace EasyAbp.Abp.WeChat.Pay.Services;
 /// </summary>
 public interface IAbpWeChatPayService
 {
+    string MchId { get; }
 }
