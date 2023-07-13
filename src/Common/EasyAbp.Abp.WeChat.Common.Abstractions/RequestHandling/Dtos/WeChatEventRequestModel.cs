@@ -11,5 +11,5 @@ public class WeChatEventRequestModel
 
     public string Timestamp { get; set; }
 
-    public string Notice { get; set; }
+    public string Nonce { get; set; }
 }

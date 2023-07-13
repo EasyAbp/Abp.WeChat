@@ -9,7 +9,6 @@ using EasyAbp.Abp.WeChat.Common.Infrastructure.Signature;
 using EasyAbp.Abp.WeChat.Official.JsTickets;
 using EasyAbp.Abp.WeChat.Official.Options;
 using EasyAbp.Abp.WeChat.Official.Services.Login;
-using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Official.RequestHandling;

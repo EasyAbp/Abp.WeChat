@@ -1,5 +1,8 @@
-namespace EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling
+using System;
+
+namespace EasyAbp.Abp.WeChat.Official.RequestHandling
 {
+    [Obsolete("请使用统一的Notify接口")]
     public class VerifyRequestDto
     {
         /// <summary>

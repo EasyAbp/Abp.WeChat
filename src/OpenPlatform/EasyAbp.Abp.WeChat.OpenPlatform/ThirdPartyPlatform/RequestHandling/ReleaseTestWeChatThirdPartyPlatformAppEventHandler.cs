@@ -6,6 +6,7 @@ using EasyAbp.Abp.WeChat.Common.Infrastructure.Encryption;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Options;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Services;
 using EasyAbp.Abp.WeChat.Common.Models;
+using EasyAbp.Abp.WeChat.Common.RequestHandling.Dtos;
 using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling.Dtos;
 using EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.Options;
 using EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.Services;

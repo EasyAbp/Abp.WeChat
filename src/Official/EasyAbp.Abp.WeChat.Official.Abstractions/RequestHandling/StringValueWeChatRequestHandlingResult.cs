@@ -1,6 +1,6 @@
 using EasyAbp.Abp.WeChat.Common.RequestHandling;
 
-namespace EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling;
+namespace EasyAbp.Abp.WeChat.Official.RequestHandling;
 
 public class StringValueWeChatRequestHandlingResult : WeChatRequestHandlingResult
 {

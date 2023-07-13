@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.RequestHandling;
 
-public interface IThirdPartyPlatformEventHandlerResolver
+public interface IWeChatThirdPartyPlatformEventHandlerResolver
 {
     Task<List<IWeChatThirdPartyPlatformAuthEventHandler>> GetAuthEventHandlersAsync([CanBeNull] string infoType);
 

@@ -1,7 +1,6 @@
-﻿using EasyAbp.Abp.WeChat.Common.RequestHandling;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
-namespace EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling.Dtos;
+namespace EasyAbp.Abp.WeChat.Common.RequestHandling.Dtos;
 
 public class AppEventHandlingResult : WeChatRequestHandlingResult
 {

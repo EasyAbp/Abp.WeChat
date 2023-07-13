@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
-namespace EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling;
+namespace EasyAbp.Abp.WeChat.Official.RequestHandling;
 
 public interface IWeChatOfficialClientRequestHandlingService
 {

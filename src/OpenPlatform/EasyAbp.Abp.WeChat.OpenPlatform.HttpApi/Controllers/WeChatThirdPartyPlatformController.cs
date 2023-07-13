@@ -115,6 +115,7 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
         {
             JsonResponseToWeChatModel => "application/json",
             XmlResponseToWeChatModel => "application/xml",
+            PlainTextResponseToWeChatModel => "text/plain",
             null => "text/plain",
             _ => "text/plain"
         })
@@ -181,7 +182,7 @@ public class WeChatThirdPartyPlatformController : AbpControllerBase
             PostData = postData,
             MsgSignature = Request.Query["msg_signature"].FirstOrDefault(),
             Timestamp = Request.Query["timestamp"].FirstOrDefault(),
-            Notice = Request.Query["nonce"].FirstOrDefault()
+            Nonce = Request.Query["nonce"].FirstOrDefault()
         };
     }
 }

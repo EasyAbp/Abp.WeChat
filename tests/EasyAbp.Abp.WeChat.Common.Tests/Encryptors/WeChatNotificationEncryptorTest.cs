@@ -1,24 +1,23 @@
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.Infrastructure.Encryption;
 using EasyAbp.Abp.WeChat.Common.Models;
-using EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.Options;
 using Shouldly;
 using Xunit;
 
-namespace EasyAbp.Abp.WeChat.OpenPlatform.Tests.ThirdPartyPlatform;
+namespace EasyAbp.Abp.WeChat.Common.Tests.Encryptors;
 
-public class WeChatNotificationEncryptorTest : AbpWeChatOpenPlatformTestBase
+public class WeChatNotificationEncryptorTest : AbpWeChatCommonTestBase<AbpWeChatCommonTestsModule>
 {
     [Fact]
     public async Task Should_Encrypt_Xml()
     {
         var encryptor = GetRequiredService<IWeChatNotificationEncryptor>();
 
-        var options = new AbpWeChatThirdPartyPlatformOptions
+        var options = new TestAbpWeChatOptions
         {
-            Token = AbpWeChatOpenPlatformTestsConsts.Token,
-            AppId = AbpWeChatOpenPlatformTestsConsts.AppId,
-            EncodingAesKey = AbpWeChatOpenPlatformTestsConsts.EncodingAesKey
+            Token = AbpWeChatCommonTestsConsts.Token,
+            AppId = AbpWeChatCommonTestsConsts.AppId,
+            EncodingAesKey = AbpWeChatCommonTestsConsts.EncodingAesKey
         };
 
         var encryptedXml = await encryptor.EncryptAsync(
@@ -42,21 +41,21 @@ public class WeChatNotificationEncryptorTest : AbpWeChatOpenPlatformTestBase
     {
         var encryptor = GetRequiredService<IWeChatNotificationEncryptor>();
 
-        var options = new AbpWeChatThirdPartyPlatformOptions
+        var options = new TestAbpWeChatOptions
         {
-            Token = AbpWeChatOpenPlatformTestsConsts.Token,
-            AppId = AbpWeChatOpenPlatformTestsConsts.AppId,
-            EncodingAesKey = AbpWeChatOpenPlatformTestsConsts.EncodingAesKey
+            Token = AbpWeChatCommonTestsConsts.Token,
+            AppId = AbpWeChatCommonTestsConsts.AppId,
+            EncodingAesKey = AbpWeChatCommonTestsConsts.EncodingAesKey
         };
 
         var model = await encryptor.DecryptAsync<WeChatAppEventModel>(
             options.Token,
             options.EncodingAesKey,
             options.AppId,
-            AbpWeChatOpenPlatformTestsConsts.ReqMsgSig,
-            AbpWeChatOpenPlatformTestsConsts.ReqTimeStamp,
-            AbpWeChatOpenPlatformTestsConsts.ReqNonce,
-            AbpWeChatOpenPlatformTestsConsts.ReqData);
+            AbpWeChatCommonTestsConsts.ReqMsgSig,
+            AbpWeChatCommonTestsConsts.ReqTimeStamp,
+            AbpWeChatCommonTestsConsts.ReqNonce,
+            AbpWeChatCommonTestsConsts.ReqData);
 
         model.MsgType.ShouldBe("text");
         model.ToUserName.ShouldBe("wx5823bf96d3bd56c7");

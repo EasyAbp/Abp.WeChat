@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.Models;
-using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling.Dtos;
+using EasyAbp.Abp.WeChat.Common.RequestHandling.Dtos;
 using JetBrains.Annotations;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.RequestHandling;
