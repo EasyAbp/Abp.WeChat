@@ -1,4 +1,4 @@
-namespace EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling
+namespace EasyAbp.Abp.WeChat.Official.RequestHandling
 {
     public class RedirectUrlRequest
     {

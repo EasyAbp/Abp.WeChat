@@ -7,7 +7,8 @@ using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.RequestHandling;
 
-public class ThirdPartyPlatformEventHandlerResolver : IThirdPartyPlatformEventHandlerResolver, ITransientDependency
+public class WeChatThirdPartyPlatformEventHandlerResolver : IWeChatThirdPartyPlatformEventHandlerResolver,
+    ITransientDependency
 {
     protected static Dictionary<string, List<Type>> AuthEventHandlerCachedTypes { get; set; }
     protected static Dictionary<string, List<Type>> AppEventHandlerCachedTypes { get; set; }
@@ -17,7 +18,7 @@ public class ThirdPartyPlatformEventHandlerResolver : IThirdPartyPlatformEventHa
 
     protected IServiceProvider ServiceProvider { get; }
 
-    public ThirdPartyPlatformEventHandlerResolver(IServiceProvider serviceProvider)
+    public WeChatThirdPartyPlatformEventHandlerResolver(IServiceProvider serviceProvider)
     {
         ServiceProvider = serviceProvider;
     }
@@ -54,8 +55,8 @@ public class ThirdPartyPlatformEventHandlerResolver : IThirdPartyPlatformEventHa
             }
         }
 
-        return AuthEventHandlerCachedTypes.ContainsKey(infoType)
-            ? await CreateObjectsAsync<IWeChatThirdPartyPlatformAuthEventHandler>(AuthEventHandlerCachedTypes[infoType])
+        return AuthEventHandlerCachedTypes.TryGetValue(infoType, out var type)
+            ? await CreateObjectsAsync<IWeChatThirdPartyPlatformAuthEventHandler>(type)
             : new List<IWeChatThirdPartyPlatformAuthEventHandler>();
     }
 

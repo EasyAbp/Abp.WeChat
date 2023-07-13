@@ -10,28 +10,26 @@ using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling.Dtos;
 using EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.Models;
 using EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.Options;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.ObjectExtending;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.RequestHandling;
 
 public class WeChatThirdPartyPlatformEventRequestHandlingService :
+    WeChatEventRequestHandlingServiceBase<AbpWeChatThirdPartyPlatformOptions>,
     IWeChatThirdPartyPlatformEventRequestHandlingService, ITransientDependency
 {
-    private readonly IThirdPartyPlatformEventHandlerResolver _thirdPartyPlatformEventHandlerResolver;
+    private readonly IWeChatThirdPartyPlatformEventHandlerResolver _weChatThirdPartyPlatformEventHandlerResolver;
     private readonly ICurrentWeChatThirdPartyPlatform _currentWeChatThirdPartyPlatform;
     private readonly IAbpWeChatOptionsProvider<AbpWeChatThirdPartyPlatformOptions> _optionsProvider;
-    private readonly IWeChatNotificationEncryptor _weChatNotificationEncryptor;
 
     public WeChatThirdPartyPlatformEventRequestHandlingService(
-        IThirdPartyPlatformEventHandlerResolver thirdPartyPlatformEventHandlerResolver,
+        IWeChatThirdPartyPlatformEventHandlerResolver weChatThirdPartyPlatformEventHandlerResolver,
         ICurrentWeChatThirdPartyPlatform currentWeChatThirdPartyPlatform,
         IAbpWeChatOptionsProvider<AbpWeChatThirdPartyPlatformOptions> optionsProvider,
-        IWeChatNotificationEncryptor weChatNotificationEncryptor)
+        IWeChatNotificationEncryptor weChatNotificationEncryptor) : base(weChatNotificationEncryptor)
     {
-        _thirdPartyPlatformEventHandlerResolver = thirdPartyPlatformEventHandlerResolver;
+        _weChatThirdPartyPlatformEventHandlerResolver = weChatThirdPartyPlatformEventHandlerResolver;
         _currentWeChatThirdPartyPlatform = currentWeChatThirdPartyPlatform;
         _optionsProvider = optionsProvider;
-        _weChatNotificationEncryptor = weChatNotificationEncryptor;
     }
 
     /// <summary>
@@ -45,7 +43,8 @@ public class WeChatThirdPartyPlatformEventRequestHandlingService :
 
         var model = await DecryptMsgAsync<AuthEventModel>(options, input.EventRequest);
 
-        foreach (var handler in await _thirdPartyPlatformEventHandlerResolver.GetAuthEventHandlersAsync(model.InfoType))
+        foreach (var handler in await _weChatThirdPartyPlatformEventHandlerResolver.GetAuthEventHandlersAsync(
+                     model.InfoType))
         {
             var result = await handler.HandleAsync(model);
 
@@ -72,7 +71,8 @@ public class WeChatThirdPartyPlatformEventRequestHandlingService :
 
         IResponseToWeChatModel responseToWeChatModel = null;
 
-        foreach (var handler in (await _thirdPartyPlatformEventHandlerResolver.GetAppEventHandlersAsync(model.MsgType))
+        foreach (var handler in (await _weChatThirdPartyPlatformEventHandlerResolver.GetAppEventHandlersAsync(
+                     model.MsgType))
                  .OrderByDescending(x => x.Priority))
         {
             var result = await handler.HandleAsync(options.AppId, input.AuthorizerAppId, model);
@@ -91,18 +91,5 @@ public class WeChatThirdPartyPlatformEventRequestHandlingService :
         return responseToWeChatModel is null
             ? new AppEventHandlingResult(true)
             : new AppEventHandlingResult(responseToWeChatModel);
-    }
-
-    protected virtual async Task<T> DecryptMsgAsync<T>(AbpWeChatThirdPartyPlatformOptions options,
-        WeChatEventRequestModel request) where T : ExtensibleObject, new()
-    {
-        return await _weChatNotificationEncryptor.DecryptAsync<T>(
-            options.Token,
-            options.EncodingAesKey,
-            options.AppId,
-            request.MsgSignature,
-            request.Timestamp,
-            request.Notice,
-            request.PostData);
     }
 }

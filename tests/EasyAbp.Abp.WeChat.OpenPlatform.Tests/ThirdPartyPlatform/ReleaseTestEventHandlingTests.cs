@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.Models;
+using EasyAbp.Abp.WeChat.Common.RequestHandling.Dtos;
 using EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling.Dtos;
 using EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.RequestHandling;
 using Shouldly;

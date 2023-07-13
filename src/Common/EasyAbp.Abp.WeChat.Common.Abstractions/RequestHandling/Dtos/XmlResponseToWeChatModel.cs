@@ -1,4 +1,4 @@
-﻿namespace EasyAbp.Abp.WeChat.OpenPlatform.RequestHandling.Dtos;
+﻿namespace EasyAbp.Abp.WeChat.Common.RequestHandling.Dtos;
 
 public class XmlResponseToWeChatModel : IResponseToWeChatModel
 {

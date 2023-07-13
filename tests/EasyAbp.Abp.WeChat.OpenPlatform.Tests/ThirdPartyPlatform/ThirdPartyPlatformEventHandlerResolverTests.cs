@@ -12,7 +12,7 @@ public class ThirdPartyPlatformEventHandlerResolverTests : AbpWeChatOpenPlatform
     [Fact]
     public async Task Should_Resolve_Handlers()
     {
-        var resolver = GetRequiredService<IThirdPartyPlatformEventHandlerResolver>();
+        var resolver = GetRequiredService<IWeChatThirdPartyPlatformEventHandlerResolver>();
 
         var unauthorizedHandlers =
             await resolver.GetAuthEventHandlersAsync(WeChatThirdPartyPlatformAuthEventInfoTypes.Unauthorized);
