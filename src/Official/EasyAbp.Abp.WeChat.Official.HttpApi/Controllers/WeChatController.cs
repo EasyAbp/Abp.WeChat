@@ -183,13 +183,21 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
         /// <summary>
         /// 微信应用事件通知接口，开发人员需要实现 <see cref="IWeChatOfficialAppEventHandler"/> 处理器来处理回调请求。
         /// </summary>
+        [HttpGet]
         [HttpPost]
         [Route("notify")]
         public virtual async Task<ActionResult> NotifyAsync([CanBeNull] string tenantId, [CanBeNull] string appId)
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-            var result = await _eventRequestHandlingService.NotifyAsync(await CreateRequestModelAsync(), appId);
+            var model = await CreateRequestModelAsync();
+
+            if (model is null)
+            {
+                return BadRequest();
+            }
+
+            var result = await _eventRequestHandlingService.NotifyAsync(model, appId);
 
             if (!result.Success)
             {
@@ -219,6 +227,7 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
         /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
         /// 见 <see cref="NotifyAsync"/>
         /// </summary>
+        [HttpGet]
         [HttpPost]
         [Route("notify/tenant-id/{tenantId}")]
         public virtual Task<ActionResult> Notify2Async([CanBeNull] string tenantId, [NotNull] string appId)
@@ -230,6 +239,7 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
         /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
         /// 见 <see cref="NotifyAsync"/>
         /// </summary>
+        [HttpGet]
         [HttpPost]
         [Route("notify/app-id/{appId}")]
         public virtual Task<ActionResult> Notify3Async([CanBeNull] string tenantId, [NotNull] string appId)
@@ -241,6 +251,7 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
         /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
         /// 见 <see cref="NotifyAsync"/>
         /// </summary>
+        [HttpGet]
         [HttpPost]
         [Route("notify/tenant-id/{tenantId}/app-id/{appId}")]
         public virtual Task<ActionResult> Notify4Async([CanBeNull] string tenantId, [NotNull] string appId)
@@ -248,8 +259,16 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
             return NotifyAsync(tenantId, appId);
         }
 
+        [ItemCanBeNull]
         protected virtual async Task<WeChatOfficialEventRequestModel> CreateRequestModelAsync()
         {
+            var echostr = Request.Query["echostr"].FirstOrDefault();
+
+            if (!echostr.IsNullOrWhiteSpace() && Request.Method != "GET")
+            {
+                return null;
+            }
+
             Request.EnableBuffering();
 
             using var streamReader = new StreamReader(Request.Body);
@@ -258,6 +277,11 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
 
             Request.Body.Position = 0;
 
+            if (!postData.IsNullOrWhiteSpace() && Request.Method != "POST")
+            {
+                return null;
+            }
+
             return new WeChatOfficialEventRequestModel
             {
                 PostData = postData,
@@ -265,7 +289,7 @@ namespace EasyAbp.Abp.WeChat.Official.Controllers
                                Request.Query["signature"].FirstOrDefault(),
                 Timestamp = Request.Query["timestamp"].FirstOrDefault(),
                 Nonce = Request.Query["nonce"].FirstOrDefault(),
-                EchoStr = Request.Query["echostr"].FirstOrDefault()
+                EchoStr = echostr
             };
         }
     }
