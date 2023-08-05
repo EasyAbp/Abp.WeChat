@@ -76,7 +76,27 @@ var result = await customMenuService.DeleteCustomMenuAsync();
   * `/wechat/redirect-url/app-id/{appId}`
   * `/wechat/redirect-url/tenant-id/{tenantId}/app-id/{appId}`
 
-## 四、如何实现其他未支持接口
+## 四、微信服务器事件处理
+
+本模块提供了 HTTP API 接口接收微信服务器事件推送，如果您需要处理，请实现处理器类：
+
+```csharp
+public class MyWeChatOfficialAppEventHandler :
+    WeChatOfficialAppEventHandlerBase<MyWeChatOfficialAppEventHandler>,
+    ITransientDependency
+{
+    public override string MsgType => "event"; // 对应微信文档的msgType值
+    public override int Priority => 0; // Priority大的处理器优先执行
+
+    public override async Task<AppEventHandlingResult> HandleAsync(string appId, WeChatAppEventModel model)
+    {
+        // 在这里处理您的业务
+        return new AppEventHandlingResult(true); // 处理后返回成功的结果
+    }
+}
+```
+
+## 五、如何实现其他未支持接口
 
 目前本仓库主要由 [real-zony](https://github.com/real-zony) 进行维护，部分不支持的接口可能一时半会儿无法实现。你可以参考源码，继承 `OfficialAbpWeChatServiceBase` 调用基类的 `WeChatOfficialApiRequester` 对象发起 API 请求。
 

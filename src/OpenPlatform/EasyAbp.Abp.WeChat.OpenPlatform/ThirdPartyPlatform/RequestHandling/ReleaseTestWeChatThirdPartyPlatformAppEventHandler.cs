@@ -18,14 +18,15 @@ using Volo.Abp.Json;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.RequestHandling;
 
-public class ReleaseTestWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPartyPlatformAppEventHandler,
+public class ReleaseTestWeChatThirdPartyPlatformAppEventHandler :
+    WeChatThirdPartyPlatformAppEventHandlerBase<ReleaseTestWeChatThirdPartyPlatformAppEventHandler>,
     ITransientDependency
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<ReleaseTestWeChatThirdPartyPlatformAppEventHandler> _logger;
 
-    public virtual string MsgType => "text";
-    public int Priority => -10000;
+    public override string MsgType => "text";
+    public override int Priority => -10000;
 
     public ReleaseTestWeChatThirdPartyPlatformAppEventHandler(
         IServiceProvider serviceProvider,
@@ -35,7 +36,7 @@ public class ReleaseTestWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPa
         _logger = logger;
     }
 
-    public virtual async Task<AppEventHandlingResult> HandleAsync(string componentAppId, string authorizerAppId,
+    public override async Task<AppEventHandlingResult> HandleAsync(string componentAppId, string authorizerAppId,
         WeChatAppEventModel model)
     {
         if (ReleaseTestConsts.OfficialAppIds.Contains(authorizerAppId))

@@ -6,7 +6,7 @@ using Xunit;
 
 namespace EasyAbp.Abp.WeChat.Official.Tests.EventHandling;
 
-public class ThirdPartyPlatformEventHandlerResolverTests : AbpWeChatOfficialTestBase
+public class OfficialAppEventHandlerResolverTests : AbpWeChatOfficialTestBase
 {
     [Fact]
     public async Task Should_Resolve_Handlers()

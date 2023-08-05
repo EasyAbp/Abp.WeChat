@@ -6,12 +6,13 @@ using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.Tests.ThirdPartyPlatform.Fakes;
 
-public class FakeUnauthorizedWeChatThirdPartyPlatformAuthEventHandler : IWeChatThirdPartyPlatformAuthEventHandler,
+public class FakeUnauthorizedWeChatThirdPartyPlatformAuthEventHandler :
+    WeChatThirdPartyPlatformAuthEventHandlerBase<FakeUnauthorizedWeChatThirdPartyPlatformAuthEventHandler>,
     ITransientDependency
 {
-    public string InfoType => WeChatThirdPartyPlatformAuthEventInfoTypes.Unauthorized;
+    public override string InfoType => WeChatThirdPartyPlatformAuthEventInfoTypes.Unauthorized;
 
-    public Task<WeChatRequestHandlingResult> HandleAsync(AuthEventModel model)
+    public override Task<WeChatRequestHandlingResult> HandleAsync(AuthEventModel model)
     {
         return Task.FromResult(new WeChatRequestHandlingResult(true));
     }
