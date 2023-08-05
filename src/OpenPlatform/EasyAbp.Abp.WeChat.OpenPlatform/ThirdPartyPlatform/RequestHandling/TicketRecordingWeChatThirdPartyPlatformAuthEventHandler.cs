@@ -9,9 +9,10 @@ using Volo.Abp.DependencyInjection;
 namespace EasyAbp.Abp.WeChat.OpenPlatform.ThirdPartyPlatform.RequestHandling;
 
 public class TicketRecordingWeChatThirdPartyPlatformAuthEventHandler :
-    IWeChatThirdPartyPlatformAuthEventHandler, ITransientDependency
+    WeChatThirdPartyPlatformAuthEventHandlerBase<TicketRecordingWeChatThirdPartyPlatformAuthEventHandler>,
+    ITransientDependency
 {
-    public string InfoType => WeChatThirdPartyPlatformAuthEventInfoTypes.ComponentVerifyTicket;
+    public override string InfoType => WeChatThirdPartyPlatformAuthEventInfoTypes.ComponentVerifyTicket;
 
     private readonly ILogger<TicketRecordingWeChatThirdPartyPlatformAuthEventHandler> _logger;
     private readonly IComponentVerifyTicketStore _componentVerifyTicketStore;
@@ -24,7 +25,7 @@ public class TicketRecordingWeChatThirdPartyPlatformAuthEventHandler :
         _componentVerifyTicketStore = componentVerifyTicketStore;
     }
 
-    public virtual async Task<WeChatRequestHandlingResult> HandleAsync(AuthEventModel model)
+    public override async Task<WeChatRequestHandlingResult> HandleAsync(AuthEventModel model)
     {
         if (model.ComponentVerifyTicket.IsNullOrWhiteSpace())
         {

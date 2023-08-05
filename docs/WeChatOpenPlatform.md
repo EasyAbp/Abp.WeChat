@@ -88,3 +88,25 @@ using (currentWeChatThirdPartyPlatform.Change(componentAppId))
   * `/wechat/third-party-platform/notify/app/tenant-id/{tenantId}/app-id/{appId}`
   * `/wechat/third-party-platform/notify/app/component-app-id/{componentAppId}/app-id/{appId}`
   * `/wechat/third-party-platform/notify/app/tenant-id/{tenantId}/component-app-id/{componentAppId}/app-id/{appId}`
+
+## 四、微信服务器事件处理
+
+本模块提供了 HTTP API 接口接收微信服务器事件推送，如果您需要处理，请实现处理器类：
+
+```csharp
+// 第三方平台代接收的微信应用事件
+public class MyWeChatThirdPartyPlatformAppEventHandler :
+    WeChatThirdPartyPlatformAppEventHandlerBase<MyWeChatThirdPartyPlatformAppEventHandler>,
+    ITransientDependency
+{
+    public override string MsgType => "event"; // 对应微信文档的msgType值
+    public override int Priority => 0; // Priority大的处理器优先执行
+
+    public override async Task<AppEventHandlingResult> HandleAsync(
+        string componentAppId, string authorizerAppId, WeChatAppEventModel model)
+    {
+        // 在这里处理您的业务
+        return new AppEventHandlingResult(true); // 处理后返回成功的结果
+    }
+}
+```

@@ -7,14 +7,15 @@ using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.OpenPlatform.Tests.ThirdPartyPlatform.Fakes;
 
-public class FakeTextWeChatThirdPartyPlatformAppEventHandler : IWeChatThirdPartyPlatformAppEventHandler,
+public class FakeTextWeChatThirdPartyPlatformAppEventHandler :
+    WeChatThirdPartyPlatformAppEventHandlerBase<FakeTextWeChatThirdPartyPlatformAppEventHandler>,
     ITransientDependency
 {
-    public string MsgType => "text";
-    public int Priority => 0;
+    public override string MsgType => "text";
+    public override int Priority => 0;
 
-    public Task<AppEventHandlingResult> HandleAsync(
-        string componentAppId, string authorizerAppId, WeChatAppEventModel model)
+    public override Task<AppEventHandlingResult> HandleAsync(string componentAppId, string authorizerAppId,
+        WeChatAppEventModel model)
     {
         return Task.FromResult(new AppEventHandlingResult(true));
     }

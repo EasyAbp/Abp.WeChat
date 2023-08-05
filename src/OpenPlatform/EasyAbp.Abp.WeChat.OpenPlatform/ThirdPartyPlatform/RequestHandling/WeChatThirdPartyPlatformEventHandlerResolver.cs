@@ -46,7 +46,7 @@ public class WeChatThirdPartyPlatformEventHandlerResolver : IWeChatThirdPartyPla
                     var objs = ServiceProvider.GetServices<IWeChatThirdPartyPlatformAuthEventHandler>().ToArray();
 
                     var cacheTypes = objs.GroupBy(obj => obj.InfoType)
-                        .ToDictionary(x => x.Key, x => x.Select(y => y.GetType()).ToList());
+                        .ToDictionary(x => x.Key, x => x.Select(y => y.HandlerType).ToList());
 
                     AuthEventHandlerCachedTypes = cacheTypes;
 
@@ -72,7 +72,7 @@ public class WeChatThirdPartyPlatformEventHandlerResolver : IWeChatThirdPartyPla
                     var objs = ServiceProvider.GetServices<IWeChatThirdPartyPlatformAppEventHandler>().ToArray();
 
                     var cacheTypes = objs.GroupBy(obj => obj.MsgType)
-                        .ToDictionary(x => x.Key, x => x.Select(y => y.GetType()).ToList());
+                        .ToDictionary(x => x.Key, x => x.Select(y => y.HandlerType).ToList());
 
                     AppEventHandlerCachedTypes = cacheTypes;
 

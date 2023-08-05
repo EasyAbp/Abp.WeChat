@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.Models;
 using EasyAbp.Abp.WeChat.Common.RequestHandling.Dtos;
@@ -13,12 +14,17 @@ public interface IWeChatOfficialAppEventHandler
     /// <summary>
     /// 仅处理回调请求中，相应的 MsgType 值的事件
     /// </summary>
-    public string MsgType { get; }
+    string MsgType { get; }
 
     /// <summary>
     /// Handler 执行的优先级，值更大的先执行
     /// </summary>
-    public int Priority { get; }
+    int Priority { get; }
+
+    /// <summary>
+    /// 实现 IWeChatOfficialAppEventHandler 的类型，用于实例化
+    /// </summary>
+    Type HandlerType { get; }
 
     /// <summary>
     /// 事件处理实现。

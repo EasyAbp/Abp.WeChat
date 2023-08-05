@@ -25,8 +25,7 @@ public class WeChatOfficialAppEventHandlerResolver : IWeChatOfficialAppEventHand
         return ResolveAppEventHandlersAsync(msgType);
     }
 
-    protected virtual async Task<List<IWeChatOfficialAppEventHandler>> ResolveAppEventHandlersAsync(
-        string msgType)
+    protected virtual async Task<List<IWeChatOfficialAppEventHandler>> ResolveAppEventHandlersAsync(string msgType)
     {
         if (AppEventHandlerCachedTypes is null)
         {
@@ -37,7 +36,7 @@ public class WeChatOfficialAppEventHandlerResolver : IWeChatOfficialAppEventHand
                     var objs = ServiceProvider.GetServices<IWeChatOfficialAppEventHandler>().ToArray();
 
                     var cacheTypes = objs.GroupBy(obj => obj.MsgType)
-                        .ToDictionary(x => x.Key, x => x.Select(y => y.GetType()).ToList());
+                        .ToDictionary(x => x.Key, x => x.Select(y => y.HandlerType).ToList());
 
                     AppEventHandlerCachedTypes = cacheTypes;
 
