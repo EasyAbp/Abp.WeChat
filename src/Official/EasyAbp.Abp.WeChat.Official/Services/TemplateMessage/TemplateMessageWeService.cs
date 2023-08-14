@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Official.Models;
@@ -25,7 +26,8 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
         private const string DeletePrivateTemplateUrl =
             "https://api.weixin.qq.com/cgi-bin/template/del_private_template?";
 
-        public TemplateMessageWeService(AbpWeChatOfficialOptions options, IAbpLazyServiceProvider lazyServiceProvider) : base(options, lazyServiceProvider)
+        public TemplateMessageWeService(AbpWeChatOfficialOptions options, IAbpLazyServiceProvider lazyServiceProvider) :
+            base(options, lazyServiceProvider)
         {
         }
 
@@ -112,13 +114,15 @@ namespace EasyAbp.Abp.WeChat.Official.Services.TemplateMessage
         /// <summary>
         /// 根据短模版 Id 创建模版。
         /// </summary>
-        /// <param name="templateShortId">模板库中模板的编号，有 "TM**" 和 "OPENTMTM**" 等形式。</param>
-        public virtual Task<CreateTemplateResponse> CreateTemplateAsync(string templateShortId)
+        /// <param name="templateShortId">模板库中模板的编号，有“TM**”和“OPENTMTM**”等形式,对于类目模板，为纯数字ID</param>
+        /// <param name="keywordNameList">选用的类目模板的关键词,按顺序传入,如果为空，或者关键词不在模板库中，会返回40246错误码</param>
+        public virtual Task<CreateTemplateResponse> CreateTemplateAsync(string templateShortId,
+            List<string> keywordNameList)
         {
             return ApiRequester.RequestAsync<CreateTemplateResponse>(
                 GetTemplateIdUrl,
                 HttpMethod.Post,
-                new CreateTemplateRequest(templateShortId),
+                new CreateTemplateRequest(templateShortId, keywordNameList),
                 Options);
         }
 
