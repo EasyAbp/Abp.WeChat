@@ -61,5 +61,10 @@ public class AbpWeChatPaySettingDefinitionProvider : SettingDefinitionProvider
             _stringEncryptionService.Encrypt(_options.CertificateSecret),
             isEncrypted: true
         ));
+
+        context.Add(new SettingDefinition(
+            AbpWeChatPaySettings.AcceptLanguage,
+            _options.AcceptLanguage
+        ));
     }
 }

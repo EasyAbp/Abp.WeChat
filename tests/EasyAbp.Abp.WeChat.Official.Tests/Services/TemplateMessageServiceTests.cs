@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using Shouldly;
@@ -58,8 +57,7 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services
         {
             var templateMessageService = await WeChatServiceFactory.CreateAsync<TemplateMessageWeService>();
 
-            var response = await templateMessageService.CreateTemplateAsync("47123",
-                new List<string> { "时间", "地点", "金额" });
+            var response = await templateMessageService.CreateTemplateAsync("OPENTM206482867");
 
             response.ErrorCode.ShouldBe(0);
             response.TemplateId.ShouldNotBeNullOrEmpty();
@@ -80,9 +78,7 @@ namespace EasyAbp.Abp.WeChat.Official.Tests.Services
         {
             var templateMessageService = await WeChatServiceFactory.CreateAsync<TemplateMessageWeService>();
 
-            var createdTemplateResponse = await templateMessageService.CreateTemplateAsync("47123",
-                new List<string> { "时间", "地点", "金额" });
-
+            var createdTemplateResponse = await templateMessageService.CreateTemplateAsync("OPENTM206482867");
             var deletedTemplateResponse =
                 await templateMessageService.DeleteTemplateAsync(createdTemplateResponse.TemplateId);
 

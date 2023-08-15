@@ -1,49 +1,87 @@
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
+using EasyAbp.Abp.WeChat.Pay.Options;
+using EasyAbp.Abp.WeChat.Pay.Security;
+using Newtonsoft.Json;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
 {
+    /// <summary>
+    /// <see cref="IWeChatPayApiRequester"/> 的默认实现。
+    /// </summary>
     [Dependency(TryRegister = true)]
     public class DefaultWeChatPayApiRequester : IWeChatPayApiRequester, ITransientDependency
     {
         private readonly IAbpWeChatPayHttpClientFactory _httpClientFactory;
+        private readonly IWeChatPayAuthorizationGenerator _authorizationGenerator;
+        private readonly IAbpWeChatPayOptionsProvider _optionsProvider;
 
-        public DefaultWeChatPayApiRequester(IAbpWeChatPayHttpClientFactory httpClientFactory)
+        public DefaultWeChatPayApiRequester(IAbpWeChatPayHttpClientFactory httpClientFactory,
+            IAbpWeChatPayOptionsProvider optionsProvider,
+            IWeChatPayAuthorizationGenerator authorizationGenerator)
         {
             _httpClientFactory = httpClientFactory;
+            _optionsProvider = optionsProvider;
+            _authorizationGenerator = authorizationGenerator;
         }
 
-        public virtual async Task<XmlDocument> RequestAsync(string url, string body, string mchId)
+        public async Task<string> RequestAsync(HttpMethod method, string url, string body, string mchId = null)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = new StringContent(body, Encoding.UTF8, "application/xml")
-            };
+            var request = CreateRequest(method, url, body, mchId);
 
+            // Setting the request header for the http client.
+            var options = await _optionsProvider.GetAsync(mchId);
+            var language = options.AcceptLanguage ?? ApiLanguages.DefaultLanguage;
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            request.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(language));
+            request.Headers.UserAgent.Add(new ProductInfoHeaderValue("EasyAbp.Abp.WeChat.Pay", "1.0.0"));
+            request.Headers.Add("Authorization", await _authorizationGenerator.GenerateAuthorizationAsync(method, url, body, mchId));
+
+            // Sending the request.
             var client = await _httpClientFactory.CreateAsync(mchId);
-            var responseMessage = await client.SendAsync(request);
-            var readAsString = await responseMessage.Content.ReadAsStringAsync();
+            var response = await client.SendAsync(request);
 
-            if (!responseMessage.IsSuccessStatusCode)
+            await ValidateResponseAsync(response);
+
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        public async Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, string body, string mchId = null)
+        {
+            var responseString = await RequestAsync(method, url, body, mchId);
+
+            return JsonConvert.DeserializeObject<TResponse>(responseString);
+        }
+
+        public Task<string> RequestAsync(HttpMethod method, string url, object body, string mchId = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, object body, string mchId = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private HttpRequestMessage CreateRequest(HttpMethod method, string url, string body, string mchId = null)
+        {
+            if (method == HttpMethod.Post || method == HttpMethod.Put)
             {
-                throw new HttpRequestException(
-                    $"微信支付接口请求失败。\n错误码: {responseMessage.StatusCode}，\n响应内容: {readAsString}");
+                return new HttpRequestMessage(method, url)
+                {
+                    Content = new StringContent(body, Encoding.UTF8, "application/json")
+                };
             }
 
-            var newXmlDocument = new XmlDocument();
-            try
-            {
-                newXmlDocument.LoadXml(readAsString);
-            }
-            catch (XmlException)
-            {
-                throw new HttpRequestException($"请求接口失败，返回的不是一个标准的 XML 文档。\n响应内容: {readAsString}");
-            }
+            return new HttpRequestMessage(HttpMethod.Get, url);
+        }
 
-            return newXmlDocument;
+        protected virtual async Task ValidateResponseAsync(HttpResponseMessage responseMessage)
+        {
+            await Task.CompletedTask;
         }
     }
 }

@@ -24,7 +24,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests
                 op.MchId = mchId;
                 op.ApiKey = AbpWeChatPayTestConsts.ApiKey;
                 // op.CertificateBlobContainerName = "";
-                op.CertificateBlobName = "CertificateName";
+                op.CertificateBlobName = "apiclient_cert.p12";
                 op.CertificateSecret = mchId;
                 op.NotifyUrl = $"https://my-abp-app.io/wechat-pay/notify/mch-id/{mchId}";
                 op.RefundNotifyUrl = $"https://my-abp-app.io/wechat-pay/refund-notify/mch-id/{mchId}";

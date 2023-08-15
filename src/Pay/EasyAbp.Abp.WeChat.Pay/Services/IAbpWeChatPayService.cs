@@ -1,4 +1,4 @@
-namespace EasyAbp.Abp.WeChat.Pay.Services;
+﻿namespace EasyAbp.Abp.WeChat.Pay.Services;
 
 /// <summary>
 /// 请使用 <see cref="IAbpWeChatPayServiceFactory"/> 创建本实例。

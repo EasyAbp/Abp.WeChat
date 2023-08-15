@@ -25,4 +25,6 @@ public static class AbpWeChatPaySettings
     /// 注意，本值是密文！
     /// </summary>
     public const string CertificateSecret = GroupName + ".CertificateSecret";
+
+    public const string AcceptLanguage = GroupName + ".AcceptLanguage";
 }

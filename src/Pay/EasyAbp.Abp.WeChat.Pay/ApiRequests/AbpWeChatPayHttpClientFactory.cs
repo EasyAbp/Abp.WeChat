@@ -3,11 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Common.Extensions;
 using EasyAbp.Abp.WeChat.Pay.Options;
-using Volo.Abp;
-using Volo.Abp.BlobStoring;
+using EasyAbp.Abp.WeChat.Pay.Security;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Timing;
 
@@ -15,6 +14,7 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests;
 
 public class AbpWeChatPayHttpClientFactory : IAbpWeChatPayHttpClientFactory, ITransientDependency
 {
+    // TODO: Confirm checking every 10 second? @gdlc88
     public static TimeSpan SkipCertificateBytesCheckUntilDuration = TimeSpan.FromSeconds(10);
 
     private const string DefaultHandlerKey = "__Default__";
@@ -25,21 +25,23 @@ public class AbpWeChatPayHttpClientFactory : IAbpWeChatPayHttpClientFactory, ITr
     protected IClock Clock { get; }
     protected IAbpLazyServiceProvider AbpLazyServiceProvider { get; }
     protected IAbpWeChatPayOptionsProvider AbpWeChatPayOptionsProvider { get; }
+    protected ICertificatesManager CertificatesManager { get; }
 
     public AbpWeChatPayHttpClientFactory(
         IClock clock,
         IAbpLazyServiceProvider abpLazyServiceProvider,
-        IAbpWeChatPayOptionsProvider abpWeChatPayOptionsProvider)
+        IAbpWeChatPayOptionsProvider abpWeChatPayOptionsProvider,
+        ICertificatesManager certificatesManager)
     {
         Clock = clock;
         AbpLazyServiceProvider = abpLazyServiceProvider;
         AbpWeChatPayOptionsProvider = abpWeChatPayOptionsProvider;
+        CertificatesManager = certificatesManager;
     }
 
     public virtual async Task<HttpClient> CreateAsync(string mchId)
     {
         var options = await AbpWeChatPayOptionsProvider.GetAsync(mchId);
-
         var handler = await GetOrCreateHttpClientHandlerAsync(options);
 
         return new HttpClient(handler, disposeHandler: false);
@@ -55,60 +57,34 @@ public class AbpWeChatPayHttpClientFactory : IAbpWeChatPayHttpClientFactory, ITr
         }
 
         var handlerCacheModel = await item.Value;
-
         if (handlerCacheModel.SkipCertificateBytesCheckUntil > Clock.Now)
         {
             return handlerCacheModel.Handler;
         }
 
-        var certificateBytes = await GetCertificateBytesOrNullAsync(options);
-
-        if (handlerCacheModel.CertificateBytes == certificateBytes &&
-            handlerCacheModel.CertificateSecret == options.CertificateSecret)
+        var certificate = await CertificatesManager.GetCertificateAsync(options.MchId);
+        if (handlerCacheModel.WeChatPayCertificate.CertificateHashCode.VerifySha256(certificate.CertificateHashCode))
         {
             return handlerCacheModel.Handler;
         }
 
+        // If the certificate has expired, need to pull the latest one from BLOB again.
         CachedHandlers.TryUpdate(
             options.MchId ?? DefaultHandlerKey,
             new Lazy<Task<HttpMessageHandlerCacheModel>>(() =>
-                CreateHttpClientHandlerCacheModelAsync(options, certificateBytes)),
+                CreateHttpClientHandlerCacheModelAsync(certificate)),
             item);
 
         return (await CachedHandlers.GetOrDefault(options.MchId).Value).Handler;
     }
 
-    protected virtual async Task<byte[]> GetCertificateBytesOrNullAsync(AbpWeChatPayOptions options)
+    protected virtual async Task<HttpMessageHandlerCacheModel> CreateHttpClientHandlerCacheModelAsync(AbpWeChatPayOptions options)
     {
-        if (options.CertificateBlobName.IsNullOrEmpty())
-        {
-            return null;
-        }
-
-        var blobContainer = options.CertificateBlobContainerName.IsNullOrWhiteSpace()
-            ? AbpLazyServiceProvider.LazyGetRequiredService<IBlobContainer>()
-            : AbpLazyServiceProvider.LazyGetRequiredService<IBlobContainerFactory>()
-                .Create(options.CertificateBlobContainerName);
-
-        var certificateBytes = await blobContainer.GetAllBytesOrNullAsync(options.CertificateBlobName);
-        if (certificateBytes == null)
-        {
-            throw new AbpException("指定的证书 Blob 无效，请重新指定有效的证书 Blob。");
-        }
-
-        return certificateBytes;
+        var certificate = await CertificatesManager.GetCertificateAsync(options.MchId);
+        return await CreateHttpClientHandlerCacheModelAsync(certificate);
     }
 
-    protected virtual async Task<HttpMessageHandlerCacheModel> CreateHttpClientHandlerCacheModelAsync(
-        AbpWeChatPayOptions options)
-    {
-        var certificateBytes = await GetCertificateBytesOrNullAsync(options);
-
-        return await CreateHttpClientHandlerCacheModelAsync(options, certificateBytes);
-    }
-
-    protected virtual Task<HttpMessageHandlerCacheModel> CreateHttpClientHandlerCacheModelAsync(
-        AbpWeChatPayOptions options, byte[] certificateBytes)
+    protected virtual Task<HttpMessageHandlerCacheModel> CreateHttpClientHandlerCacheModelAsync(WeChatPayCertificate weChatPayCertificate)
     {
         var handler = new HttpClientHandler
         {
@@ -116,21 +92,16 @@ public class AbpWeChatPayHttpClientFactory : IAbpWeChatPayHttpClientFactory, ITr
             SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls
         };
 
-        if (!certificateBytes.IsNullOrEmpty())
+        if (weChatPayCertificate.X509Certificate != null)
         {
-            handler.ClientCertificates.Add(new X509Certificate2(
-                certificateBytes,
-                options.CertificateSecret,
-                X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.MachineKeySet));
-
+            handler.ClientCertificates.Add(weChatPayCertificate.X509Certificate);
             handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
         }
 
         return Task.FromResult(new HttpMessageHandlerCacheModel
         {
             Handler = handler,
-            CertificateBytes = certificateBytes,
-            CertificateSecret = options.CertificateSecret,
+            WeChatPayCertificate = weChatPayCertificate,
             SkipCertificateBytesCheckUntil = Clock.Now.Add(SkipCertificateBytesCheckUntilDuration)
         });
     }

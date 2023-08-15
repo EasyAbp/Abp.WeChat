@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using System.Xml;
-using EasyAbp.Abp.WeChat.Pay.Extensions;
 using EasyAbp.Abp.WeChat.Pay.Options;
+using EasyAbp.Abp.WeChat.Pay.Security.Extensions;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Pay.RequestHandling;
@@ -19,7 +19,7 @@ public class WeChatPayEventXmlDecrypter : IWeChatPayEventXmlDecrypter, ITransien
             return (false, null);
         }
 
-        var decryptedString = WeChatPayUtility.Decrypt(encryptedXml, options.ApiKey.ToMd5().ToLower());
+        var decryptedString = WeChatPaySecurityUtility.Decrypt(encryptedXml, options.ApiKey.ToMd5().ToLower());
 
         if (decryptedString.IsNullOrEmpty())
         {

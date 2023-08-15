@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace EasyAbp.Abp.WeChat.Common.Extensions
@@ -15,6 +17,23 @@ namespace EasyAbp.Abp.WeChat.Common.Extensions
             }
 
             return stringBuilder.ToString();
+        }
+
+        public static byte[] Sha256(this byte[] bytes)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                return sha256.ComputeHash(bytes);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool VerifySha256(this byte[] bytes, byte[] hash)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                return sha256.ComputeHash(bytes).SequenceEqual(hash);
+            }
         }
     }
 }
