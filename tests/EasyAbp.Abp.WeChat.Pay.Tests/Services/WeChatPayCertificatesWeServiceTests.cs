@@ -32,6 +32,7 @@ public class WeChatPayCertificatesWeServiceTests : AbpWeChatPayTestBase
         response.Data.Count().ShouldBeGreaterThan(0);
     }
 
+    [Fact]
     public async Task DecryptWeChatPayCertificateAsync_Test()
     {
         // Arrange
@@ -41,8 +42,12 @@ public class WeChatPayCertificatesWeServiceTests : AbpWeChatPayTestBase
 
         // Act
         weChatPayCertificate.ShouldNotBeNull();
-        // WeChatPaySecurityUtility.AesGcmDecrypt(AbpWeChatPayOptions.ApiKey,)
+        var response = WeChatPaySecurityUtility.AesGcmDecrypt(AbpWeChatPayOptions.ApiKey,
+            weChatPayCertificate.EncryptCertificateData.AssociatedData,
+            weChatPayCertificate.EncryptCertificateData.Nonce,
+            weChatPayCertificate.EncryptCertificateData.Ciphertext);
 
         // Assert
+        response.ShouldStartWith("-----BEGIN CERTIFICATE-----");
     }
 }
