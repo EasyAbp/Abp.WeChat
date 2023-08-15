@@ -27,7 +27,7 @@ public class AbpWeChatPaySettingDefinitionProvider : SettingDefinitionProvider
 
         context.Add(new SettingDefinition(
             AbpWeChatPaySettings.ApiKey,
-            _stringEncryptionService.Encrypt(_options.ApiKey),
+            _stringEncryptionService.Encrypt(_options.ApiV3Key),
             isEncrypted: true
         ));
 

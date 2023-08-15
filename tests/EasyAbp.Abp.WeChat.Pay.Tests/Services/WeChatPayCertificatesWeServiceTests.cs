@@ -42,7 +42,7 @@ public class WeChatPayCertificatesWeServiceTests : AbpWeChatPayTestBase
 
         // Act
         weChatPayCertificate.ShouldNotBeNull();
-        var response = WeChatPaySecurityUtility.AesGcmDecrypt(AbpWeChatPayOptions.ApiKey,
+        var response = WeChatPaySecurityUtility.AesGcmDecrypt(AbpWeChatPayOptions.ApiV3Key,
             weChatPayCertificate.EncryptCertificateData.AssociatedData,
             weChatPayCertificate.EncryptCertificateData.Nonce,
             weChatPayCertificate.EncryptCertificateData.Ciphertext);

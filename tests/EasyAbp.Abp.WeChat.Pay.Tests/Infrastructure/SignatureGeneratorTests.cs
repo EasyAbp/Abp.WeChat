@@ -18,7 +18,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests.Infrastructure
         [Fact]
         public void Generate_Test()
         {
-            AbpWeChatPayOptions.ApiKey = "192006250b4c09247ec02edce69f6a2d";
+            AbpWeChatPayOptions.ApiV3Key = "192006250b4c09247ec02edce69f6a2d";
 
             var newParam = new WeChatPayParameters();
             newParam.AddParameter("appid", "wxd930ea5d5a258f4f");
@@ -27,7 +27,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests.Infrastructure
             newParam.AddParameter("body", "test");
             newParam.AddParameter("nonce_str", "ibuaiVcKdpRxkhJA");
 
-            var signStr = _signatureGenerator.Generate(newParam, MD5.Create(), AbpWeChatPayOptions.ApiKey);
+            var signStr = _signatureGenerator.Generate(newParam, MD5.Create(), AbpWeChatPayOptions.ApiV3Key);
 
             signStr.ShouldBe("9A0A8659F005D6984697E2CA0A9CF3B7");
         }

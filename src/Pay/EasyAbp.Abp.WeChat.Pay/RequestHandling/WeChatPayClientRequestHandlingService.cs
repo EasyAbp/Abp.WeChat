@@ -45,7 +45,7 @@ public class WeChatPayClientRequestHandlingService : IWeChatPayClientRequestHand
         @params.AddParameter("package", package);
         @params.AddParameter("signType", signType);
 
-        var paySign = _signatureGenerator.Generate(@params, MD5.Create(), options.ApiKey);
+        var paySign = _signatureGenerator.Generate(@params, MD5.Create(), options.ApiV3Key);
 
         return new GetJsSdkWeChatPayParametersResult(nonceStr, timeStamp, package, signType, paySign);
     }

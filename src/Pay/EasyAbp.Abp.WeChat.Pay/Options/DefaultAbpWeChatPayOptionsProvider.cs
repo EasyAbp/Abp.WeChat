@@ -34,7 +34,7 @@ public class DefaultAbpWeChatPayOptionsProvider : IAbpWeChatPayOptionsProvider, 
         return new AbpWeChatPayOptions
         {
             MchId = settingMchId,
-            ApiKey = await SettingProvider.GetOrNullAsync(AbpWeChatPaySettings.ApiKey),
+            ApiV3Key = await SettingProvider.GetOrNullAsync(AbpWeChatPaySettings.ApiKey),
             IsSandBox = await SettingProvider.GetAsync<bool>(AbpWeChatPaySettings.IsSandBox),
             NotifyUrl = await SettingProvider.GetOrNullAsync(AbpWeChatPaySettings.NotifyUrl),
             RefundNotifyUrl = await SettingProvider.GetOrNullAsync(AbpWeChatPaySettings.RefundNotifyUrl),

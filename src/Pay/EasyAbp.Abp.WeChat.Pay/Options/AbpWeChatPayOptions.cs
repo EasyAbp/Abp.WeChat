@@ -16,7 +16,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Options
         /// 微信支付的 API v3 密钥信息，会在后续进行签名时被使用。
         /// 注意，本值是密文！
         /// </summary>
-        public string ApiKey { get; set; }
+        public string ApiV3Key { get; set; }
 
         /// <summary>
         /// 错误信息的自然语言语种，支持的语种请参考 <see cref="ApiLanguages"/> 的定义。

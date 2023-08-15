@@ -22,7 +22,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests
                 const string mchId = AbpWeChatPayTestConsts.MchId;
 
                 op.MchId = mchId;
-                op.ApiKey = AbpWeChatPayTestConsts.ApiKey;
+                op.ApiV3Key = AbpWeChatPayTestConsts.ApiKey;
                 // op.CertificateBlobContainerName = "";
                 op.CertificateBlobName = "apiclient_cert.p12";
                 op.CertificateSecret = mchId;

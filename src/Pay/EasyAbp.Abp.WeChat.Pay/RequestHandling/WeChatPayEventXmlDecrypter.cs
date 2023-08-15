@@ -19,7 +19,7 @@ public class WeChatPayEventXmlDecrypter : IWeChatPayEventXmlDecrypter, ITransien
             return (false, null);
         }
 
-        var decryptedString = WeChatPaySecurityUtility.Decrypt(encryptedXml, options.ApiKey.ToMd5().ToLower());
+        var decryptedString = WeChatPaySecurityUtility.Decrypt(encryptedXml, options.ApiV3Key.ToMd5().ToLower());
 
         if (decryptedString.IsNullOrEmpty())
         {

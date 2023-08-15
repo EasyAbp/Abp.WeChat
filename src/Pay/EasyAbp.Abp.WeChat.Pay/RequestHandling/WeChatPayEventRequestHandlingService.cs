@@ -122,7 +122,7 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
             parameters.AddParameter(node.Name, node.InnerText);
         }
 
-        var responseSign = _signatureGenerator.Generate(parameters, MD5.Create(), options.ApiKey);
+        var responseSign = _signatureGenerator.Generate(parameters, MD5.Create(), options.ApiV3Key);
 
         return Task.FromResult(responseSign == weChatRequestXmlData.SelectSingleNode("/xml/sign")?.InnerText);
     }
