@@ -15,6 +15,11 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
     [Dependency(TryRegister = true)]
     public class DefaultWeChatPayApiRequester : IWeChatPayApiRequester, ITransientDependency
     {
+        private static JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore
+        };
+
         private readonly IAbpWeChatPayHttpClientFactory _httpClientFactory;
         private readonly IWeChatPayAuthorizationGenerator _authorizationGenerator;
         private readonly IAbpWeChatPayOptionsProvider _optionsProvider;
@@ -30,7 +35,7 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
 
         public async Task<string> RequestAsync(HttpMethod method, string url, string body, string mchId = null)
         {
-            var request = CreateRequest(method, url, body, mchId);
+            var request = CreateRequest(method, url, body);
 
             // Setting the request header for the http client.
             var options = await _optionsProvider.GetAsync(mchId);
@@ -58,7 +63,9 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
 
         public Task<string> RequestAsync(HttpMethod method, string url, object body, string mchId = null)
         {
-            throw new System.NotImplementedException();
+            var bodyString = JsonConvert.SerializeObject(body, _jsonSerializerSettings);
+
+            return RequestAsync(method, url, bodyString, mchId);
         }
 
         public Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, object body, string mchId = null)
@@ -66,7 +73,7 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
             throw new System.NotImplementedException();
         }
 
-        private HttpRequestMessage CreateRequest(HttpMethod method, string url, string body, string mchId = null)
+        private HttpRequestMessage CreateRequest(HttpMethod method, string url, string body)
         {
             if (method == HttpMethod.Post || method == HttpMethod.Put)
             {
