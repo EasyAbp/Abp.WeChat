@@ -2,6 +2,7 @@
   "culture": "zh-Hans",
   "texts": {
     "SYSTEMERROR": "接口返回错误。",
-    "ERROR": "业务错误"
+    "ERROR": "业务错误",
+    "UNABLE_TO_ACQUIRE_DISTRIBUTED_LOCK": "无法获取分布式锁"
   }
 }
