@@ -15,7 +15,7 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
     [Dependency(TryRegister = true)]
     public class DefaultWeChatPayApiRequester : IWeChatPayApiRequester, ITransientDependency
     {
-        private static JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
         };
@@ -63,14 +63,12 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
 
         public Task<string> RequestAsync(HttpMethod method, string url, object body, string mchId = null)
         {
-            var bodyString = JsonConvert.SerializeObject(body, _jsonSerializerSettings);
-
-            return RequestAsync(method, url, bodyString, mchId);
+            return RequestAsync(method, url, JsonConvert.SerializeObject(body, JsonSerializerSettings), mchId);
         }
 
         public Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, object body, string mchId = null)
         {
-            throw new System.NotImplementedException();
+            return RequestAsync<TResponse>(method, url, JsonConvert.SerializeObject(body, JsonSerializerSettings), mchId);
         }
 
         private HttpRequestMessage CreateRequest(HttpMethod method, string url, string body)

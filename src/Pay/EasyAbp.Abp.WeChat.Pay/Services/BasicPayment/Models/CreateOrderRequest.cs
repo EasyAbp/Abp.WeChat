@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
-namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.ParametersModel;
+namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 
 public class CreateOrderRequest
 {
@@ -11,7 +11,7 @@ public class CreateOrderRequest
     /// 应用 ID。
     /// </summary>
     /// <remarks>
-    /// 由微信生成的应用 ID，全局唯一。请求基础下单接口时请注意APPID的应用属性。<br/>
+    /// 由微信生成的应用 ID，全局唯一。请求基础下单接口时请注意 APPID 的应用属性。<br/>
     /// 例如公众号场景下，需使用应用属性为公众号的服务号 APPID。
     /// </remarks>
     /// <example>
@@ -75,7 +75,7 @@ public class CreateOrderRequest
     /// 示例值: 2018-06-08T10:34:56+08:00
     /// </example>
     [JsonProperty("time_expire")]
-    public DateTime TimeExpire { get; set; }
+    public DateTime? TimeExpire { get; set; }
 
     /// <summary>
     /// 附加数据。
@@ -137,18 +137,13 @@ public class CreateOrderRequest
     /// </summary>
     [Required]
     [NotNull]
+    [JsonProperty("amount")]
     public CreateOrderAmountModel Amount { get; set; }
-
-    /// <summary>
-    /// 支付者信息。
-    /// </summary>
-    [Required]
-    [NotNull]
-    public CreateOrderPayerModel Payer { get; set; }
 
     /// <summary>
     /// 优惠功能。
     /// </summary>
+    [JsonProperty("detail")]
     public CreateOrderDetailModel Detail { get; set; }
 
     /// <summary>
@@ -292,26 +287,11 @@ public class CreateOrderAmountModel
     /// 示例值: CNY
     /// </example>
     [StringLength(16, MinimumLength = 1)]
+    [JsonProperty("currency")]
     public string Currency { get; set; } = "CNY";
 }
 
-public class CreateOrderPayerModel
-{
-    /// <summary>
-    /// 用户标识。
-    /// </summary>
-    /// <remarks>
-    /// 用户在直连商户 AppId 下的唯一标识。<br/>
-    /// 下单前需获取到用户的 OpenId。
-    /// </remarks>
-    /// <example>
-    /// 示例值: oUpF8uMuAJO_M2pxb1Q9zNjWeS6o。
-    /// </example>
-    [Required]
-    [StringLength(128, MinimumLength = 1)]
-    [JsonProperty("openid")]
-    public string OpenId { get; set; }
-}
+
 
 public class CreateOrderDetailModel
 {

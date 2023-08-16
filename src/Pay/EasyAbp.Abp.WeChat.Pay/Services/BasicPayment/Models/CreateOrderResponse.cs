@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using EasyAbp.Abp.WeChat.Pay.Services.ParametersModel;
+using Newtonsoft.Json;
 
-namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.ParametersModel;
+namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 
-public class CreateOrderResponse
+public class CreateOrderResponse : WeChatPayCommonErrorResponse
 {
     /// <summary>
     /// 预支付交易会话标识。
