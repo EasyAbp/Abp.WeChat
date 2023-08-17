@@ -24,7 +24,7 @@ public class WeChatPayCertificatesWeServiceTests : AbpWeChatPayTestBase
         var weChatPayCertificatesWeService = await _abpWeChatPayServiceFactory.CreateAsync<WeChatPayCertificatesWeService>();
 
         // Act
-        var response = await weChatPayCertificatesWeService.GetWeChatPayCertificatesAsync();
+        var response = await weChatPayCertificatesWeService.GetPlatformCertificatesAsync();
 
         // Assert
         response.ShouldNotBeNull();
@@ -37,7 +37,7 @@ public class WeChatPayCertificatesWeServiceTests : AbpWeChatPayTestBase
     {
         // Arrange
         var weChatPayCertificatesWeService = await _abpWeChatPayServiceFactory.CreateAsync<WeChatPayCertificatesWeService>();
-        var weChatPayCertificate = (await weChatPayCertificatesWeService.GetWeChatPayCertificatesAsync())
+        var weChatPayCertificate = (await weChatPayCertificatesWeService.GetPlatformCertificatesAsync())
             .Data.MaxBy(d => d.EffectiveTime);
 
         // Act

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.OtherServices.ParametersModel;
 
-public class GetWeChatPayCertificatesResponse : WeChatPayCommonErrorResponse
+public class GetPlatformCertificatesResponse : WeChatPayCommonErrorResponse
 {
     [JsonProperty("data")] public IEnumerable<CertificateObject> Data { get; set; }
 
