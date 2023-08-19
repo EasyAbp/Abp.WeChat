@@ -63,12 +63,12 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
 
         public Task<string> RequestAsync(HttpMethod method, string url, object body, string mchId = null)
         {
-            return RequestAsync(method, url, JsonConvert.SerializeObject(body, JsonSerializerSettings), mchId);
+            return RequestAsync(method, url, HandleRequestObject(method, body), mchId);
         }
 
         public Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, object body, string mchId = null)
         {
-            return RequestAsync<TResponse>(method, url, JsonConvert.SerializeObject(body, JsonSerializerSettings), mchId);
+            return RequestAsync<TResponse>(method, url, HandleRequestObject(method, body), mchId);
         }
 
         private HttpRequestMessage CreateRequest(HttpMethod method, string url, string body)
@@ -81,7 +81,28 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
                 };
             }
 
+            if (method == HttpMethod.Get)
+            {
+                return new HttpRequestMessage(HttpMethod.Get, $"{url}{body}");
+            }
+
             return new HttpRequestMessage(HttpMethod.Get, url);
+        }
+
+        private string HandleRequestObject(HttpMethod method, object body)
+        {
+            if (method == HttpMethod.Post || method == HttpMethod.Put)
+            {
+                return JsonConvert.SerializeObject(body, JsonSerializerSettings);
+            }
+
+            if (method != HttpMethod.Get) return null;
+            if (body is string bodyStr)
+            {
+                return bodyStr;
+            }
+
+            return null;
         }
 
         protected virtual async Task ValidateResponseAsync(HttpResponseMessage responseMessage)
