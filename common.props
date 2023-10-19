@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
-        <Version>3.0.0-preview.6</Version>
+        <Version>3.0.0-preview.8</Version>
         <NoWarn>$(NoWarn);CS1591</NoWarn>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>EasyAbp Team</Authors>
