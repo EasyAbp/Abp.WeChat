@@ -398,7 +398,7 @@ public class RefundOrderResponse : WeChatPayCommonErrorResponse
             /// </example>
             [JsonProperty("wechatpay_goods_id")]
             [StringLength(32, MinimumLength = 1)]
-            public string WechatpayGoodsId { get; set; }
+            public string WechatPayGoodsId { get; set; }
 
             /// <summary>
             /// 商品名称。
