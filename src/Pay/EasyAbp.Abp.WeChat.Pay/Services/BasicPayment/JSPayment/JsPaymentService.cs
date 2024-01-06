@@ -12,12 +12,10 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment;
 public class JsPaymentService : WeChatPayServiceBase
 {
     public const string CreateOrderUrl = "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi";
-
     public const string QueryOrderByWechatNumberUrl = "https://api.mch.weixin.qq.com/v3/pay/transactions/{transaction_id}";
-
     public const string QueryOrderByOutTradeNumberUrl = "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/{out_trade_no}";
-
     public const string CloseOrderUrl = "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/{out_trade_no}/close";
+    public const string RefundUrl = "https://api.mch.weixin.qq.com/v3/refund/domestic/refunds";
 
     public JsPaymentService(AbpWeChatPayOptions options,
         IAbpLazyServiceProvider lazyServiceProvider) : base(options,
@@ -46,5 +44,10 @@ public class JsPaymentService : WeChatPayServiceBase
     {
         var requestUrl = CloseOrderUrl.Replace("{out_trade_no}", request.OutTradeNo);
         return ApiRequester.RequestAsync<WeChatPayCommonErrorResponse>(HttpMethod.Post, requestUrl, request);
+    }
+
+    public Task<RefundOrderResponse> RefundAsync(RefundOrderRequest orderRequest)
+    {
+        return ApiRequester.RequestAsync<RefundOrderResponse>(HttpMethod.Post, RefundUrl, orderRequest);
     }
 }

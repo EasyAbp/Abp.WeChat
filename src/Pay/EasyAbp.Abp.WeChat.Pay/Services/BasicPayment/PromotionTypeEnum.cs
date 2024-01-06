@@ -6,12 +6,12 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment;
 public static class PromotionTypeEnum
 {
     /// <summary>
-    /// 充值型代金券。
+    /// 代金券，需要走结算资金的充值型代金券。
     /// </summary>
-    public const string Cash = "CASH";
-
+    public const string Coupon = "COUPON";
+    
     /// <summary>
-    /// 免充值型代金券。
+    /// 优惠券，不走结算资金的免充值型优惠券。
     /// </summary>
-    public const string NoCash = "NOCASH";
+    public const string Discount = "DISCOUNT";
 }

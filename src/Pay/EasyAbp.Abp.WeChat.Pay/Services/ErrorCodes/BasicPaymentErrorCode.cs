@@ -18,7 +18,7 @@ public class BasicPaymentErrorCode : WeChatPayCommonErrorCodes
     /// 描述: 余额不足。
     /// 解决方案: 用户账号余额不足，请用户充值或更换支付卡后再支付。
     /// </summary>
-    public const string NotEnough = "NOTENOUGH";
+    public const string NotEnough = "NOT_ENOUGH";
 
     /// <summary>
     /// 描述: 商户无权限。
