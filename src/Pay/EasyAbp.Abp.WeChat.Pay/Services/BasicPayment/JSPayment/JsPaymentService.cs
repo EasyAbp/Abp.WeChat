@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment.Models;
@@ -68,5 +69,10 @@ public class JsPaymentService : WeChatPayServiceBase
     public Task<GetBillResponse> GetFundFlowBillAsync(GetFundFlowBillRequest request)
     {
         return ApiRequester.RequestAsync<GetBillResponse>(HttpMethod.Get, GetFundFlowBillUrl, request);
+    }
+
+    public async Task<Stream> DownloadBillFileAsync(string billDownloadUrl)
+    {
+        return await (await ApiRequester.RequestRawAsync(HttpMethod.Get, billDownloadUrl)).Content.ReadAsStreamAsync();
     }
 }
