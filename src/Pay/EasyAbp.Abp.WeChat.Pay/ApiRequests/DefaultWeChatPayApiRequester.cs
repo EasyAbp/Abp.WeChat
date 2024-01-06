@@ -1,7 +1,10 @@
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Common.Extensions;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Security;
 using Newtonsoft.Json;
@@ -43,7 +46,8 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             request.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(language));
             request.Headers.UserAgent.Add(new ProductInfoHeaderValue("EasyAbp.Abp.WeChat.Pay", "1.0.0"));
-            request.Headers.Add("Authorization", await _authorizationGenerator.GenerateAuthorizationAsync(method, url, body, mchId));
+            request.Headers.Add("Authorization",
+                await _authorizationGenerator.GenerateAuthorizationAsync(method, url, body, mchId));
 
             // Sending the request.
             var client = await _httpClientFactory.CreateAsync(mchId);
@@ -54,7 +58,8 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, string body, string mchId = null)
+        public async Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, string body,
+            string mchId = null)
         {
             var responseString = await RequestAsync(method, url, body, mchId);
 
@@ -83,7 +88,7 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
 
             if (method == HttpMethod.Get)
             {
-                return new HttpRequestMessage(HttpMethod.Get, $"{url}{body}");
+                return new HttpRequestMessage(HttpMethod.Get, $"{url}?{body}");
             }
 
             return new HttpRequestMessage(HttpMethod.Get, url);
@@ -102,7 +107,8 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
                 return bodyStr;
             }
 
-            return null;
+            // Convert the object to query string.
+            return WeChatReflectionHelper.ConvertToQueryString(body);
         }
 
         protected virtual async Task ValidateResponseAsync(HttpResponseMessage responseMessage)
