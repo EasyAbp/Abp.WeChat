@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 
-public class GetTransactionBillRequest
+public class GetFundFlowBillRequest
 {
     /// <summary>
     /// 账单日期。
@@ -21,17 +21,17 @@ public class GetTransactionBillRequest
     public string BillDate { get; set; }
 
     /// <summary>
-    /// 账单类型。
+    /// 资金账户类型。
     /// </summary>
     /// <remarks>
-    /// 枚举值，具体定义参考类型 <see cref="TransactionBillTypeEnum"/>，不填则默认是 ALL。
+    /// 枚举值，具体定义参考类型 <see cref="FundAccountTypeEnum"/>，不填则默认是 BASIC。
     /// </remarks>
     /// <example>
-    /// 示例值: ALL (<see cref="TransactionBillTypeEnum.All"/>)
+    /// 示例值: Basic (<see cref="FundAccountTypeEnum.Basic"/>)
     /// </example>
     [StringLength(32, MinimumLength = 1)]
-    [JsonProperty("bill_type")]
-    public string BillType { get; set; }
+    [JsonProperty("account_type")]
+    public string AccountType { get; set; }
 
     /// <summary>
     /// 压缩类型。

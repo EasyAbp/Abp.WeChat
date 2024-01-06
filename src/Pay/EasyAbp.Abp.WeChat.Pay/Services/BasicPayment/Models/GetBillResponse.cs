@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 
-public class GetTransactionBillResponse : WeChatPayCommonErrorResponse
+public class GetBillResponse : WeChatPayCommonErrorResponse
 {
     /// <summary>
     /// 哈希类型。

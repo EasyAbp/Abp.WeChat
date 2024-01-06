@@ -140,10 +140,10 @@ public class RefundOrderResponse : WeChatPayCommonErrorResponse
     /// 资金账户。
     /// </summary>
     /// <remarks>
-    /// 退款所使用资金对应的资金账户类型，请参考类型 <see cref="FundsAccountEnum"/> 的定义。
+    /// 退款所使用资金对应的资金账户类型，请参考类型 <see cref="RefundFundsAccountEnum"/> 的定义。
     /// </remarks>
     /// <example>
-    /// 示例值: UNSETTLED (<see cref="FundsAccountEnum.Unsettled"/>)
+    /// 示例值: UNSETTLED (<see cref="RefundFundsAccountEnum.Unsettled"/>)
     /// </example>
     [JsonProperty("funds_account")]
     [StringLength(32, MinimumLength = 1)]

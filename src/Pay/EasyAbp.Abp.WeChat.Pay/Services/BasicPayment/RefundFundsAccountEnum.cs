@@ -3,7 +3,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment;
 /// <summary>
 /// 退款资金来源枚举。
 /// </summary>
-public static class FundsAccountEnum
+public static class RefundFundsAccountEnum
 {
     /// <summary>
     /// 可用余额账户。

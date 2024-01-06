@@ -78,10 +78,10 @@ public class RefundOrderRequest
     /// </summary>
     /// <remarks>
     /// 若传递此参数则使用对应的资金账户退款，否则默认使用未结算资金退款 (仅对老资金流商户适用)。
-    /// 仅支持取值为 <see cref="FundsAccountEnum.Available"/> 。
+    /// 仅支持取值为 <see cref="RefundFundsAccountEnum.Available"/> 。
     /// </remarks>
     /// <example>
-    /// 示例值: AVAILABLE (<see cref="FundsAccountEnum.Available"/>)
+    /// 示例值: AVAILABLE (<see cref="RefundFundsAccountEnum.Available"/>)
     /// </example>
     [JsonProperty("funds_account")]
     [StringLength(32)]
@@ -170,10 +170,10 @@ public class RefundOrderRequest
             /// 出资账户类型。
             /// </summary>
             /// <remarks>
-            /// 参考类型 <see cref="FundsAccountEnum"/> 的定义。
+            /// 参考类型 <see cref="RefundFundsAccountEnum"/> 的定义。
             /// </remarks>
             /// <example>
-            /// 示例值: AVAILABLE (<see cref="FundsAccountEnum.Available"/>)
+            /// 示例值: AVAILABLE (<see cref="RefundFundsAccountEnum.Available"/>)
             /// </example>
             [JsonProperty("account")]
             [Required]
