@@ -17,6 +17,7 @@ public class JsPaymentService : WeChatPayServiceBase
     public const string CloseOrderUrl = "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/{out_trade_no}/close";
     public const string RefundUrl = "https://api.mch.weixin.qq.com/v3/refund/domestic/refunds";
     public const string QueryRefundOrderUrl = "https://api.mch.weixin.qq.com/v3/refund/domestic/refunds/{out_refund_no}";
+    public const string GetTransactionBillUrl = "https://api.mch.weixin.qq.com/v3/bill/tradebill";
 
     public JsPaymentService(AbpWeChatPayOptions options,
         IAbpLazyServiceProvider lazyServiceProvider) : base(options,
@@ -56,5 +57,10 @@ public class JsPaymentService : WeChatPayServiceBase
     {
         var requestUrl = QueryRefundOrderUrl.Replace("{out_refund_no}", request.OutRefundNo);
         return ApiRequester.RequestAsync<RefundOrderResponse>(HttpMethod.Get, requestUrl);
+    }
+
+    public Task<GetTransactionBillResponse> GetTransactionBillAsync(GetTransactionBillRequest request)
+    {
+        return ApiRequester.RequestAsync<GetTransactionBillResponse>(HttpMethod.Get, GetTransactionBillUrl, request);
     }
 }
