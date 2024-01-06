@@ -1,3 +1,4 @@
+using EasyAbp.Abp.WeChat.Pay.Services.ErrorCodes;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.ParametersModel;
@@ -5,7 +6,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ParametersModel;
 public abstract class WeChatPayCommonErrorResponse
 {
     /// <summary>
-    /// 错误代码，具体定义可以参考 <see cref="ErrorCodes"/> 命名空间下的常量定义。
+    /// 错误代码，具体定义可以参考 <see cref="BasicPaymentErrorCode"/> 命名空间下的常量定义。
     /// </summary>
     [JsonProperty("code")]
     public string Code { get; set; }
