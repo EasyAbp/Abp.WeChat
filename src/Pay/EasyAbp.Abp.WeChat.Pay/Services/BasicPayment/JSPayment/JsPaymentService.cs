@@ -11,7 +11,12 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment;
 public class JsPaymentService : WeChatPayServiceBase
 {
     public const string CreateOrderUrl = "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi";
-    public const string QueryOrderUrl = "https://api.mch.weixin.qq.com/v3/pay/transactions/id";
+
+    public const string QueryOrderByWechatNumberUrl =
+        "https://api.mch.weixin.qq.com/v3/pay/transactions/{transaction_id}";
+
+    public const string QueryOrderByOutTradeNumberUrl =
+        "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/{out_trade_no}";
 
     public JsPaymentService(AbpWeChatPayOptions options,
         IAbpLazyServiceProvider lazyServiceProvider) : base(options,
@@ -24,8 +29,15 @@ public class JsPaymentService : WeChatPayServiceBase
         return ApiRequester.RequestAsync<CreateOrderResponse>(HttpMethod.Post, CreateOrderUrl, request);
     }
 
-    public Task QueryOrderAsync(QueryOrderRequest request)
+    public Task<QueryOrderResponse> QueryOrderByWechatNumberAsync(QueryOrderByWechatNumberRequest request)
     {
-        return Task.CompletedTask;
+        var requestUrl = QueryOrderByWechatNumberUrl.Replace("{transaction_id}", request.TransactionId);
+        return ApiRequester.RequestAsync<QueryOrderResponse>(HttpMethod.Get, requestUrl, request);
+    }
+
+    public Task<QueryOrderResponse> QueryOrderByOutTradeNumberAsync(QueryOrderByOutTradeNumberRequest request)
+    {
+        var requestUrl = QueryOrderByOutTradeNumberUrl.Replace("{out_trade_no}", request.OutTradeNo);
+        return ApiRequester.RequestAsync<QueryOrderResponse>(HttpMethod.Get, requestUrl, request);
     }
 }

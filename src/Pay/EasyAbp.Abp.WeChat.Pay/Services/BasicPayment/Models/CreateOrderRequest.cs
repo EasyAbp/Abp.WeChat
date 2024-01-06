@@ -291,8 +291,6 @@ public class CreateOrderAmountModel
     public string Currency { get; set; } = "CNY";
 }
 
-
-
 public class CreateOrderDetailModel
 {
     /// <summary>
