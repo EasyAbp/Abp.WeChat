@@ -1,4 +1,4 @@
-namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment;
+namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Enums;
 
 /// <summary>
 /// 优惠类型的枚举值定义。

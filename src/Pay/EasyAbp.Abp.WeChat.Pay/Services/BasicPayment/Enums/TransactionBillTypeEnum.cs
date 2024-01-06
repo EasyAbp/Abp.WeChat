@@ -1,4 +1,4 @@
-namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment;
+namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Enums;
 
 /// <summary>
 /// 账单类型枚举。

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Enums;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;

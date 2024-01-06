@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Enums;
 using EasyAbp.Abp.WeChat.Pay.Services.ParametersModel;
 using Newtonsoft.Json;
 

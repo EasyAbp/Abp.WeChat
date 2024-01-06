@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Enums;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
@@ -78,7 +79,7 @@ public class RefundOrderRequest
     /// </summary>
     /// <remarks>
     /// 若传递此参数则使用对应的资金账户退款，否则默认使用未结算资金退款 (仅对老资金流商户适用)。
-    /// 仅支持取值为 <see cref="RefundFundsAccountEnum.Available"/> 。
+    /// 仅支持取值为 <see cref="RefundRefundFundsAccountEnumable"/> 。
     /// </remarks>
     /// <example>
     /// 示例值: AVAILABLE (<see cref="RefundFundsAccountEnum.Available"/>)
