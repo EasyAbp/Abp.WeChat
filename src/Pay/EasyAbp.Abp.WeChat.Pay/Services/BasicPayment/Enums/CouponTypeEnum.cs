@@ -1,9 +1,9 @@
-namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment;
+namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Enums;
 
 /// <summary>
-/// 优惠类型的枚举值定义。
+/// 代金券的枚举值定义。
 /// </summary>
-public static class PromotionTypeEnum
+public static class CouponTypeEnum
 {
     /// <summary>
     /// 充值型代金券。

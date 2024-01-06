@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Enums;
 using EasyAbp.Abp.WeChat.Pay.Services.ParametersModel;
 using Newtonsoft.Json;
 
@@ -308,10 +309,10 @@ public class QueryOrderPromotionDetailModel
     /// 优惠类型。
     /// </summary>
     /// <remarks>
-    /// 枚举值，取值范围请参考 <see cref="PromotionTypeEnum"/>。
+    /// 枚举值，取值范围请参考 <see cref="CouponTypeEnum"/>。
     /// </remarks>
     /// <example>
-    /// 示例值: CASH。(<see cref="PromotionTypeEnum.Cash"/>)
+    /// 示例值: CASH。(<see cref="CouponTypeEnum.Cash"/>)
     /// </example>
     [StringLength(32)]
     [JsonProperty("type")]

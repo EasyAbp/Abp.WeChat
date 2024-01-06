@@ -12,6 +12,8 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
         Task<string> RequestAsync(HttpMethod method, string url, [CanBeNull] string body = null, [CanBeNull] string mchId = null);
 
         Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, [CanBeNull] string body = null, [CanBeNull] string mchId = null);
+        
+        Task<HttpResponseMessage> RequestRawAsync(HttpMethod method, string url, [CanBeNull] string body = null, [CanBeNull] string mchId = null);
 
         Task<string> RequestAsync(HttpMethod method, string url, [NotNull] object body, [CanBeNull] string mchId = null);
 

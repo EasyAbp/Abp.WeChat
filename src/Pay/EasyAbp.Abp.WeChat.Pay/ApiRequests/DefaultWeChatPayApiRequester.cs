@@ -1,7 +1,5 @@
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.Extensions;
@@ -38,6 +36,22 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
 
         public async Task<string> RequestAsync(HttpMethod method, string url, string body, string mchId = null)
         {
+            var response = await RequestRawAsync(method, url, body, mchId);
+            await ValidateResponseAsync(response);
+
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        public async Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, string body,
+            string mchId = null)
+        {
+            var responseString = await RequestAsync(method, url, body, mchId);
+
+            return JsonConvert.DeserializeObject<TResponse>(responseString);
+        }
+
+        public async Task<HttpResponseMessage> RequestRawAsync(HttpMethod method, string url, string body = null, string mchId = null)
+        {
             var request = CreateRequest(method, url, body);
 
             // Setting the request header for the http client.
@@ -51,19 +65,7 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
 
             // Sending the request.
             var client = await _httpClientFactory.CreateAsync(mchId);
-            var response = await client.SendAsync(request);
-
-            await ValidateResponseAsync(response);
-
-            return await response.Content.ReadAsStringAsync();
-        }
-
-        public async Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, string body,
-            string mchId = null)
-        {
-            var responseString = await RequestAsync(method, url, body, mchId);
-
-            return JsonConvert.DeserializeObject<TResponse>(responseString);
+            return await client.SendAsync(request);
         }
 
         public Task<string> RequestAsync(HttpMethod method, string url, object body, string mchId = null)
