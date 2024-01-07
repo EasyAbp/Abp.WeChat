@@ -20,8 +20,4 @@
         <PackageReference Include="Volo.Abp.DistributedLocking.Abstractions" Version="$(AbpVersion)" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Services\BusinessCapability" />
-    </ItemGroup>
-
 </Project>
