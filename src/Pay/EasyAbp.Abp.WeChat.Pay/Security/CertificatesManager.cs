@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using Volo.Abp.BlobStoring;
@@ -34,6 +37,14 @@ public class CertificatesManager : ICertificatesManager, ITransientDependency
         return CertificatesCache.GetOrAdd(mchId ?? DefaultCertificateKey, _ =>
             new Lazy<WeChatPayCertificate>(() =>
                 new WeChatPayCertificate(options.MchId, certificateBytes, options.CertificateSecret))).Value;
+    }
+
+    public string GetSignature(string pendingSignature, WeChatPayCertificate certificate)
+    {
+        var privateKey = certificate.X509Certificate.GetRSAPrivateKey();
+        var signDataBytes = privateKey.SignData(Encoding.UTF8.GetBytes(pendingSignature), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+        return Convert.ToBase64String(signDataBytes);
     }
 
     protected virtual async Task<byte[]> GetX509CertificateBytesAsync(AbpWeChatPayOptions options)
