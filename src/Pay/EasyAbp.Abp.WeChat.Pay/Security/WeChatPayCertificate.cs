@@ -28,7 +28,7 @@ public sealed class WeChatPayCertificate
     /// </summary>
     /// <param name="mchId">商户号。</param>
     /// <param name="certificateBytes">X509 证书实例。</param>
-    /// <param name="password">X509 证书的哈希值，用于快速比对证书是否发生变化。</param>
+    /// <param name="password">X509 证书的密码。</param>
     public WeChatPayCertificate(string mchId, byte[] certificateBytes, string password)
     {
         MchId = mchId;
