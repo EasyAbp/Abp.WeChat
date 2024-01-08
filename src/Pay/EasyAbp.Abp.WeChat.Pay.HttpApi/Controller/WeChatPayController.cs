@@ -7,7 +7,6 @@ using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 
@@ -41,7 +40,6 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-            Logger.LogError(await GetPostDataAsync());
             // var result = await _eventRequestHandlingService.PaidNotifyAsync(new PaidNotifyInput
             // {
             //     MchId = mchId,
