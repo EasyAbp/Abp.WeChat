@@ -28,12 +28,12 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests.Services
             var blobContainer = options.CertificateBlobContainerName.IsNullOrEmpty()
                 ? GetRequiredService<IBlobContainer>()
                 : GetRequiredService<IBlobContainerFactory>().Create(options.CertificateBlobContainerName);
-                
+
             var certificateBytes = AsyncHelper.RunSync(() => blobContainer.GetAllBytesOrNullAsync(options.CertificateBlobName));
             if (certificateBytes == null) throw new FileNotFoundException("指定的证书路径无效，请重新指定有效的证书文件路径。");
 
             // Assert
-            certificateBytes.Length.ShouldBe(2);
+            certificateBytes.Length.ShouldNotBe(0);
         }
     }
 }

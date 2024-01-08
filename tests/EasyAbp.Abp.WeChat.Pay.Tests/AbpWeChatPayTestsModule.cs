@@ -23,12 +23,12 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests
 
                 op.MchId = mchId;
                 op.ApiV3Key = AbpWeChatPayTestConsts.ApiKey;
-                // op.CertificateBlobContainerName = "";
                 op.CertificateBlobName = "apiclient_cert.p12";
                 op.CertificateSecret = mchId;
                 op.NotifyUrl = $"https://my-abp-app.io/wechat-pay/notify/mch-id/{mchId}";
                 op.RefundNotifyUrl = $"https://my-abp-app.io/wechat-pay/refund-notify/mch-id/{mchId}";
                 op.IsSandBox = AbpWeChatPayTestConsts.IsSandBox;
+                op.ApiV3Key = AbpWeChatPayTestConsts.ApiV3Key;
             });
 
             Configure<AbpBlobStoringOptions>(options =>
