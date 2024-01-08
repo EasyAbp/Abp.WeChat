@@ -7,6 +7,7 @@ using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 
@@ -34,22 +35,25 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         /// </summary>
         [HttpPost]
         [Route("notify")]
-        public virtual async Task<ActionResult> NotifyAsync([CanBeNull] string tenantId, [CanBeNull] string mchId)
+        public virtual async Task<ActionResult> NotifyAsync([CanBeNull] [FromQuery] string tenantId,
+            [CanBeNull] [FromQuery] string mchId,
+            [FromBody] PaymentNotifyCallbackRequest request)
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-            var result = await _eventRequestHandlingService.PaidNotifyAsync(new PaidNotifyInput
-            {
-                MchId = mchId,
-                Xml = await GetPostDataAsync()
-            });
+            Logger.LogError(await GetPostDataAsync());
+            // var result = await _eventRequestHandlingService.PaidNotifyAsync(new PaidNotifyInput
+            // {
+            //     MchId = mchId,
+            //     Xml = await GetPostDataAsync()
+            // });
+            //
+            // if (!result.Success)
+            // {
+            //     return BadRequest(BuildFailedXml(result.FailureReason));
+            // }
 
-            if (!result.Success)
-            {
-                return BadRequest(BuildFailedXml(result.FailureReason));
-            }
-
-            return Ok(BuildSuccessXml());
+            return Ok();
         }
 
         /// <summary>
@@ -58,9 +62,9 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         /// </summary>
         [HttpPost]
         [Route("notify/tenant-id/{tenantId}")]
-        public virtual Task<ActionResult> Notify2Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
+        public virtual Task<ActionResult> Notify2Async([CanBeNull] string tenantId, [CanBeNull] string mchId, [FromBody] PaymentNotifyCallbackRequest request)
         {
-            return NotifyAsync(tenantId, mchId);
+            return NotifyAsync(tenantId, mchId, request);
         }
 
         /// <summary>
@@ -69,9 +73,9 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         /// </summary>
         [HttpPost]
         [Route("notify/mch-id/{mchId}")]
-        public virtual Task<ActionResult> Notify3Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
+        public virtual Task<ActionResult> Notify3Async([CanBeNull] string tenantId, [CanBeNull] string mchId, [FromBody] PaymentNotifyCallbackRequest request)
         {
-            return NotifyAsync(tenantId, mchId);
+            return NotifyAsync(tenantId, mchId, request);
         }
 
         /// <summary>
@@ -80,9 +84,9 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         /// </summary>
         [HttpPost]
         [Route("notify/tenant-id/{tenantId}/mch-id/{mchId}")]
-        public virtual Task<ActionResult> Notify4Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
+        public virtual Task<ActionResult> Notify4Async([CanBeNull] string tenantId, [CanBeNull] string mchId, [FromBody] PaymentNotifyCallbackRequest request)
         {
-            return NotifyAsync(tenantId, mchId);
+            return NotifyAsync(tenantId, mchId, request);
         }
 
         /// <summary>
@@ -107,7 +111,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
 
             return Ok(BuildSuccessXml());
         }
-        
+
         /// <summary>
         /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
         /// 见 <see cref="RefundNotifyAsync"/>
@@ -118,7 +122,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         {
             return RefundNotifyAsync(tenantId, mchId);
         }
-        
+
         /// <summary>
         /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
         /// 见 <see cref="RefundNotifyAsync"/>
@@ -129,7 +133,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         {
             return RefundNotifyAsync(tenantId, mchId);
         }
-        
+
         /// <summary>
         /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
         /// 见 <see cref="RefundNotifyAsync"/>

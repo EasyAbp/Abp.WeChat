@@ -2,7 +2,7 @@
 
 namespace EasyAbp.Abp.WeChat.Pay
 {
-    [DependsOn(typeof(AbpWeChatPayAbstractionsModule))]
+    [DependsOn(typeof(AbpWeChatPayAbstractionsModule), typeof(AbpWeChatPayModule))]
     public class AbpWeChatPayHttpApiModule : AbpModule
     {
     }
