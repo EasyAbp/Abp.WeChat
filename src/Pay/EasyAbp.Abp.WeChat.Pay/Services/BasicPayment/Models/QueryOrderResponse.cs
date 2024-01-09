@@ -68,7 +68,7 @@ public class QueryOrderResponse : WeChatPayCommonErrorResponse
     /// 交易类型。
     /// </summary>
     /// <remarks>
-    /// 交易类型为美剧值，具体值可参考 <see cref="TradeTypeEnum"/> 中找到对应的定义。
+    /// 交易类型为枚举值，具体值可参考 <see cref="TradeTypeEnum"/> 中找到对应的定义。
     /// </remarks>
     /// <example>
     /// 示例值: MICROPAY。(<see cref="TradeTypeEnum"/>)。

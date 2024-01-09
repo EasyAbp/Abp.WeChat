@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.RequestHandling;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
+using EasyAbp.Abp.WeChat.Pay.Security.Extensions;
 using EasyAbp.Abp.WeChat.Pay.Security.PlatformCertificate;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
+using Newtonsoft.Json;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Pay.RequestHandling;
@@ -37,9 +40,12 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
             return new WeChatRequestHandlingResult(false, "签名验证不通过");
         }
 
-        var model = new WeChatPayEventModel
+        var decryptingResult = DecryptResource<QueryOrderResponse>(input, options);
+
+        var model = new WeChatPayEventModel<QueryOrderResponse>
         {
-            Options = options
+            Options = options,
+            Resource = decryptingResult
         };
 
         foreach (var handler in handlers.Where(x => x.Type == WeChatHandlerType.Paid))
@@ -62,14 +68,12 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
         var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayEventHandler>>()
             .Where(x => x.Type == WeChatHandlerType.Refund);
 
-        // var (decryptingResult, decryptedXmlDocument) = await _xmlDecrypter.TryDecryptAsync(xmlDocument, options);
-
         // if (!decryptingResult)
         // {
         //     return new WeChatRequestHandlingResult(false, "微信消息体解码失败");
         // }
 
-        var model = new WeChatPayEventModel
+        var model = new WeChatPayEventModel<QueryOrderResponse>
         {
             Options = options
         };
@@ -95,5 +99,12 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
             .Append(input.Nonce).Append("\n")
             .Append(input.RequestBodyString).Append("\n");
         return certificate.VerifySignature(sb.ToString(), input.Signature);
+    }
+
+    protected virtual TObject DecryptResource<TObject>(PaidNotifyInput input, AbpWeChatPayOptions options)
+    {
+        var sourceJson = WeChatPaySecurityUtility.AesGcmDecrypt(options.ApiV3Key, input.RequestBody.Resource.AssociatedData,
+            input.RequestBody.Resource.Nonce, input.RequestBody.Resource.Ciphertext);
+        return JsonConvert.DeserializeObject<TObject>(sourceJson);
     }
 }

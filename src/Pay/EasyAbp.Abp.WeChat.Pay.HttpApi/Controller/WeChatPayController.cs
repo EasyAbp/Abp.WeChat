@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling;
@@ -7,7 +8,6 @@ using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 
@@ -41,27 +41,30 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
             var body = await GetPostDataAsync();
-            // var result = await _eventRequestHandlingService.PaidNotifyAsync(new PaidNotifyInput
-            // {
-            //     MchId = mchId,
-            //     RequestBodyString = body,
-            //     RequestBody = JsonConvert.DeserializeObject<PaymentNotifyCallbackRequest>(body),
-            //     SerialNumber = Request.Headers["Wechatpay-Serial"],
-            //     Timestamp = Request.Headers["Wechatpay-TimeStamp"],
-            //     Nonce = Request.Headers["Wechatpay-Nonce"],
-            //     Signature = Request.Headers["Wechatpay-Signature"]
-            // });
-            //
-            // if (!result.Success)
-            // {
-            //     return BadRequest(new PaymentNotifyCallbackResponse
-            //     {
-            //         Code = "FAIL",
-            //         Message = "处理失败"
-            //     });
-            // }
+            var result = await _eventRequestHandlingService.PaidNotifyAsync(new PaidNotifyInput
+            {
+                MchId = mchId,
+                RequestBodyString = body,
+                RequestBody = JsonSerializer.Deserialize<PaymentNotifyCallbackRequest>(body),
+                SerialNumber = Request.Headers["Wechatpay-Serial"],
+                Timestamp = Request.Headers["Wechatpay-TimeStamp"],
+                Nonce = Request.Headers["Wechatpay-Nonce"],
+                Signature = Request.Headers["Wechatpay-Signature"]
+            });
 
-            return Ok();
+            if (!result.Success)
+            {
+                return BadRequest(new PaymentNotifyCallbackResponse
+                {
+                    Code = "FAIL",
+                    Message = "处理失败"
+                });
+            }
+
+            return Ok(new PaymentNotifyCallbackResponse
+            {
+                Code = "SUCCESS"
+            });
         }
 
         /// <summary>
