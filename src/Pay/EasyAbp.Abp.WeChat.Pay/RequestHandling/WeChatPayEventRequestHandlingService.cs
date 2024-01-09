@@ -1,16 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
-using EasyAbp.Abp.WeChat.Common.Infrastructure;
-using EasyAbp.Abp.WeChat.Common.Infrastructure.Signature;
 using EasyAbp.Abp.WeChat.Common.RequestHandling;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
-using Org.BouncyCastle.Asn1.Ocsp;
+using EasyAbp.Abp.WeChat.Pay.Security.PlatformCertificate;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Pay.RequestHandling;
@@ -19,18 +14,15 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
 {
     public IAbpLazyServiceProvider LazyServiceProvider { get; set; }
 
-    private readonly IWeChatPayEventXmlDecrypter _xmlDecrypter;
     private readonly IAbpWeChatPayOptionsProvider _optionsProvider;
-    private readonly ISignatureGenerator _signatureGenerator;
+    private readonly IPlatformCertificateManager _platformCertificateManager;
 
     public WeChatPayEventRequestHandlingService(
-        IWeChatPayEventXmlDecrypter xmlDecrypter,
         IAbpWeChatPayOptionsProvider optionsProvider,
-        ISignatureGenerator signatureGenerator)
+        IPlatformCertificateManager platformCertificateManager)
     {
-        _xmlDecrypter = xmlDecrypter;
         _optionsProvider = optionsProvider;
-        _signatureGenerator = signatureGenerator;
+        _platformCertificateManager = platformCertificateManager;
     }
 
     public virtual async Task<WeChatRequestHandlingResult> PaidNotifyAsync(PaidNotifyInput input)
@@ -40,17 +32,14 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
         var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayEventHandler>>()
             .Where(h => h.Type == WeChatHandlerType.Paid);
 
-        var xmlDocument = await CreateXmlDocumentAsync(input.Xml);
-
-        if (!await IsSignValidAsync(xmlDocument, options))
+        if (!await IsSignValidAsync(input, options))
         {
             return new WeChatRequestHandlingResult(false, "签名验证不通过");
         }
 
         var model = new WeChatPayEventModel
         {
-            Options = options,
-            WeChatRequestXmlData = xmlDocument
+            Options = options
         };
 
         foreach (var handler in handlers.Where(x => x.Type == WeChatHandlerType.Paid))
@@ -73,20 +62,16 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
         var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayEventHandler>>()
             .Where(x => x.Type == WeChatHandlerType.Refund);
 
-        var xmlDocument = await CreateXmlDocumentAsync(input.Xml);
+        // var (decryptingResult, decryptedXmlDocument) = await _xmlDecrypter.TryDecryptAsync(xmlDocument, options);
 
-        var (decryptingResult, decryptedXmlDocument) = await _xmlDecrypter.TryDecryptAsync(xmlDocument, options);
-
-        if (!decryptingResult)
-        {
-            return new WeChatRequestHandlingResult(false, "微信消息体解码失败");
-        }
+        // if (!decryptingResult)
+        // {
+        //     return new WeChatRequestHandlingResult(false, "微信消息体解码失败");
+        // }
 
         var model = new WeChatPayEventModel
         {
-            Options = options,
-            WeChatRequestXmlData = xmlDocument,
-            DecryptedXmlData = decryptedXmlDocument
+            Options = options
         };
 
         foreach (var handler in handlers)
@@ -102,36 +87,13 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
         return new WeChatRequestHandlingResult(true);
     }
 
-    protected virtual Task<bool> IsSignValidAsync(XmlDocument weChatRequestXmlData, AbpWeChatPayOptions options)
+    protected virtual async Task<bool> IsSignValidAsync(PaidNotifyInput input, AbpWeChatPayOptions options)
     {
-        var parameters = new WeChatParameters();
-
-        var nodes = weChatRequestXmlData.SelectSingleNode("/xml")?.ChildNodes;
-        if (nodes == null)
-        {
-            return Task.FromResult(false);
-        }
-
-        foreach (XmlNode node in nodes)
-        {
-            if (node.Name == "sign")
-            {
-                continue;
-            }
-
-            parameters.AddParameter(node.Name, node.InnerText);
-        }
-
-        var responseSign = _signatureGenerator.Generate(parameters, MD5.Create(), options.ApiV3Key);
-
-        return Task.FromResult(responseSign == weChatRequestXmlData.SelectSingleNode("/xml/sign")?.InnerText);
-    }
-
-    protected virtual Task<XmlDocument> CreateXmlDocumentAsync(string xml)
-    {
-        var xmlDocument = new XmlDocument();
-        xmlDocument.LoadXml(xml);
-
-        return Task.FromResult(xmlDocument);
+        var certificate = await _platformCertificateManager.GetPlatformCertificateAsync(options.MchId, input.SerialNumber);
+        var sb = new StringBuilder();
+        sb.Append(input.Timestamp).Append("\n")
+            .Append(input.Nonce).Append("\n")
+            .Append(input.RequestBodyString).Append("\n");
+        return certificate.VerifySignature(sb.ToString(), input.Signature);
     }
 }

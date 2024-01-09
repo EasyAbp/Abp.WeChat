@@ -5,5 +5,5 @@ namespace EasyAbp.Abp.WeChat.Pay.Security.PlatformCertificate;
 
 public interface IPlatformCertificateManager
 {
-    Task<PlatformCertificateSecretModel> GetPlatformCertificateAsync([NotNull] string mchId, [NotNull] string serialNo);
+    Task<PlatformCertificateEntity> GetPlatformCertificateAsync([NotNull] string mchId, [NotNull] string serialNo);
 }

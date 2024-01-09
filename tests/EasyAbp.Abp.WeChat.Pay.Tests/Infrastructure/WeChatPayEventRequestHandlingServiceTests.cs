@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
-using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
-using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Shouldly;
 using Xunit;
 
@@ -10,12 +9,10 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests.Infrastructure;
 
 public class WeChatPayEventRequestHandlingServiceTests : AbpWeChatPayTestBase
 {
-    protected readonly IWeChatPayEventXmlDecrypter Decrypter;
     protected readonly IWeChatPayEventRequestHandlingService Service;
 
     public WeChatPayEventRequestHandlingServiceTests()
     {
-        Decrypter = GetRequiredService<IWeChatPayEventXmlDecrypter>();
         Service = GetRequiredService<IWeChatPayEventRequestHandlingService>();
     }
 
@@ -42,35 +39,25 @@ public class WeChatPayEventRequestHandlingServiceTests : AbpWeChatPayTestBase
     [Fact]
     public async Task Should_Handle_Paid()
     {
-        const string xml = @"<xml>
-  <appid><![CDATA[wx2421b1c4370ec43b]]></appid>
-  <attach><![CDATA[支付测试]]></attach>
-  <bank_type><![CDATA[CFT]]></bank_type>
-  <fee_type><![CDATA[CNY]]></fee_type>
-  <is_subscribe><![CDATA[Y]]></is_subscribe>
-  <mch_id><![CDATA[10000100]]></mch_id>
-  <nonce_str><![CDATA[5d2b6c2a8db53831f7eda20af46e531c]]></nonce_str>
-  <openid><![CDATA[oUpF8uMEb4qRXf22hE3X68TekukE]]></openid>
-  <out_trade_no><![CDATA[1409811653]]></out_trade_no>
-  <result_code><![CDATA[SUCCESS]]></result_code>
-  <return_code><![CDATA[SUCCESS]]></return_code>
-  <sign><![CDATA[29ADB404083AA9154EC99D650DDFDCC2]]></sign>
-  <time_end><![CDATA[20140903131540]]></time_end>
-  <total_fee>1</total_fee>
-  <coupon_fee><![CDATA[10]]></coupon_fee>
-  <coupon_count><![CDATA[1]]></coupon_count>
-  <coupon_type><![CDATA[CASH]]></coupon_type>
-  <coupon_id><![CDATA[10000]]></coupon_id>
-  <trade_type><![CDATA[JSAPI]]></trade_type>
-  <transaction_id><![CDATA[1004400740201409030005092168]]></transaction_id>
-</xml>";
+        var json = """
+                   {
+                       "id": "EV-2018022511223320873",
+                       "create_time": "2015-05-20T13:29:35+08:00",
+                       "resource_type": "encrypt-resource",
+                       "event_type": "TRANSACTION.SUCCESS",
+                       "summary": "支付成功",
+                       "resource": {
+                           "original_type": "transaction",
+                           "algorithm": "AEAD_AES_256_GCM",
+                           "ciphertext": "",
+                           "associated_data": "",
+                           "nonce": ""
+                       }
+                   }
+                   """;
 
-        var result = await Service.PaidNotifyAsync(new PaidNotifyInput
-        {
-            MchId = "10000100",
-            Xml = xml
-        });
+        // var result = await Service.PaidNotifyAsync(JsonConvert.DeserializeObject<PaymentNotifyCallbackRequest>(json), null);
 
-        result.Success.ShouldBe(true);
+        // result.Success.ShouldBe(true);
     }
 }

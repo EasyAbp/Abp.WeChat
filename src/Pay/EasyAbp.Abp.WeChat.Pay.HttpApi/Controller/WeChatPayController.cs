@@ -7,6 +7,7 @@ using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 
@@ -34,22 +35,33 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         /// </summary>
         [HttpPost]
         [Route("notify")]
-        public virtual async Task<ActionResult> NotifyAsync([CanBeNull] string tenantId, [CanBeNull] string mchId)
+        public virtual async Task<ActionResult> NotifyAsync([CanBeNull] [FromQuery] string tenantId,
+            [CanBeNull] [FromQuery] string mchId)
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-            var result = await _eventRequestHandlingService.PaidNotifyAsync(new PaidNotifyInput
-            {
-                MchId = mchId,
-                Xml = await GetPostDataAsync()
-            });
+            var body = await GetPostDataAsync();
+            // var result = await _eventRequestHandlingService.PaidNotifyAsync(new PaidNotifyInput
+            // {
+            //     MchId = mchId,
+            //     RequestBodyString = body,
+            //     RequestBody = JsonConvert.DeserializeObject<PaymentNotifyCallbackRequest>(body),
+            //     SerialNumber = Request.Headers["Wechatpay-Serial"],
+            //     Timestamp = Request.Headers["Wechatpay-TimeStamp"],
+            //     Nonce = Request.Headers["Wechatpay-Nonce"],
+            //     Signature = Request.Headers["Wechatpay-Signature"]
+            // });
+            //
+            // if (!result.Success)
+            // {
+            //     return BadRequest(new PaymentNotifyCallbackResponse
+            //     {
+            //         Code = "FAIL",
+            //         Message = "处理失败"
+            //     });
+            // }
 
-            if (!result.Success)
-            {
-                return BadRequest(BuildFailedXml(result.FailureReason));
-            }
-
-            return Ok(BuildSuccessXml());
+            return Ok();
         }
 
         /// <summary>
@@ -107,7 +119,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
 
             return Ok(BuildSuccessXml());
         }
-        
+
         /// <summary>
         /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
         /// 见 <see cref="RefundNotifyAsync"/>
@@ -118,7 +130,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         {
             return RefundNotifyAsync(tenantId, mchId);
         }
-        
+
         /// <summary>
         /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
         /// 见 <see cref="RefundNotifyAsync"/>
@@ -129,7 +141,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         {
             return RefundNotifyAsync(tenantId, mchId);
         }
-        
+
         /// <summary>
         /// 本方法是为了避免多 Route 导致 ABP ApiDescription 报 Warning。
         /// 见 <see cref="RefundNotifyAsync"/>
