@@ -20,8 +20,6 @@ public class PlatformCertificateManagerTests : AbpWeChatPayTestBase
         // Arrange & Act
         var certificate = await _platformCertificateManager.GetPlatformCertificateAsync(AbpWeChatPayTestConsts.MchId,
             AbpWeChatPayTestConsts.SerialNo);
-        var certificate2 = await _platformCertificateManager.GetPlatformCertificateAsync(AbpWeChatPayTestConsts.MchId,
-            AbpWeChatPayTestConsts.SerialNo);
 
         // Assert
         certificate.ShouldNotBeNull();

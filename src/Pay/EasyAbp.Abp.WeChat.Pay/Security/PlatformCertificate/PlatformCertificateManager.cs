@@ -14,7 +14,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Security.PlatformCertificate;
 
 public class PlatformCertificateManager : IPlatformCertificateManager, ISingletonDependency
 {
-    public static string PlatformCertificatesCacheItemKey { get; set; } = "empty";
+    public static string PlatformCertificatesCacheItemKey { get; set; } = nameof(PlatformCertificatesCacheItemKey);
 
     private readonly ILogger<PlatformCertificateManager> _logger;
     private readonly IAbpWeChatPayServiceFactory _abpWeChatPayServiceFactory;
