@@ -9,5 +9,6 @@
         public const string AppId = "";
         public const string OpenId = "";
         public const string NotifyUrl = "";
+        public const string SerialNo = "";
     }
 }
