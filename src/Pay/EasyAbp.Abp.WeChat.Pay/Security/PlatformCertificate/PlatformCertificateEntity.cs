@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Pay.Security.PlatformCertificate;
 
+// TODO: There might be performance issues here because serialization and deserialization operations are involved every time the cache is accessed. The best practice would be to cache the certificates directly in memory.
 public class X509Certificate2JsonConverter : JsonConverter<X509Certificate2>
 {
     public override void WriteJson(JsonWriter writer, X509Certificate2 value, JsonSerializer serializer)
