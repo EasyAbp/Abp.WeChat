@@ -8,37 +8,32 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Volo.Abp;
 using Volo.Abp.Caching;
-using Volo.Abp.DistributedLocking;
+using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Pay.Security.PlatformCertificate;
 
-public class PlatformCertificateManager : IPlatformCertificateManager
+public class PlatformCertificateManager : IPlatformCertificateManager, ISingletonDependency
 {
     public static string PlatformCertificatesCacheItemKey { get; set; } = "empty";
-
-    private const string LockName = "PlatformCertificateManager";
 
     private readonly ILogger<PlatformCertificateManager> _logger;
     private readonly IAbpWeChatPayServiceFactory _abpWeChatPayServiceFactory;
     private readonly IAbpWeChatPayOptionsProvider _abpWeChatPayOptionsProvider;
     private readonly IDistributedCache<PlatformCertificatesCacheItem> _distributedCache;
-    private readonly IAbpDistributedLock _distributedLock;
 
     public PlatformCertificateManager(
         ILogger<PlatformCertificateManager> logger,
         IAbpWeChatPayServiceFactory abpWeChatPayServiceFactory,
         IAbpWeChatPayOptionsProvider abpWeChatPayOptionsProvider,
-        IDistributedCache<PlatformCertificatesCacheItem> distributedCache,
-        IAbpDistributedLock distributedLock)
+        IDistributedCache<PlatformCertificatesCacheItem> distributedCache)
     {
         _logger = logger;
         _abpWeChatPayServiceFactory = abpWeChatPayServiceFactory;
         _abpWeChatPayOptionsProvider = abpWeChatPayOptionsProvider;
         _distributedCache = distributedCache;
-        _distributedLock = distributedLock;
     }
 
-    public virtual async Task<PlatformCertificateSecretModel> GetPlatformCertificateAsync(string mchId, string serialNo)
+    public virtual async Task<PlatformCertificateEntity> GetPlatformCertificateAsync(string mchId, string serialNo)
     {
         Check.NotNullOrWhiteSpace(mchId, nameof(mchId));
         Check.NotNullOrWhiteSpace(serialNo, nameof(serialNo));
@@ -49,26 +44,12 @@ public class PlatformCertificateManager : IPlatformCertificateManager
             return GetSpecifiedCachedCertificate(cacheItem, serialNo);
         }
 
-        await using var handle = await _distributedLock.TryAcquireAsync(LockName, TimeSpan.FromSeconds(3));
-
-        if (handle == null)
-        {
-            throw new InvalidOperationException("Failed to acquire the distributed lock.");
-        }
-
-        cacheItem = await _distributedCache.GetAsync(PlatformCertificatesCacheItemKey);
-        if (cacheItem != null)
-        {
-            return GetSpecifiedCachedCertificate(cacheItem, serialNo);
-        }
-
         var options = await _abpWeChatPayOptionsProvider.GetAsync(mchId);
 
-        var certificateService =
-            await _abpWeChatPayServiceFactory.CreateAsync<WeChatPayCertificatesWeService>(mchId);
+        var certificateService = await _abpWeChatPayServiceFactory.CreateAsync<WeChatPayCertificatesWeService>(mchId);
 
         cacheItem = new PlatformCertificatesCacheItem();
-        var cacheExpiration = TimeSpan.FromHours(6);
+        var cacheExpiration = TimeSpan.FromDays(31);
 
         try
         {
@@ -82,7 +63,7 @@ public class PlatformCertificateManager : IPlatformCertificateManager
                     certificate.EncryptCertificateData.Ciphertext);
 
                 cacheItem.Certificates.Add(certificate.SerialNo,
-                    new PlatformCertificateSecretModel(certificate.SerialNo, certificateString,
+                    new PlatformCertificateEntity(certificate.SerialNo, certificateString,
                         certificate.EffectiveTime, certificate.ExpireTime));
             }
         }
@@ -102,7 +83,7 @@ public class PlatformCertificateManager : IPlatformCertificateManager
         return GetSpecifiedCachedCertificate(cacheItem, serialNo);
     }
 
-    protected virtual PlatformCertificateSecretModel GetSpecifiedCachedCertificate(
+    protected virtual PlatformCertificateEntity GetSpecifiedCachedCertificate(
         PlatformCertificatesCacheItem cacheItem, string serialNo)
     {
         if (!cacheItem.Certificates.TryGetValue(serialNo, out var secretModel))
