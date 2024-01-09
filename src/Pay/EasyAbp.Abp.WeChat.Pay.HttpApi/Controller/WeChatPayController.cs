@@ -7,6 +7,7 @@ using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 
@@ -35,20 +36,29 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         [HttpPost]
         [Route("notify")]
         public virtual async Task<ActionResult> NotifyAsync([CanBeNull] [FromQuery] string tenantId,
-            [CanBeNull] [FromQuery] string mchId,
-            [FromBody] PaymentNotifyCallbackRequest request)
+            [CanBeNull] [FromQuery] string mchId)
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
+            var body = await GetPostDataAsync();
             // var result = await _eventRequestHandlingService.PaidNotifyAsync(new PaidNotifyInput
             // {
             //     MchId = mchId,
-            //     Xml = await GetPostDataAsync()
+            //     RequestBodyString = body,
+            //     RequestBody = JsonConvert.DeserializeObject<PaymentNotifyCallbackRequest>(body),
+            //     SerialNumber = Request.Headers["Wechatpay-Serial"],
+            //     Timestamp = Request.Headers["Wechatpay-TimeStamp"],
+            //     Nonce = Request.Headers["Wechatpay-Nonce"],
+            //     Signature = Request.Headers["Wechatpay-Signature"]
             // });
             //
             // if (!result.Success)
             // {
-            //     return BadRequest(BuildFailedXml(result.FailureReason));
+            //     return BadRequest(new PaymentNotifyCallbackResponse
+            //     {
+            //         Code = "FAIL",
+            //         Message = "处理失败"
+            //     });
             // }
 
             return Ok();
@@ -60,9 +70,9 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         /// </summary>
         [HttpPost]
         [Route("notify/tenant-id/{tenantId}")]
-        public virtual Task<ActionResult> Notify2Async([CanBeNull] string tenantId, [CanBeNull] string mchId, [FromBody] PaymentNotifyCallbackRequest request)
+        public virtual Task<ActionResult> Notify2Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
         {
-            return NotifyAsync(tenantId, mchId, request);
+            return NotifyAsync(tenantId, mchId);
         }
 
         /// <summary>
@@ -71,9 +81,9 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         /// </summary>
         [HttpPost]
         [Route("notify/mch-id/{mchId}")]
-        public virtual Task<ActionResult> Notify3Async([CanBeNull] string tenantId, [CanBeNull] string mchId, [FromBody] PaymentNotifyCallbackRequest request)
+        public virtual Task<ActionResult> Notify3Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
         {
-            return NotifyAsync(tenantId, mchId, request);
+            return NotifyAsync(tenantId, mchId);
         }
 
         /// <summary>
@@ -82,9 +92,9 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         /// </summary>
         [HttpPost]
         [Route("notify/tenant-id/{tenantId}/mch-id/{mchId}")]
-        public virtual Task<ActionResult> Notify4Async([CanBeNull] string tenantId, [CanBeNull] string mchId, [FromBody] PaymentNotifyCallbackRequest request)
+        public virtual Task<ActionResult> Notify4Async([CanBeNull] string tenantId, [CanBeNull] string mchId)
         {
-            return NotifyAsync(tenantId, mchId, request);
+            return NotifyAsync(tenantId, mchId);
         }
 
         /// <summary>

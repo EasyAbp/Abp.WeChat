@@ -26,10 +26,4 @@ public class WeChatPayAuthorizationGeneratorTests : AbpWeChatPayTestBase
         authorization.ShouldNotBeNull();
         authorization.ShouldNotBeNullOrEmpty();
     }
-
-    public async Task ValidateAuthorizationAsync_Test()
-    {
-        // Arrange
-        
-    }
 }

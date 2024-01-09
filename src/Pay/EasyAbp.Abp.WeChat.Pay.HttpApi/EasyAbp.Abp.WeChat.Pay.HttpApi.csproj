@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\EasyAbp.Abp.WeChat.Pay.Abstractions\EasyAbp.Abp.WeChat.Pay.Abstractions.csproj" />
+        <ProjectReference Include="..\EasyAbp.Abp.WeChat.Pay\EasyAbp.Abp.WeChat.Pay.csproj" />
     </ItemGroup>
 
     <ItemGroup>

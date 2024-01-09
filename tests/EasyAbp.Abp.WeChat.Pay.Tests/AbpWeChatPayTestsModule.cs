@@ -22,7 +22,6 @@ namespace EasyAbp.Abp.WeChat.Pay.Tests
                 const string mchId = AbpWeChatPayTestConsts.MchId;
 
                 op.MchId = mchId;
-                op.ApiV3Key = AbpWeChatPayTestConsts.ApiKey;
                 op.CertificateBlobName = "apiclient_cert.p12";
                 op.CertificateSecret = mchId;
                 op.NotifyUrl = $"https://my-abp-app.io/wechat-pay/notify/mch-id/{mchId}";

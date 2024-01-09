@@ -6,5 +6,5 @@ namespace EasyAbp.Abp.WeChat.Pay.Security.PlatformCertificate;
 [Serializable]
 public class PlatformCertificatesCacheItem
 {
-    public Dictionary<string, PlatformCertificateSecretModel> Certificates { get; } = new();
+    public Dictionary<string, PlatformCertificateEntity> Certificates { get; } = new();
 }
