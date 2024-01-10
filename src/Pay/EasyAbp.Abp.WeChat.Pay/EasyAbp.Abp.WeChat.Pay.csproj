@@ -17,7 +17,6 @@
         <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
         <PackageReference Include="Volo.Abp.BlobStoring" Version="$(AbpVersion)" />
         <PackageReference Include="Volo.Abp.BackgroundWorkers" Version="$(AbpVersion)" />
-        <PackageReference Include="Volo.Abp.DistributedLocking.Abstractions" Version="$(AbpVersion)" />
         <PackageReference Include="Volo.Abp.Json.Newtonsoft" Version="8.0.1" />
     </ItemGroup>
 

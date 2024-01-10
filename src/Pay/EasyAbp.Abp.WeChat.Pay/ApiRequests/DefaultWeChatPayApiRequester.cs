@@ -23,11 +23,11 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
             NullValueHandling = NullValueHandling.Ignore
         };
 
-        private readonly IAbpWeChatPayHttpClientFactory _httpClientFactory;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IWeChatPayAuthorizationGenerator _authorizationGenerator;
         private readonly IAbpWeChatPayOptionsProvider _optionsProvider;
 
-        public DefaultWeChatPayApiRequester(IAbpWeChatPayHttpClientFactory httpClientFactory,
+        public DefaultWeChatPayApiRequester(IHttpClientFactory httpClientFactory,
             IAbpWeChatPayOptionsProvider optionsProvider,
             IWeChatPayAuthorizationGenerator authorizationGenerator)
         {
@@ -66,7 +66,7 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
                 await _authorizationGenerator.GenerateAuthorizationAsync(method, url, body, mchId));
 
             // Sending the request.
-            var client = await _httpClientFactory.CreateAsync(mchId);
+            var client = _httpClientFactory.CreateClient();
             return await client.SendAsync(request);
         }
 
