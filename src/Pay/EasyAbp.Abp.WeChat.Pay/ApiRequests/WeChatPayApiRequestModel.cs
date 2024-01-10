@@ -25,15 +25,15 @@ public class WeChatPayApiRequestModel
         Method = method;
         Timestamp = timestamp;
         RandomString = randomString;
-        if (method == HttpMethod.Get)
+        Url = url;
+        Body = body;
+        
+        if (method != HttpMethod.Get) return;
+        
+        Body = null;
+        if (!string.IsNullOrEmpty(body))
         {
-            Body = null;
             Url = $"{url}?{body}";
-        }
-        else
-        {
-            Url = url;
-            Body = body;
         }
     }
 
