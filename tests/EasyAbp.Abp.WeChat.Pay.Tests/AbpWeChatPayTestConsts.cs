@@ -10,5 +10,6 @@
         public const string OpenId = "";
         public const string NotifyUrl = "";
         public const string SerialNo = "";
+        public const string RefundNotifyUrl = "";
     }
 }

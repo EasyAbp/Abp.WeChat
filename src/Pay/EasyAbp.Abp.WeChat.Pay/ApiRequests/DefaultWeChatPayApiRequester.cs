@@ -115,14 +115,19 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
             return WeChatReflectionHelper.ConvertToQueryString(body);
         }
 
-        protected virtual async Task ValidateResponseAsync(HttpResponseMessage responseMessage)
+        protected virtual Task ValidateResponseAsync(HttpResponseMessage responseMessage)
         {
-            if (responseMessage.StatusCode != HttpStatusCode.OK)
+            switch (responseMessage.StatusCode)
             {
-                throw new CallWeChatPayApiException("微信支付 API 调用失败，状态码为非 200。");
+                case HttpStatusCode.OK:
+                    return Task.CompletedTask;
+                case HttpStatusCode.Accepted:
+                    return Task.CompletedTask;
+                case HttpStatusCode.NoContent:
+                    return Task.CompletedTask;
+                default:
+                    throw new CallWeChatPayApiException("微信支付 API 调用失败，状态码为非 200。");
             }
-
-            await Task.CompletedTask;
         }
     }
 }

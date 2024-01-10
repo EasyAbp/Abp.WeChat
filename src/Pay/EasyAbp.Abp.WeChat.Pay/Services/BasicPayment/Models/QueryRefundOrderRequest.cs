@@ -17,5 +17,6 @@ public class QueryRefundOrderRequest
     [Required]
     [StringLength(64, MinimumLength = 1)]
     [JsonProperty("out_refund_no")]
+    [JsonIgnore]
     public string OutRefundNo { get; set; }
 }
