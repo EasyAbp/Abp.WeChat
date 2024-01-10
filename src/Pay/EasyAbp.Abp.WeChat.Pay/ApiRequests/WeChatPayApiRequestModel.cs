@@ -23,10 +23,18 @@ public class WeChatPayApiRequestModel
         string randomString)
     {
         Method = method;
-        Url = url;
-        Body = body;
         Timestamp = timestamp;
         RandomString = randomString;
+        Url = url;
+        Body = body;
+        
+        if (method != HttpMethod.Get) return;
+        
+        Body = null;
+        if (!string.IsNullOrEmpty(body))
+        {
+            Url = $"{url}?{body}";
+        }
     }
 
     public string GetPendingSignatureString()

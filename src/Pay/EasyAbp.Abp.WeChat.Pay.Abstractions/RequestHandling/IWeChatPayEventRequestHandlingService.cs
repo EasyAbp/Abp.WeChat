@@ -6,7 +6,7 @@ namespace EasyAbp.Abp.WeChat.Pay.RequestHandling;
 
 public interface IWeChatPayEventRequestHandlingService
 {
-    Task<WeChatRequestHandlingResult> PaidNotifyAsync(PaidNotifyInput input);
+    Task<WeChatRequestHandlingResult> PaidNotifyAsync(NotifyInputDto inputDto);
 
-    Task<WeChatRequestHandlingResult> RefundNotifyAsync(RefundNotifyInput input);
+    Task<WeChatRequestHandlingResult> RefundNotifyAsync(NotifyInputDto inputDto);
 }

@@ -31,5 +31,6 @@ public class CloseOrderRequest
     [Required]
     [StringLength(32,MinimumLength = 6)]
     [JsonProperty("out_trade_no")]
+    [JsonIgnore]
     public string OutTradeNo { get; set; }
 }

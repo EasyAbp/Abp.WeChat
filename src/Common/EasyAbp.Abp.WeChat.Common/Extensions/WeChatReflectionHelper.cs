@@ -19,6 +19,9 @@ public static class WeChatReflectionHelper
                 continue;
             }
 
+            var ignoreAttribute = propertyInfo.GetCustomAttribute<JsonIgnoreAttribute>();
+            if(ignoreAttribute != null) continue;
+
             var jsonPropertyAttribute = propertyInfo.GetCustomAttribute<JsonPropertyAttribute>();
             var name = jsonPropertyAttribute?.PropertyName ?? propertyInfo.Name;
             var type = propertyInfo.PropertyType;

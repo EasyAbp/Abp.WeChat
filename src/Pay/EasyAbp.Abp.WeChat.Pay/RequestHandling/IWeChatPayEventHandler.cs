@@ -10,6 +10,6 @@ namespace EasyAbp.Abp.WeChat.Pay.RequestHandling
     {
         WeChatHandlerType Type { get; }
 
-        Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel model);
+        Task<WeChatRequestHandlingResult> HandleAsync<TResource>(WeChatPayEventModel<TResource> model);
     }
 }
