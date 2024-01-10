@@ -27,5 +27,6 @@ public class QueryOrderByOutTradeNumberRequest
     [JsonProperty("out_trade_no")]
     [Required]
     [StringLength(32, MinimumLength = 6)]
+    [JsonIgnore]
     public string OutTradeNo { get; set; }
 }
