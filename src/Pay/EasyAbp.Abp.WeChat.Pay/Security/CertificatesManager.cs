@@ -13,7 +13,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Security;
 /// <summary>
 /// <see cref="ICertificatesManager"/> 的默认实现。
 /// </summary>
-public class CertificatesManager : ICertificatesManager, ITransientDependency
+public class CertificatesManager : ICertificatesManager, ISingletonDependency
 {
     protected IAbpLazyServiceProvider AbpLazyServiceProvider { get; }
     protected IAbpWeChatPayOptionsProvider AbpWeChatPayOptionsProvider { get; }
