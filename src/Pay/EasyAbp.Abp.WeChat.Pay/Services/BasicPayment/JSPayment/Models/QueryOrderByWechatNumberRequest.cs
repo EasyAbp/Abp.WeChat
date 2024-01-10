@@ -27,5 +27,6 @@ public class QueryOrderByWechatNumberRequest
     [JsonProperty("transaction_id")]
     [Required]
     [StringLength(32, MinimumLength = 1)]
+    [JsonIgnore]
     public string TransactionId { get; set; }
 }

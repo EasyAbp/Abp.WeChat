@@ -1,8 +1,10 @@
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.Extensions;
+using EasyAbp.Abp.WeChat.Pay.Exceptions;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Security;
 using Newtonsoft.Json;
@@ -115,6 +117,11 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
 
         protected virtual async Task ValidateResponseAsync(HttpResponseMessage responseMessage)
         {
+            if (responseMessage.StatusCode != HttpStatusCode.OK)
+            {
+                throw new CallWeChatPayApiException("微信支付 API 调用失败，状态码为非 200。");
+            }
+
             await Task.CompletedTask;
         }
     }
