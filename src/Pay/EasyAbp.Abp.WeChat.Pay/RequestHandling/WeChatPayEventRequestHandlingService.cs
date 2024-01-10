@@ -93,12 +93,12 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
 
     protected virtual async Task<bool> IsSignValidAsync(PaidNotifyInput input, AbpWeChatPayOptions options)
     {
-        var certificate = await _platformCertificateManager.GetPlatformCertificateAsync(options.MchId, input.SerialNumber);
+        var certificate = await _platformCertificateManager.GetPlatformCertificateAsync(options.MchId, input.HttpHeader.SerialNumber);
         var sb = new StringBuilder();
-        sb.Append(input.Timestamp).Append("\n")
-            .Append(input.Nonce).Append("\n")
+        sb.Append(input.HttpHeader.Timestamp).Append("\n")
+            .Append(input.HttpHeader.Nonce).Append("\n")
             .Append(input.RequestBodyString).Append("\n");
-        return certificate.VerifySignature(sb.ToString(), input.Signature);
+        return certificate.VerifySignature(sb.ToString(), input.HttpHeader.Signature);
     }
 
     protected virtual TObject DecryptResource<TObject>(PaidNotifyInput input, AbpWeChatPayOptions options)

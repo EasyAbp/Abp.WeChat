@@ -40,16 +40,16 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-            var body = await GetPostDataAsync();
+            var requestBody = await GetPostDataAsync();
             var result = await _eventRequestHandlingService.PaidNotifyAsync(new PaidNotifyInput
             {
                 MchId = mchId,
-                RequestBodyString = body,
-                RequestBody = JsonSerializer.Deserialize<PaymentNotifyCallbackRequest>(body),
-                SerialNumber = Request.Headers["Wechatpay-Serial"],
-                Timestamp = Request.Headers["Wechatpay-TimeStamp"],
-                Nonce = Request.Headers["Wechatpay-Nonce"],
-                Signature = Request.Headers["Wechatpay-Signature"]
+                RequestBodyString = requestBody,
+                RequestBody = JsonSerializer.Deserialize<PaymentNotifyCallbackRequest>(requestBody),
+                HttpHeader = new NotifyHttpHeaderModel(Request.Headers["Wechatpay-Serial"],
+                    Request.Headers["Wechatpay-TimeStamp"],
+                    Request.Headers["Wechatpay-Nonce"],
+                    Request.Headers["Wechatpay-Signature"])
             });
 
             if (!result.Success)
@@ -108,6 +108,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         public virtual async Task<ActionResult> RefundNotifyAsync([CanBeNull] string tenantId, [CanBeNull] string mchId)
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
+            var requestBody = await GetPostDataAsync();
 
             var result = await _eventRequestHandlingService.RefundNotifyAsync(new RefundNotifyInput
             {
