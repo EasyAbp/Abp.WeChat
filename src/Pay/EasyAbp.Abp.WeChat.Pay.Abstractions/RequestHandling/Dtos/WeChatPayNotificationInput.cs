@@ -3,7 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 
-public class PaymentNotifyCallbackRequest
+[Serializable]
+public class WeChatPayNotificationInput
 {
     /// <summary>
     /// 通知 ID。

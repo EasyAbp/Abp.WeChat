@@ -1,8 +1,10 @@
+using System;
 using System.Text.Json.Serialization;
 
 namespace EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 
-public class PaymentNotifyCallbackResponse
+[Serializable]
+public class WeChatPayNotificationOutput
 {
     /// <summary>
     /// 返回状态码。

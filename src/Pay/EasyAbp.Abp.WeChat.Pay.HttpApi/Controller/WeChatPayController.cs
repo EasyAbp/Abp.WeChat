@@ -40,17 +40,8 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
 
-            var requestBody = await GetPostDataAsync();
-            var result = await _eventRequestHandlingService.PaidNotifyAsync(new PaidNotifyInput
-            {
-                MchId = mchId,
-                RequestBodyString = requestBody,
-                RequestBody = JsonSerializer.Deserialize<PaymentNotifyCallbackRequest>(requestBody),
-                HttpHeader = new NotifyHttpHeaderModel(Request.Headers["Wechatpay-Serial"],
-                    Request.Headers["Wechatpay-TimeStamp"],
-                    Request.Headers["Wechatpay-Nonce"],
-                    Request.Headers["Wechatpay-Signature"])
-            });
+            var result = await _eventRequestHandlingService.PaidNotifyAsync(
+                BuildNotifyInputDto(await GetPostDataAsync(), mchId));
 
             return !result.Success ? NotifyFailure(result.FailureReason) : NotifySuccess();
         }
@@ -96,14 +87,9 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
         public virtual async Task<IActionResult> RefundNotifyAsync([CanBeNull] string tenantId, [CanBeNull] string mchId)
         {
             using var changeTenant = CurrentTenant.Change(tenantId.IsNullOrWhiteSpace() ? null : Guid.Parse(tenantId!));
-            var requestBody = await GetPostDataAsync();
 
-            var result = await _eventRequestHandlingService.RefundNotifyAsync(new RefundNotifyInput
-            {
-                MchId = mchId,
-                Xml = await GetPostDataAsync()
-            });
-            
+            var result = await _eventRequestHandlingService.RefundNotifyAsync(BuildNotifyInputDto(await GetPostDataAsync(), mchId));
+
             return !result.Success ? NotifyFailure(result.FailureReason) : NotifySuccess();
         }
 
@@ -173,7 +159,7 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
 
         private IActionResult NotifySuccess()
         {
-            return Ok(new PaymentNotifyCallbackResponse
+            return Ok(new WeChatPayNotificationOutput
             {
                 Code = "SUCCESS"
             });
@@ -181,11 +167,25 @@ namespace EasyAbp.Abp.WeChat.Pay.Controller
 
         private IActionResult NotifyFailure(string message)
         {
-            return BadRequest(new PaymentNotifyCallbackResponse
+            return BadRequest(new WeChatPayNotificationOutput
             {
                 Code = "FAIL",
                 Message = message
             });
+        }
+
+        private NotifyInputDto BuildNotifyInputDto(string requestBody, string mchId)
+        {
+            return new NotifyInputDto
+            {
+                MchId = mchId,
+                RequestBodyString = requestBody,
+                RequestBody = JsonSerializer.Deserialize<WeChatPayNotificationInput>(requestBody),
+                HttpHeader = new NotifyHttpHeaderModel(Request.Headers["Wechatpay-Serial"],
+                    Request.Headers["Wechatpay-TimeStamp"],
+                    Request.Headers["Wechatpay-Nonce"],
+                    Request.Headers["Wechatpay-Signature"])
+            };
         }
 
         protected virtual async Task<string> GetPostDataAsync()
