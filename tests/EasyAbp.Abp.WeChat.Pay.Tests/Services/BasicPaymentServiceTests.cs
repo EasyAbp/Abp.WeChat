@@ -36,7 +36,7 @@ public class BasicPaymentServiceTests : AbpWeChatPayTestBase
                 Total = 1,
                 Currency = "CNY"
             },
-            Payer = new CreateOrderPayerModel
+            Payer = new CreateOrderRequest.CreateOrderPayerModel
             {
                 OpenId = AbpWeChatPayTestConsts.OpenId // 请替换为测试用户的 OpenId，具体 Id 可以在微信公众号平台-用户管理进行查看。
             }
