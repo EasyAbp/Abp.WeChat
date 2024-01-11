@@ -37,7 +37,7 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
             return new WeChatRequestHandlingResult(false, "签名验证不通过");
         }
 
-        var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayEventHandler>>()
+        var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayEventHandler<QueryOrderResponse>>>()
             .Where(h => h.Type == WeChatHandlerType.Paid);
 
         var decryptingResult = DecryptResource<QueryOrderResponse>(input, options);
@@ -70,7 +70,7 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
             return new WeChatRequestHandlingResult(false, "签名验证不通过");
         }
 
-        var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayEventHandler>>()
+        var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayEventHandler<RefundOrderResponse>>>()
             .Where(x => x.Type == WeChatHandlerType.Refund);
 
         var decryptingResult = DecryptResource<RefundOrderResponse>(input, options);

@@ -31,12 +31,12 @@ public override void ConfigureServices (ServiceConfigurationContext context)
     {
         // 默认商户 Id
         op.MchId = "000000000000000";
-        // 微信支付的 API 密钥信息，会在后续进行签名时被使用。
-        op.ApiKey = "****************************";
+        // 微信支付的 API V3 密钥信息，会在后续进行 签名/加密/解密 时被使用。
+        op.ApiV3Key = "****************************";
         // 支付结果回调地址，用于接收支付结果通知。
         // 如果安装了本模块提供的 HttpApi 模块，则默认是 域名 + /wechat-pay/notify 路由。
         op.NotifyUrl = "https://xxx.xxxx.com/wechat-pay/notify";
-        
+      
         // 如果需要支持退款操作，则以下配置必须
         
         // 退款结果回调地址，用于接收退款结果通知。
@@ -54,7 +54,7 @@ public override void ConfigureServices (ServiceConfigurationContext context)
 
 完整的 Setting 项清单：https://github.com/EasyAbp/Abp.WeChat/blob/master/src/Pay/EasyAbp.Abp.WeChat.Pay/Settings/AbpWeChatPaySettingDefinitionProvider.cs
 
-> 注意，如您在 appsettings.json 中通过 Setting 设置 `ApiKey` 或 `CertificateSecret`，须自行加密后填入，参考：https://docs.abp.io/en/abp/latest/String-Encryption
+> 注意，如您在 appsettings.json 中通过 Setting 设置 `ApiV3Key` 或 `CertificateSecret`，须自行加密后填入，参考：https://docs.abp.io/en/abp/latest/String-Encryption
 
 ## 二、提供的回调接口
 
@@ -65,17 +65,16 @@ public override void ConfigureServices (ServiceConfigurationContext context)
 用户如果需要对支付结果进行处理，只需要实现一个或多个 `IWeChatPayEventHandler` 处理器即可。当框架接受到微信通知时，会触发开发人员编写的处理器，并将微信结果传递给这些处理器。
 
 ```csharp
-public class WeChatPaymentHandler : IWeChatPayEventHandler
-{
-    // 定义当前的处理的事件类型为：支付成功事件
-    public WeChatHandlerType Type => WeChatHandlerType.Paid;
-  
-    public async Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel model)
-    {
-        Console.WriteLine("我知道支付成功了");
-        return new WeChatRequestHandlingResult(true);
-    }
-}
+  public class PaidWeChatPayEventHandler : IWeChatPayEventHandler<QueryOrderResponse>
+  {
+      public WeChatHandlerType Type => WeChatHandlerType.Paid;
+
+      public Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel<QueryOrderResponse> model)
+      {
+          Console.WriteLine("支付成功。");
+          return Task.FromResult(new WeChatRequestHandlingResult(true));
+      }
+  }
 ```
 
 编写完成之后，则需要开发人员手动注入这些处理器。
@@ -92,8 +91,6 @@ public class XXXDomainModule : AbpModule
 
 如果在处理过程当中出现了异常，那么你可以在返回 `WeChatRequestHandlingResult` 对象时，设置 `success` 参数为 `false`，并且可以填写对应的失败原因。
 
-其中 `XmlDocument` 对象内部的参数含义，可以参考微信支付 **[开发文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7&index=8)**。
-
 WeChatPay 模块默认提供了参数校验处理器，各个处理器的调用顺序是按照 **注入顺序** 来的，目前暂时不支持处理器自定义排序。
 
 ### 2.2 退款回调接口
@@ -103,17 +100,16 @@ WeChatPay 模块默认提供了参数校验处理器，各个处理器的调用�
 用户如果需要对退款通知进行处理，只需要实现一个或多个 `IWeChatPayEventHandler` 处理器即可。当框架接受到微信通知时，会触发开发人员编写的处理器，并将微信结果传递给这些处理器。
 
 ```csharp
-public class XXXAAAHandler : IWeChatPayEventHandler
-{
-    // 定义当前处理器的类型为退款。
-    public WeChatHandlerType Type => WeChatHandlerType.Refund;
-  
-    public Task HandleAsync(XmlDocument xmlDocument)
-    {
-        Console.WriteLine("接受到了数据");
-        return Task.CompletedTask;
-    }
-}
+  public class RefundWeChatPayEventHandler : IWeChatPayEventHandler<RefundOrderResponse>
+  {
+      public WeChatHandlerType Type => WeChatHandlerType.Refund;
+
+      public Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel<RefundOrderResponse> model)
+      {
+          Console.WriteLine("退款成功。");
+          return Task.FromResult(new WeChatRequestHandlingResult(true));
+      }
+  }
 ```
 
 编写完成之后，则需要开发人员手动注册这些处理器。
@@ -127,8 +123,6 @@ public class XXXDomainModule : AbpModule
     }
 }
 ```
-
-其中 `XmlDocument` 对象内部的参数含义，可以参考微信支付 **[开发文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_16&index=10)**。
 
 ## 三、服务的使用
 
