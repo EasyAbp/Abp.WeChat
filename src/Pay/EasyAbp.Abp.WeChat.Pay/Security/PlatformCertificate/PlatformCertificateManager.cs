@@ -54,7 +54,7 @@ public class PlatformCertificateManager : IPlatformCertificateManager, ISingleto
                     certificate.EncryptCertificateData.Nonce,
                     certificate.EncryptCertificateData.Ciphertext);
 
-                _certificatesCache.TryAdd(certificate.SerialNo,new Lazy<PlatformCertificateEntity>(() =>
+                _certificatesCache.TryAdd(certificate.SerialNo, new Lazy<PlatformCertificateEntity>(() =>
                     new PlatformCertificateEntity(certificate.SerialNo, certificateString,
                         certificate.EffectiveTime, certificate.ExpireTime)));
             }

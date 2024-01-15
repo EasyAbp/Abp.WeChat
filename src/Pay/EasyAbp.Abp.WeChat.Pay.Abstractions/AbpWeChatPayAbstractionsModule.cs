@@ -2,6 +2,6 @@
 
 namespace EasyAbp.Abp.WeChat.Pay;
 
-public class AbpWeChatPayAbstractionsModule : AbpModule 
+public class AbpWeChatPayAbstractionsModule : AbpModule
 {
 }

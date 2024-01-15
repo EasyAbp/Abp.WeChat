@@ -418,7 +418,9 @@ public class QueryOrderPromotionDetailModel
         /// <example>
         /// 示例值: 1
         /// </example>
-        [Required] [JsonProperty("quantity")] public int Quantity { get; set; }
+        [Required]
+        [JsonProperty("quantity")]
+        public int Quantity { get; set; }
 
         /// <summary>
         /// 商品单价。
