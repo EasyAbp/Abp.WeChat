@@ -9,7 +9,7 @@ public static class RefundFundsAccountEnum
     /// 可用余额账户。
     /// </summary>
     public const string Available = "AVAILABLE";
-    
+
     /// <summary>
     /// 不可用余额账户。
     /// </summary>
@@ -24,9 +24,9 @@ public static class RefundFundsAccountEnum
     /// 运营账户。
     /// </summary>
     public const string Operation = "OPERATION";
-    
+
     /// <summary>
     /// 基本账户。
     /// </summary>
-    public const string Basic= "BASIC";
+    public const string Basic = "BASIC";
 }

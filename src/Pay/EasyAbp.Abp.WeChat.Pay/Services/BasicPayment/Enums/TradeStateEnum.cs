@@ -9,7 +9,7 @@ public static class TradeStateEnum
     /// 支付成功。
     /// </summary>
     public const string Success = "SUCCESS";
-    
+
     /// <summary>
     /// 转入退款。
     /// </summary>
@@ -19,7 +19,7 @@ public static class TradeStateEnum
     /// 未支付。
     /// </summary>
     public const string NotPay = "NOTPAY";
-    
+
     /// <summary>
     /// 已关闭。
     /// </summary>

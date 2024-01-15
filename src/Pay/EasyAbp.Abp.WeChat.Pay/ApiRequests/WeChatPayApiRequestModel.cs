@@ -27,9 +27,9 @@ public class WeChatPayApiRequestModel
         RandomString = randomString;
         Url = url;
         Body = body;
-        
+
         if (method != HttpMethod.Get) return;
-        
+
         Body = null;
         if (!string.IsNullOrEmpty(body))
         {

@@ -1,3 +1,78 @@
+## 零、支持情况
+
+### 0.0 如何直接调用微信支付 V3 的接口?
+
+由于精力有限，在项目初期没有完成所有微信支付 V3 接口的封装，这个时候你可以自己继承 `WeChatPayServiceBase` 基类，并直接使用基类提供的 `ApiRequester` 属性发起微信支付 V3 接口的请求。
+
+所有的证书管理和签名验证都已经实现，你只需要自己编写对应的请求体对象和响应对象的类型定义。
+
+你可以参考以下代码:
+
+```csharp
+using System.Net.Http;
+using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Pay.Options;
+using EasyAbp.Abp.WeChat.Pay.Services.MarketingTools.VoucherService.ParametersModel;
+using Volo.Abp.DependencyInjection;
+
+namespace EasyAbp.Abp.WeChat.Pay.Services.MarketingTools.VoucherService;
+
+/// <summary>
+/// 代金券服务。
+/// </summary>
+public class VoucherWeService : WeChatPayServiceBase
+{
+    public const string CreateCouponBatchUrl = "https://api.mch.weixin.qq.com/v3/marketing/favor/coupon-stocks";
+
+    public VoucherWeService(AbpWeChatPayOptions options,
+        IAbpLazyServiceProvider lazyServiceProvider) : base(options,
+        lazyServiceProvider)
+    {
+    }
+
+    public Task<CreateCouponBatchResponse> CreateCouponBatchAsync(CreateCouponBatchRequest request)
+    {
+        return ApiRequester.RequestAsync<CreateCouponBatchResponse>(HttpMethod.Post, CreateCouponBatchUrl, request, MchId);
+    }
+}
+```
+
+### 0.1 基础支付
+
+| 服务        | 支持情况                                                     | 备注                                                         |
+| ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| JSAPI 支付  | ![Support](https://img.shields.io/badge/-支持-bright_green.svg) |                                                              |
+| APP 支付    | ![Support](https://img.shields.io/badge/-支持-bright_green.svg) |                                                              |
+| H5 支付     | ![Support](https://img.shields.io/badge/-支持-bright_green.svg) |                                                              |
+| Native 支付 | ![Support](https://img.shields.io/badge/-支持-bright_green.svg) |                                                              |
+| 小程序支付  | ![Support](https://img.shields.io/badge/-支持-bright_green.svg) |                                                              |
+| 合单支付    | ![Support](https://img.shields.io/badge/-未实现-red.svg)     |                                                              |
+| 付款码支付  | ![Support](https://img.shields.io/badge/-未实现-red.svg)     | 付款码支付仍然使用的是 微信支付 V2 版本的 API。<br />目前不考虑再支持此支付方式，请考虑使用 Native 支付替代。 |
+
+### 0.2 经营能力
+
+TODO
+
+### 0.3 行业方案
+
+TODO
+
+### 0.4 营销工具
+
+TODO
+
+### 0.5 资金应用
+
+TODO
+
+### 0.6 风险合规
+
+TODO
+
+### 0.7 其他能力
+
+TODO
+
 ## 一、基本模块配置
 
 ### 1.1 模块的引用

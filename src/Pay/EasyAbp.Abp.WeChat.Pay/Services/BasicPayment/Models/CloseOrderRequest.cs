@@ -29,7 +29,7 @@ public class CloseOrderRequest
     /// 示例值: 1217752501201407033233368018
     /// </example>
     [Required]
-    [StringLength(32,MinimumLength = 6)]
+    [StringLength(32, MinimumLength = 6)]
     [JsonProperty("out_trade_no")]
     [JsonIgnore]
     public string OutTradeNo { get; set; }

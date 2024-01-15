@@ -13,7 +13,7 @@ public class CreateOrderRequest : BasicPayment.Models.CreateOrderRequest
     [NotNull]
     [JsonProperty("payer")]
     public CreateOrderPayerModel Payer { get; set; }
-    
+
     public class CreateOrderPayerModel
     {
         /// <summary>
