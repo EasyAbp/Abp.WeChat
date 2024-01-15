@@ -4,7 +4,6 @@ using EasyAbp.Abp.WeChat.Pay.RequestHandling;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 using EasyAbp.Abp.WeChat.Pay.Services;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment;
-using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment.Models;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 using Shouldly;
 using Xunit;
@@ -40,7 +39,7 @@ public class WeChatPayClientRequestHandlingServiceTests : AbpWeChatPayTestBase
                 Total = 1,
                 Currency = "CNY"
             },
-            Payer = new CreateOrderPayerModel
+            Payer = new CreateOrderRequest.CreateOrderPayerModel
             {
                 OpenId = AbpWeChatPayTestConsts.OpenId // 请替换为测试用户的 OpenId，具体 Id 可以在微信公众号平台-用户管理进行查看。
             }
