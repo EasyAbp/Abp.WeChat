@@ -201,24 +201,40 @@ public class XXXDomainModule : AbpModule
 
 ## 三、服务的使用
 
+服务的所有使用方法你都可以参考集成测试项目下的内容 [https://github.com/EasyAbp/Abp.WeChat/blob/master/tests/EasyAbp.Abp.WeChat.Pay.Tests/Services](https://github.com/EasyAbp/Abp.WeChat/blob/master/tests/EasyAbp.Abp.WeChat.Pay.Tests/Services)。
+
 ### 3.1 发起支付请求
 
 ```csharp
 [Fact]
-public async Task UnifiedOrder_Test()
+public async Task CreateOrderAsync_Test()
 {
-    var mchId = null; // 目标商户的 mchid，如果为空则取 Setting 中的默认值
-    var _payService = await WeChatPayServiceFactory.CreateAsync<OrdinaryMerchantPayWeService>(mchId);
+    // Arrange
+    var service = await _weChatPayServiceFactory.CreateAsync<JsPaymentService>();
+    var request = new CreateOrderRequest
+    {
+        MchId = service.MchId,
+        OutTradeNo = RandomStringHelper.GetRandomString(),
+        NotifyUrl = AbpWeChatPayTestConsts.NotifyUrl,
+        AppId = AbpWeChatPayTestConsts.AppId, // 请替换为你的 AppId
+        Description = "Image形象店-深圳腾大-QQ公仔",
+        Amount = new CreateOrderAmountModel
+        {
+            Total = 1,
+            Currency = "CNY"
+        },
+        Payer = new CreateOrderRequest.CreateOrderPayerModel
+        {
+            OpenId = AbpWeChatPayTestConsts.OpenId // 请替换为测试用户的 OpenId，具体 Id 可以在微信公众号平台-用户管理进行查看。
+        }
+    };
 
-    var result = await _payService.UnifiedOrderAsync(
-        "你的 AppId",
-        "你的商户 Id",
-        "订单的描述信息",
-        "订单号", // 订单号需要你自己生成，长度不超过 32 位。
-        101, // 支付金额，单位是分。
-        TradeType.JsApi); // 交易类型。
-    
-    result.ShouldNotBeNull();
+    // Act
+    var response = await service.CreateOrderAsync(request);
+
+    // Assert
+    response.ShouldNotBeNull();
+    response.PrepayId.ShouldNotBeNullOrEmpty();
 }
 ```
 
@@ -226,20 +242,29 @@ public async Task UnifiedOrder_Test()
 
 ```csharp
 [Fact]
-public async Task Ref()
+public async Task RefundAsync_Test()
 {
-    var mchId = null; // 目标商户的 mchid，如果为空则取 Setting 中的默认值
-    var _payService = await WeChatPayServiceFactory.CreateAsync<OrdinaryMerchantPayWeService>(mchId);
+    // Arrange
+    var service = await _weChatPayServiceFactory.CreateAsync<JsPaymentService>();
+    var request = new RefundOrderRequest
+    {
+        OutRefundNo = RandomStringHelper.GetRandomString(),
+        OutTradeNo = "kel9xerwcjib2zs8eixyazuis3qsmo",
+        NotifyUrl = AbpWeChatPayTestConsts.RefundNotifyUrl,
+        Amount = new RefundOrderRequest.AmountInfo
+        {
+            Refund = 1,
+            Total = 1,
+            Currency = "CNY"
+        }
+    };
+        
+    // Act
+    var response = await service.RefundAsync(request);
 
-    var response = await _payService.RefundAsync(
-        "你的 AppId",
-        "你的商户 Id",
-        "订单号",
-        "退款订单号", // 退款订单号需要你自己生成，长度不超过 32 位。
-        101, // 原始订单金额，单位是分，必须准确。
-        50); // 退款订单金额，单位是分。
-    
+    // Assert
     response.ShouldNotBeNull();
+    response.RefundId.ShouldNotBeNullOrEmpty();
 }
 ```
 
