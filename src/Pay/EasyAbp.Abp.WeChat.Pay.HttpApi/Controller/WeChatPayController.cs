@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
