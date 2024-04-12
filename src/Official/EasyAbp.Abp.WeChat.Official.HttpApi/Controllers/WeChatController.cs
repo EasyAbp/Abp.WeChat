@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using EasyAbp.Abp.WeChat.Common;
 using EasyAbp.Abp.WeChat.Common.RequestHandling.Dtos;
 using EasyAbp.Abp.WeChat.Official.RequestHandling;
