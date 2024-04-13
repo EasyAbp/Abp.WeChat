@@ -4,9 +4,9 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.Extensions;
-using EasyAbp.Abp.WeChat.Pay.Exceptions;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Security;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Volo.Abp.DependencyInjection;
 
@@ -24,22 +24,26 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
         };
 
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IWeChatPayAuthorizationGenerator _authorizationGenerator;
         private readonly IAbpWeChatPayOptionsProvider _optionsProvider;
+        private readonly IWeChatPayAuthorizationGenerator _authorizationGenerator;
+        private readonly ILogger<DefaultWeChatPayApiRequester> _logger;
 
-        public DefaultWeChatPayApiRequester(IHttpClientFactory httpClientFactory,
+        public DefaultWeChatPayApiRequester(
+            IHttpClientFactory httpClientFactory,
             IAbpWeChatPayOptionsProvider optionsProvider,
-            IWeChatPayAuthorizationGenerator authorizationGenerator)
+            IWeChatPayAuthorizationGenerator authorizationGenerator,
+            ILogger<DefaultWeChatPayApiRequester> logger)
         {
             _httpClientFactory = httpClientFactory;
             _optionsProvider = optionsProvider;
             _authorizationGenerator = authorizationGenerator;
+            _logger = logger;
         }
 
         public async Task<string> RequestAsync(HttpMethod method, string url, string body, string mchId = null)
         {
             var response = await RequestRawAsync(method, url, body, mchId);
-            await ValidateResponseAsync(response);
+            await LogFailureResponseAsync(response);
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -52,7 +56,8 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
             return JsonConvert.DeserializeObject<TResponse>(responseString);
         }
 
-        public async Task<HttpResponseMessage> RequestRawAsync(HttpMethod method, string url, string body = null, string mchId = null)
+        public async Task<HttpResponseMessage> RequestRawAsync(HttpMethod method, string url, string body = null,
+            string mchId = null)
         {
             var request = CreateRequest(method, url, body);
 
@@ -115,18 +120,18 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
             return WeChatReflectionHelper.ConvertToQueryString(body);
         }
 
-        protected virtual Task ValidateResponseAsync(HttpResponseMessage responseMessage)
+        protected virtual async Task LogFailureResponseAsync(HttpResponseMessage responseMessage)
         {
             switch (responseMessage.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    return Task.CompletedTask;
                 case HttpStatusCode.Accepted:
-                    return Task.CompletedTask;
                 case HttpStatusCode.NoContent:
-                    return Task.CompletedTask;
+                    return;
                 default:
-                    throw new CallWeChatPayApiException("微信支付 API 调用失败，状态码为非 200。");
+                    _logger.LogError("微信支付接口调用失败，HTTP状态码：{StatusCode}，返回内容：{Content}",
+                        responseMessage.StatusCode, await responseMessage.Content.ReadAsStringAsync());
+                    break;
             }
         }
     }
