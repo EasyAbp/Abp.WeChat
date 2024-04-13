@@ -140,11 +140,9 @@ public override void ConfigureServices (ServiceConfigurationContext context)
 用户如果需要对支付结果进行处理，只需要实现一个或多个 `IWeChatPayEventHandler` 处理器即可。当框架接受到微信通知时，会触发开发人员编写的处理器，并将微信结果传递给这些处理器。
 
 ```csharp
-  public class PaidWeChatPayEventHandler : IWeChatPayEventHandler<QueryOrderResponse>
+  public class PaidWeChatPayEventHandler : WeChatPayPaidEventHandlerBase
   {
-      public WeChatHandlerType Type => WeChatHandlerType.Paid;
-
-      public Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel<QueryOrderResponse> model)
+      public Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel<WeChatPayPaidEventModel> model)
       {
           Console.WriteLine("支付成功。");
           return Task.FromResult(new WeChatRequestHandlingResult(true));
@@ -175,11 +173,9 @@ WeChatPay 模块默认提供了参数校验处理器，各个处理器的调用�
 用户如果需要对退款通知进行处理，只需要实现一个或多个 `IWeChatPayEventHandler` 处理器即可。当框架接受到微信通知时，会触发开发人员编写的处理器，并将微信结果传递给这些处理器。
 
 ```csharp
-  public class RefundWeChatPayEventHandler : IWeChatPayEventHandler<RefundOrderResponse>
+  public class RefundWeChatPayEventHandler : WeChatPayRefundEventHandlerBase
   {
-      public WeChatHandlerType Type => WeChatHandlerType.Refund;
-
-      public Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel<RefundOrderResponse> model)
+      public Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel<WeChatPayRefundEventModel> model)
       {
           Console.WriteLine("退款成功。");
           return Task.FromResult(new WeChatRequestHandlingResult(true));
