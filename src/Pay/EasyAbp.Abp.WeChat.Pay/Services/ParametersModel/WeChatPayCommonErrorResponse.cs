@@ -6,16 +6,22 @@ namespace EasyAbp.Abp.WeChat.Pay.Services.ParametersModel;
 public abstract class WeChatPayCommonErrorResponse
 {
     /// <summary>
-    /// 错误代码，具体定义可以参考 <see cref="BasicPaymentErrorCode"/> 命名空间下的常量定义。
+    /// 详细错误码，具体定义可以参考 <see cref="BasicPaymentErrorCode"/> 命名空间下的常量定义。
     /// </summary>
     [JsonProperty("code")]
     public string Code { get; set; }
 
     /// <summary>
-    /// 具体的错误信息。
+    /// 错误描述，使用易理解的文字表示错误的原因。
     /// </summary>
     [JsonProperty("message")]
     public string Message { get; set; }
+
+    /// <summary>
+    /// 具体的错误信息。
+    /// </summary>
+    [JsonProperty("detail")]
+    public string Detail { get; set; }
 
     public class InnerDetail
     {
