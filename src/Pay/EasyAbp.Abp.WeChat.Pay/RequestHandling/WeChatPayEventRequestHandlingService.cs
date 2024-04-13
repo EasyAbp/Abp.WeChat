@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.RequestHandling;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
+using EasyAbp.Abp.WeChat.Pay.RequestHandling.Models;
 using EasyAbp.Abp.WeChat.Pay.Security.Extensions;
 using EasyAbp.Abp.WeChat.Pay.Security.PlatformCertificate;
-using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 using Newtonsoft.Json;
 using Volo.Abp.DependencyInjection;
 
@@ -37,12 +37,13 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
             return new WeChatRequestHandlingResult(false, "签名验证不通过");
         }
 
-        var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayEventHandler<QueryOrderResponse>>>()
+        var handlers = LazyServiceProvider
+            .LazyGetService<IEnumerable<IWeChatPayEventHandler<WeChatPayPaidEventModel>>>()
             .Where(h => h.Type == WeChatHandlerType.Paid);
 
-        var decryptingResult = DecryptResource<QueryOrderResponse>(input, options);
+        var decryptingResult = DecryptResource<WeChatPayPaidEventModel>(input, options);
 
-        var model = new WeChatPayEventModel<QueryOrderResponse>
+        var model = new WeChatPayEventModel<WeChatPayPaidEventModel>
         {
             Options = options,
             Resource = decryptingResult
@@ -70,11 +71,12 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
             return new WeChatRequestHandlingResult(false, "签名验证不通过");
         }
 
-        var handlers = LazyServiceProvider.LazyGetService<IEnumerable<IWeChatPayEventHandler<RefundOrderResponse>>>()
+        var handlers = LazyServiceProvider
+            .LazyGetService<IEnumerable<IWeChatPayEventHandler<WeChatPayRefundEventModel>>>()
             .Where(x => x.Type == WeChatHandlerType.Refund);
 
-        var decryptingResult = DecryptResource<RefundOrderResponse>(input, options);
-        var model = new WeChatPayEventModel<RefundOrderResponse>
+        var decryptingResult = DecryptResource<WeChatPayRefundEventModel>(input, options);
+        var model = new WeChatPayEventModel<WeChatPayRefundEventModel>
         {
             Options = options,
             Resource = decryptingResult
@@ -95,7 +97,9 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
 
     protected virtual async Task<bool> IsSignValidAsync(NotifyInputDto inputDto, AbpWeChatPayOptions options)
     {
-        var certificate = await _platformCertificateManager.GetPlatformCertificateAsync(options.MchId, inputDto.HttpHeader.SerialNumber);
+        var certificate =
+            await _platformCertificateManager.GetPlatformCertificateAsync(options.MchId,
+                inputDto.HttpHeader.SerialNumber);
         var sb = new StringBuilder();
         sb.Append(inputDto.HttpHeader.Timestamp).Append("\n")
             .Append(inputDto.HttpHeader.Nonce).Append("\n")
@@ -105,7 +109,8 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
 
     protected virtual TObject DecryptResource<TObject>(NotifyInputDto inputDto, AbpWeChatPayOptions options)
     {
-        var sourceJson = WeChatPaySecurityUtility.AesGcmDecrypt(options.ApiV3Key, inputDto.RequestBody.Resource.AssociatedData,
+        var sourceJson = WeChatPaySecurityUtility.AesGcmDecrypt(options.ApiV3Key,
+            inputDto.RequestBody.Resource.AssociatedData,
             inputDto.RequestBody.Resource.Nonce, inputDto.RequestBody.Resource.Ciphertext);
         return JsonConvert.DeserializeObject<TObject>(sourceJson);
     }
