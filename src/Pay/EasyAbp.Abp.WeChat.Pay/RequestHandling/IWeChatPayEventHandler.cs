@@ -6,10 +6,10 @@ namespace EasyAbp.Abp.WeChat.Pay.RequestHandling
     /// <summary>
     /// 定义了微信支付回调处理器。
     /// </summary>
-    public interface IWeChatPayEventHandler<TResource>
+    public interface IWeChatPayEventHandler<TEventModel>
     {
         WeChatHandlerType Type { get; }
 
-        Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel<TResource> model);
+        Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel<TEventModel> model);
     }
 }
