@@ -16,7 +16,7 @@ public class AppPaymentService : BasicPaymentService
     {
     }
 
-    public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
+    public virtual Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
     {
         return ApiRequester.RequestAsync<CreateOrderResponse>(HttpMethod.Post, CreateOrderUrl, request);
     }

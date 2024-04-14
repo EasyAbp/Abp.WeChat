@@ -23,7 +23,7 @@ public class WeChatPayCertificatesWeService : WeChatPayServiceBase
     /// <summary>
     /// 获取商户当前可用的平台证书列表。
     /// </summary>
-    public Task<GetPlatformCertificatesResponse> GetPlatformCertificatesAsync()
+    public virtual Task<GetPlatformCertificatesResponse> GetPlatformCertificatesAsync()
     {
         return ApiRequester.RequestAsync<GetPlatformCertificatesResponse>(HttpMethod.Get, CertificatesUrl);
     }

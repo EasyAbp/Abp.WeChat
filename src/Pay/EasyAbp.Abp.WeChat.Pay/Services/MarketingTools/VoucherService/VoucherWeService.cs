@@ -19,8 +19,9 @@ public class VoucherWeService : WeChatPayServiceBase
     {
     }
 
-    public Task<CreateCouponBatchResponse> CreateCouponBatchAsync(CreateCouponBatchRequest request)
+    public virtual Task<CreateCouponBatchResponse> CreateCouponBatchAsync(CreateCouponBatchRequest request)
     {
-        return ApiRequester.RequestAsync<CreateCouponBatchResponse>(HttpMethod.Post, CreateCouponBatchUrl, request, MchId);
+        return ApiRequester.RequestAsync<CreateCouponBatchResponse>(
+            HttpMethod.Post, CreateCouponBatchUrl, request, MchId);
     }
 }
