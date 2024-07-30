@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using Volo.Abp;
+﻿using Volo.Abp;
 using Volo.Abp.ExceptionHandling;
 
 namespace EasyAbp.Abp.WeChat.Official.Services.MediaManagement.Exceptions
@@ -19,16 +18,6 @@ namespace EasyAbp.Abp.WeChat.Official.Services.MediaManagement.Exceptions
         public UnSupportMediaFileTypeException(string message, string details) : base(message)
         {
             Details = details;
-        }
-
-        /// <summary>
-        /// 构造一个新的 <see cref="UnSupportMediaFileTypeException"/> 对象。
-        /// </summary>
-        /// <param name="serializationInfo">序列化信息。</param>
-        /// <param name="context">上下文实例。</param>
-        public UnSupportMediaFileTypeException(SerializationInfo serializationInfo, StreamingContext context)
-            : base(serializationInfo, context)
-        {
         }
     }
 }

@@ -3,7 +3,7 @@
     <Import Project="..\..\..\common.props" />
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>EasyAbp.Abp.WeChat.Pay</RootNamespace>
         <Description>ABP vNext微信模块，提供对微信支付业务的支持。</Description>
     </PropertyGroup>
