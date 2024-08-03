@@ -46,10 +46,10 @@ public class BasicPaymentService : WeChatPayServiceBase
         return ApiRequester.RequestAsync<QueryOrderResponse>(HttpMethod.Get, requestUrl, request);
     }
 
-    public virtual Task<WeChatPayCommonErrorResponse> CloseOrderAsync(CloseOrderRequest request)
+    public virtual Task<CloseOrderResponse> CloseOrderAsync(CloseOrderRequest request)
     {
         var requestUrl = CloseOrderUrl.Replace("{out_trade_no}", request.OutTradeNo);
-        return ApiRequester.RequestAsync<WeChatPayCommonErrorResponse>(HttpMethod.Post, requestUrl, request);
+        return ApiRequester.RequestAsync<CloseOrderResponse>(HttpMethod.Post, requestUrl, request);
     }
 
     public virtual Task<RefundOrderResponse> RefundAsync(RefundOrderRequest orderRequest)
