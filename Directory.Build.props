@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup>
 
-        <AbpVersion>8.2.0</AbpVersion>
+        <AbpVersion>8.3.2</AbpVersion>
         <MicrosoftNetTestSdkVersion>17.8.0</MicrosoftNetTestSdkVersion>
 
     </PropertyGroup>
