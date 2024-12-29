@@ -3,7 +3,7 @@
     <Import Project="..\..\..\common.props" />
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <RootNamespace>EasyAbp.Abp.WeChat.OpenPlatform</RootNamespace>
         <Description>ABP vNext开放平台模块，提供对微信开放平台业务的支持。</Description>
     </PropertyGroup>
