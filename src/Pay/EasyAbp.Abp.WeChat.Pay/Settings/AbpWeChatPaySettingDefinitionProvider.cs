@@ -66,5 +66,13 @@ public class AbpWeChatPaySettingDefinitionProvider : SettingDefinitionProvider
             AbpWeChatPaySettings.AcceptLanguage,
             _options.AcceptLanguage
         ));
+        context.Add(new SettingDefinition(
+            AbpWeChatPaySettings.PublicKeyId,
+            _options.PublicKeyId
+        ));
+        context.Add(new SettingDefinition(
+            AbpWeChatPaySettings.PublicKey,
+            _options.PublicKey
+        ));
     }
 }

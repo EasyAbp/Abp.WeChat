@@ -27,4 +27,8 @@ public static class AbpWeChatPaySettings
     public const string CertificateSecret = GroupName + ".CertificateSecret";
 
     public const string AcceptLanguage = GroupName + ".AcceptLanguage";
+
+    public const string PublicKeyId = GroupName + ".PublicKeyId";
+
+    public const string PublicKey = GroupName + ".PublicKey";
 }

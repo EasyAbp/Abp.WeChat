@@ -97,13 +97,19 @@ public class WeChatPayEventRequestHandlingService : IWeChatPayEventRequestHandli
 
     protected virtual async Task<bool> IsSignValidAsync(NotifyInputDto inputDto, AbpWeChatPayOptions options)
     {
-        var certificate =
-            await _platformCertificateManager.GetPlatformCertificateAsync(options.MchId,
-                inputDto.HttpHeader.SerialNumber);
         var sb = new StringBuilder();
         sb.Append(inputDto.HttpHeader.Timestamp).Append("\n")
             .Append(inputDto.HttpHeader.Nonce).Append("\n")
             .Append(inputDto.RequestBodyString).Append("\n");
+
+        if (inputDto.HttpHeader.SerialNumber.StartsWith("PUB_KEY_ID_"))
+        {
+            return WeChatPaySecurityUtility.Verify(sb.ToString(), inputDto.HttpHeader.Signature, options.PublicKey);
+        }
+
+        var certificate =
+            await _platformCertificateManager.GetPlatformCertificateAsync(options.MchId,
+                inputDto.HttpHeader.SerialNumber);
         return certificate.VerifySignature(sb.ToString(), inputDto.HttpHeader.Signature);
     }
 
