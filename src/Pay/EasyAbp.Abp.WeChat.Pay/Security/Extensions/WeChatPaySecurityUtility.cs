@@ -41,5 +41,28 @@ namespace EasyAbp.Abp.WeChat.Pay.Security.Extensions
             gcmBlockCipher.DoFinal(plaintext, length);
             return Encoding.UTF8.GetString(plaintext);
         }
+
+        public static bool Verify(string data, string sign, string publicKey)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            if (string.IsNullOrEmpty(sign))
+            {
+                throw new ArgumentNullException(nameof(sign));
+            }
+
+            if (string.IsNullOrEmpty(publicKey))
+            {
+                throw new ArgumentNullException(nameof(publicKey));
+            }
+
+            using var rsa = RSA.Create();
+            rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(publicKey), out _);
+            return rsa.VerifyData(Encoding.UTF8.GetBytes(data), Convert.FromBase64String(sign),
+                HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+        }
     }
 }

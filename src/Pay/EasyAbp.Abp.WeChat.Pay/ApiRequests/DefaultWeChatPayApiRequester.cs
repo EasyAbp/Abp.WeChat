@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -70,9 +71,16 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
             request.Headers.Add("Authorization",
                 await _authorizationGenerator.GenerateAuthorizationAsync(method, url, body, mchId));
 
+            if (options.PublicKeyId.IsNullOrWhiteSpace() == false && options.PublicKeyId.StartsWith("PUB_KEY_ID_"))
+            {
+                request.Headers.Add("Wechatpay-Serial", options.PublicKeyId);
+            }
+
             // Sending the request.
             var client = _httpClientFactory.CreateClient();
-            return await client.SendAsync(request);
+            var response = await client.SendAsync(request);
+
+            return response;
         }
 
         public Task<string> RequestAsync(HttpMethod method, string url, object body, string mchId = null)

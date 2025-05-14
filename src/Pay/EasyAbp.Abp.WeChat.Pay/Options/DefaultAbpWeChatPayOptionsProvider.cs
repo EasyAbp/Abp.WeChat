@@ -41,7 +41,9 @@ public class DefaultAbpWeChatPayOptionsProvider : IAbpWeChatPayOptionsProvider, 
             CertificateBlobContainerName =
                 await SettingProvider.GetOrNullAsync(AbpWeChatPaySettings.CertificateBlobContainerName),
             CertificateBlobName = await SettingProvider.GetOrNullAsync(AbpWeChatPaySettings.CertificateBlobName),
-            CertificateSecret = await SettingProvider.GetOrNullAsync(AbpWeChatPaySettings.CertificateSecret)
+            CertificateSecret = await SettingProvider.GetOrNullAsync(AbpWeChatPaySettings.CertificateSecret),
+            PublicKeyId = await SettingProvider.GetOrNullAsync(AbpWeChatPaySettings.PublicKeyId),
+            PublicKey = await SettingProvider.GetOrNullAsync(AbpWeChatPaySettings.PublicKey),
         };
     }
 }

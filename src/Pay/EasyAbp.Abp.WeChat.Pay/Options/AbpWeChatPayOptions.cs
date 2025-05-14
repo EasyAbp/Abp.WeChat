@@ -54,6 +54,17 @@ namespace EasyAbp.Abp.WeChat.Pay.Options
         public string CertificateSecret { get; set; }
 
         /// <summary>
+        /// 微信支付公钥Id
+        /// </summary>
+        public string PublicKeyId { get; set; }
+
+        /// <summary>
+        /// 微信支付公钥
+        /// </summary>
+        public string PublicKey { get; set; }
+
+
+        /// <summary>
         /// 构建一个新的 <see cref="AbpWeChatPayModule"/> 实例。
         /// </summary>
         public AbpWeChatPayOptions()

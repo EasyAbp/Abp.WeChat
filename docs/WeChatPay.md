@@ -123,6 +123,10 @@ public override void ConfigureServices (ServiceConfigurationContext context)
         op.CertificateBlobName = "WeChatPayCert";
         // 微信支付API证书秘钥，默认为商户名
         op.CertificateSecret = "000000000000000";
+        // 微信支付API证书公钥Id
+        op.PublicKeyId = "PUB_KEY_ID_xxxxx";
+        // 微信支付API证书公钥 要删除头、尾、换行符
+        op.PublicKey = "MIIBIjANBgkqhkiG9w0BAQEFA";
     });
 }
 ```
