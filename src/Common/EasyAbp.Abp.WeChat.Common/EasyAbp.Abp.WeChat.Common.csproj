@@ -12,7 +12,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Volo.Abp.Caching" Version="$(AbpVersion)" />
         <PackageReference Include="Volo.Abp.Core" Version="$(AbpVersion)" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.5" />
     </ItemGroup>
     
     <ItemGroup>
