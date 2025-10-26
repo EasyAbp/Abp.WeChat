@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 
-public class CreateOrderRequest
+public class CreateOrderRequest : IHasMchId
 {
     /// <summary>
     /// 应用 ID。

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment.Models;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
-using EasyAbp.Abp.WeChat.Pay.Services.ParametersModel;
+using JetBrains.Annotations;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment;
@@ -54,27 +54,28 @@ public class BasicPaymentService : WeChatPayServiceBase
 
     public virtual Task<RefundOrderResponse> RefundAsync(RefundOrderRequest orderRequest)
     {
-        return ApiRequester.RequestAsync<RefundOrderResponse>(HttpMethod.Post, RefundUrl, orderRequest);
+        return ApiRequester.RequestAsync<RefundOrderResponse>(HttpMethod.Post, RefundUrl, orderRequest, MchId);
     }
 
     public virtual Task<RefundOrderResponse> QueryRefundOrderAsync(QueryRefundOrderRequest request)
     {
         var requestUrl = QueryRefundOrderUrl.Replace("{out_refund_no}", request.OutRefundNo);
-        return ApiRequester.RequestAsync<RefundOrderResponse>(HttpMethod.Get, requestUrl);
+        return ApiRequester.RequestAsync<RefundOrderResponse>(HttpMethod.Get, requestUrl, null, MchId);
     }
 
     public virtual Task<GetBillResponse> GetTransactionBillAsync(GetTransactionBillRequest request)
     {
-        return ApiRequester.RequestAsync<GetBillResponse>(HttpMethod.Get, GetTransactionBillUrl, request);
+        return ApiRequester.RequestAsync<GetBillResponse>(HttpMethod.Get, GetTransactionBillUrl, request, MchId);
     }
 
     public virtual Task<GetBillResponse> GetFundFlowBillAsync(GetFundFlowBillRequest request)
     {
-        return ApiRequester.RequestAsync<GetBillResponse>(HttpMethod.Get, GetFundFlowBillUrl, request);
+        return ApiRequester.RequestAsync<GetBillResponse>(HttpMethod.Get, GetFundFlowBillUrl, request, MchId);
     }
 
     public virtual async Task<Stream> DownloadBillFileAsync(string billDownloadUrl)
     {
-        return await (await ApiRequester.RequestRawAsync(HttpMethod.Get, billDownloadUrl)).Content.ReadAsStreamAsync();
+        return await (await ApiRequester.RequestRawAsync(HttpMethod.Get, billDownloadUrl, null, MchId)).Content
+            .ReadAsStreamAsync();
     }
 }

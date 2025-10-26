@@ -19,7 +19,7 @@ public class WeChatPayApiRequestTests : AbpWeChatPayTestBase
     public async Task GetCertificatesAsync_Test()
     {
         var response = await _weChatPayApiRequester.RequestAsync(HttpMethod.Get,
-            "https://api.mch.weixin.qq.com/v3/certificates");
+            "https://api.mch.weixin.qq.com/v3/certificates", null, null);
 
         response.ShouldNotBeNull(response);
     }

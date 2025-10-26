@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 using JetBrains.Annotations;
 
 namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
@@ -9,14 +10,21 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
     /// </summary>
     public interface IWeChatPayApiRequester
     {
-        Task<string> RequestAsync(HttpMethod method, string url, [CanBeNull] string body = null, [CanBeNull] string mchId = null);
+        Task<string> RequestAsync(HttpMethod method, string url, [CanBeNull] string body, [CanBeNull] string mchId);
 
-        Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, [CanBeNull] string body = null, [CanBeNull] string mchId = null);
+        Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, [CanBeNull] string body,
+            [CanBeNull] string mchId);
 
-        Task<HttpResponseMessage> RequestRawAsync(HttpMethod method, string url, [CanBeNull] string body = null, [CanBeNull] string mchId = null);
+        Task<HttpResponseMessage> RequestRawAsync(HttpMethod method, string url, [CanBeNull] string body,
+            [CanBeNull] string mchId);
 
-        Task<string> RequestAsync(HttpMethod method, string url, [NotNull] object body, [CanBeNull] string mchId = null);
+        Task<string> RequestAsync(HttpMethod method, string url, [NotNull] object body, [CanBeNull] string mchId);
 
-        Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, [NotNull] object body, [CanBeNull] string mchId = null);
+        Task<string> RequestAsync(HttpMethod method, string url, [NotNull] IHasMchId body);
+
+        Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, [NotNull] object body,
+            [CanBeNull] string mchId);
+
+        Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, [NotNull] IHasMchId body);
     }
 }

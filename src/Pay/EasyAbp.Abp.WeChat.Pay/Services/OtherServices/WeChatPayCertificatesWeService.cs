@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Services.OtherServices.ParametersModel;
@@ -25,6 +24,6 @@ public class WeChatPayCertificatesWeService : WeChatPayServiceBase
     /// </summary>
     public virtual Task<GetPlatformCertificatesResponse> GetPlatformCertificatesAsync()
     {
-        return ApiRequester.RequestAsync<GetPlatformCertificatesResponse>(HttpMethod.Get, CertificatesUrl);
+        return ApiRequester.RequestAsync<GetPlatformCertificatesResponse>(HttpMethod.Get, CertificatesUrl, null, MchId);
     }
 }
