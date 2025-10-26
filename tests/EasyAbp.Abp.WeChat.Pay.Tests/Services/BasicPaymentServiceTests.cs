@@ -26,7 +26,7 @@ public class BasicPaymentServiceTests : AbpWeChatPayTestBase
         var service = await _weChatPayServiceFactory.CreateAsync<JsPaymentService>();
         var request = new CreateOrderRequest
         {
-            MchId = null, // fallback to AbpWeChatPayOptions.MchId
+            MchId = service.MchId,
             OutTradeNo = RandomStringHelper.GetRandomString(),
             NotifyUrl = AbpWeChatPayTestConsts.NotifyUrl,
             AppId = AbpWeChatPayTestConsts.AppId, // 请替换为你的 AppId

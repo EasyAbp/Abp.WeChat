@@ -1,13 +1,10 @@
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.Extensions;
-using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling.Dtos;
 using EasyAbp.Abp.WeChat.Pay.Services;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Shouldly;
 using Xunit;
 using CreateOrderRequest = EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment.Models.CreateOrderRequest;
@@ -30,10 +27,9 @@ public class WeChatPayClientRequestHandlingServiceTests : AbpWeChatPayTestBase
     {
         // Arrange
         var service = await _weChatPayServiceFactory.CreateAsync<JsPaymentService>();
-        var options = ServiceProvider.GetRequiredService<IOptions<AbpWeChatPayOptions>>().Value;
         var response = await service.CreateOrderAsync(new CreateOrderRequest
         {
-            MchId = options.MchId,
+            MchId = service.MchId,
             OutTradeNo = RandomStringHelper.GetRandomString(),
             NotifyUrl = AbpWeChatPayTestConsts.NotifyUrl,
             AppId = AbpWeChatPayTestConsts.AppId, // 请替换为你的 AppId
