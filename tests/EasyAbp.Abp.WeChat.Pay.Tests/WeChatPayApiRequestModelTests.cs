@@ -24,7 +24,7 @@ public class WeChatPayApiRequestModelTests
             randomString);
 
         request.ShouldNotBeNull();
-        request.Body.ShouldBeEmpty();
+        request.Body.ShouldBeNull();
         request.Url.ShouldBe(url);
         request.RandomString.ShouldBe(randomString);
         request.Timestamp.ShouldBe(timestamp);

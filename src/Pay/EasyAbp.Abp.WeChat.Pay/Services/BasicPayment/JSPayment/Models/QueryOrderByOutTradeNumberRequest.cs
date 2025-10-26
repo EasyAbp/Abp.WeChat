@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment.Models;
 
-public class QueryOrderByOutTradeNumberRequest
+public class QueryOrderByOutTradeNumberRequest : IHasMchId
 {
     /// <summary>
     /// 直连商户号。

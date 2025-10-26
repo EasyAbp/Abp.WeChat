@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Bogus;
+using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Services;
 using EasyAbp.Abp.WeChat.Pay.Services.MarketingTools.VoucherService;
 using EasyAbp.Abp.WeChat.Pay.Services.MarketingTools.VoucherService.ParametersModel;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Shouldly;
 using Xunit;
 
@@ -28,12 +31,13 @@ public class VoucherWeServiceTests : AbpWeChatPayTestBase
     {
         // Arrange
         var service = await _weChatPayServiceFactory.CreateAsync<VoucherWeService>();
+        var options = ServiceProvider.GetRequiredService<IOptions<AbpWeChatPayOptions>>().Value;
 
         // Act
         var response = await service.CreateCouponBatchAsync(new CreateCouponBatchRequest
         {
             StockName = "测试代金券-1",
-            BelongMerchant = service.MchId,
+            BelongMerchant = options.MchId,
             AvailableBeginTime = DateTime.Now.AddDays(1),
             AvailableEndTime = DateTime.Now.AddDays(2),
             NoCash = true,
@@ -54,7 +58,7 @@ public class VoucherWeServiceTests : AbpWeChatPayTestBase
                     CouponAmount = 100,
                     TransactionMinimum = 10000
                 },
-                AvailableMerchants = new[] { service.MchId }
+                AvailableMerchants = new[] { options.MchId }
             }
         });
 

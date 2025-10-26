@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 
-public class CloseOrderRequest
+public class CloseOrderRequest : IHasMchId
 {
     /// <summary>
     /// 直连商户号。

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment.Models;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
-using EasyAbp.Abp.WeChat.Pay.Services.ParametersModel;
+using JetBrains.Annotations;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.WeChat.Pay.Services.BasicPayment;
@@ -49,32 +49,37 @@ public class BasicPaymentService : WeChatPayServiceBase
     public virtual Task<CloseOrderResponse> CloseOrderAsync(CloseOrderRequest request)
     {
         var requestUrl = CloseOrderUrl.Replace("{out_trade_no}", request.OutTradeNo);
-        return ApiRequester.RequestAsync<CloseOrderResponse>(HttpMethod.Post, requestUrl, request);
+        return ApiRequester.RequestAsync<CloseOrderResponse>(HttpMethod.Post, requestUrl, request, request.MchId);
     }
 
-    public virtual Task<RefundOrderResponse> RefundAsync(RefundOrderRequest orderRequest)
+    public virtual Task<RefundOrderResponse> RefundAsync(RefundOrderRequest orderRequest,
+        [CanBeNull] string mchId = null)
     {
-        return ApiRequester.RequestAsync<RefundOrderResponse>(HttpMethod.Post, RefundUrl, orderRequest);
+        return ApiRequester.RequestAsync<RefundOrderResponse>(HttpMethod.Post, RefundUrl, orderRequest, mchId);
     }
 
-    public virtual Task<RefundOrderResponse> QueryRefundOrderAsync(QueryRefundOrderRequest request)
+    public virtual Task<RefundOrderResponse> QueryRefundOrderAsync(QueryRefundOrderRequest request,
+        [CanBeNull] string mchId = null)
     {
         var requestUrl = QueryRefundOrderUrl.Replace("{out_refund_no}", request.OutRefundNo);
-        return ApiRequester.RequestAsync<RefundOrderResponse>(HttpMethod.Get, requestUrl);
+        return ApiRequester.RequestAsync<RefundOrderResponse>(HttpMethod.Get, requestUrl, null, mchId);
     }
 
-    public virtual Task<GetBillResponse> GetTransactionBillAsync(GetTransactionBillRequest request)
+    public virtual Task<GetBillResponse> GetTransactionBillAsync(GetTransactionBillRequest request,
+        [CanBeNull] string mchId = null)
     {
-        return ApiRequester.RequestAsync<GetBillResponse>(HttpMethod.Get, GetTransactionBillUrl, request);
+        return ApiRequester.RequestAsync<GetBillResponse>(HttpMethod.Get, GetTransactionBillUrl, request, mchId);
     }
 
-    public virtual Task<GetBillResponse> GetFundFlowBillAsync(GetFundFlowBillRequest request)
+    public virtual Task<GetBillResponse> GetFundFlowBillAsync(GetFundFlowBillRequest request,
+        [CanBeNull] string mchId = null)
     {
-        return ApiRequester.RequestAsync<GetBillResponse>(HttpMethod.Get, GetFundFlowBillUrl, request);
+        return ApiRequester.RequestAsync<GetBillResponse>(HttpMethod.Get, GetFundFlowBillUrl, request, mchId);
     }
 
-    public virtual async Task<Stream> DownloadBillFileAsync(string billDownloadUrl)
+    public virtual async Task<Stream> DownloadBillFileAsync(string billDownloadUrl, [CanBeNull] string mchId = null)
     {
-        return await (await ApiRequester.RequestRawAsync(HttpMethod.Get, billDownloadUrl)).Content.ReadAsStreamAsync();
+        return await (await ApiRequester.RequestRawAsync(HttpMethod.Get, billDownloadUrl, null, mchId)).Content
+            .ReadAsStreamAsync();
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.Extensions;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Security;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Volo.Abp.DependencyInjection;
@@ -41,7 +42,7 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
             _logger = logger;
         }
 
-        public async Task<string> RequestAsync(HttpMethod method, string url, string body, string mchId = null)
+        public async Task<string> RequestAsync(HttpMethod method, string url, string body, string mchId)
         {
             var response = await RequestRawAsync(method, url, body, mchId);
             await LogFailureResponseAsync(response);
@@ -50,15 +51,14 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
         }
 
         public async Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, string body,
-            string mchId = null)
+            string mchId)
         {
             var responseString = await RequestAsync(method, url, body, mchId);
 
             return JsonConvert.DeserializeObject<TResponse>(responseString);
         }
 
-        public async Task<HttpResponseMessage> RequestRawAsync(HttpMethod method, string url, string body = null,
-            string mchId = null)
+        public async Task<HttpResponseMessage> RequestRawAsync(HttpMethod method, string url, string body, string mchId)
         {
             var request = CreateRequest(method, url, body);
 
@@ -83,14 +83,24 @@ namespace EasyAbp.Abp.WeChat.Pay.ApiRequests
             return response;
         }
 
-        public Task<string> RequestAsync(HttpMethod method, string url, object body, string mchId = null)
+        public Task<string> RequestAsync(HttpMethod method, string url, object body, string mchId)
         {
             return RequestAsync(method, url, HandleRequestObject(method, body), mchId);
         }
 
-        public Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, object body, string mchId = null)
+        public Task<string> RequestAsync(HttpMethod method, string url, IHasMchId body)
+        {
+            return RequestAsync(method, url, body, body.MchId);
+        }
+
+        public Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, object body, string mchId)
         {
             return RequestAsync<TResponse>(method, url, HandleRequestObject(method, body), mchId);
+        }
+
+        public Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string url, IHasMchId body)
+        {
+            return RequestAsync<TResponse>(method, url, body, body.MchId);
         }
 
         private HttpRequestMessage CreateRequest(HttpMethod method, string url, string body)
